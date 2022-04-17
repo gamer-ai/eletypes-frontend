@@ -25,7 +25,7 @@ function App() {
         <GlobalStyles />
         <header>
         <h1>Ele Types</h1>
-          <span >an elegant typing experience, just start typing</span>
+          <span className="sub-header" >an elegant typing experience, just start typing</span>
         </header>
 
         <TypeBox textInputRef={textInputRef} key="type-box"></TypeBox>

@@ -5,7 +5,7 @@ const lightTheme = {
     gradient: 'linear-gradient(#39598A, #79D7ED)',
     title: '#2979ff',
     textTypeBox: '#8f8f8f',
-    stats: '#BB86FC'
+    stats: '#3E7C17'
   };
   
 const darkTheme = {
@@ -25,7 +25,7 @@ const cyberTheme = {
     gradient: 'linear-gradient(#091236, #1E215D)',
     title: '#FDF500',
     textTypeBox: '#D1C5C0',
-    stats: '#BB86FC'
+    stats: '#00ff9f'
 };
 
 

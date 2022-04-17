@@ -46,14 +46,17 @@ export const GlobalStyles = createGlobalStyle`
   }
   h1 {
     color: ${({ theme }) => theme.title};
+    opacity: 0.9;
+    font: 48px;
   }
   .stats {
     margin-top: 100px;
     color: ${({ theme }) => theme.stats};
     bottom: 10%;
   }
-  a {
+  .sub-header {
     color: ${({ theme }) => theme.text};
+    opacity: 0.9;
   }
   .type-box {
     display: block;
