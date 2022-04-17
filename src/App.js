@@ -23,7 +23,7 @@ function App() {
         <GlobalStyles />
         <header>
         <h1>Ele Type</h1>
-          <a href={() => false}>an elegant typing experience</a>
+          <span >an elegant typing experience</span>
         </header>
 
         <TypeBox textInputRef={textInputRef} key="type-box"></TypeBox>
