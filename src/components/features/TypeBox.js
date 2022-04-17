@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 const TypeBox = ({ textInputRef }) => {
   // constants
   const WORDS_COUNT = 300;
-  const COUNT_DOWN =60;
+  const COUNT_DOWN = 60;
   // set up words state
   const [words, setWords] = useState([]);
   const wordSpanRefs = useMemo(() => Array(WORDS_COUNT).fill(0).map(i=> React.createRef()), []);
@@ -59,16 +59,19 @@ const TypeBox = ({ textInputRef }) => {
   // }
 
   function start() {
-    textInputRef.current.focus();
+    //textInputRef.current.focus();
     if (status === "finished") {
       setWords(wordsGenerator(WORDS_COUNT));
       setCurrWordIndex(0);
       setCurrCharIndex(-1);
       setCurrChar("");
       setHistory({});
+      setInputWordsHistory({});
       setWordsCorrect(new Set());
       setWordsInCorrect(new Set());
       setShowRestart(false);
+      setStatus("waiting");
+      textInputRef.current.focus();
     }
 
     if (status !== "started") {
@@ -80,6 +83,7 @@ const TypeBox = ({ textInputRef }) => {
             clearInterval(interval);
             setStatus("finished");
             setCurrInput("");
+            setPrevInput("");
             setShowRestart(true);
             return COUNT_DOWN;
           } else {
@@ -90,6 +94,9 @@ const TypeBox = ({ textInputRef }) => {
     }
   }
   function UpdateInput (e) {
+    if (status === 'finished'){
+      return;
+    }
     setCurrInput(e.target.value);
     inputWordsHistory[currWordIndex] = e.target.value.trim();
     setInputWordsHistory(inputWordsHistory);
@@ -97,6 +104,7 @@ const TypeBox = ({ textInputRef }) => {
   function handleKeyDown({ keyCode, key }) {
     if (status === 'finished'){
       setCurrInput("");
+      setPrevInput("");
       return;
     }
 

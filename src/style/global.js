@@ -48,6 +48,7 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.title};
   }
   .stats {
+    margin-top: 100px;
     color: ${({ theme }) => theme.stats};
     bottom: 10%;
   }
@@ -70,7 +71,7 @@ export const GlobalStyles = createGlobalStyle`
   }
   .words{
     color: ${({ theme }) => theme.textTypeBox};
-    font-size: 24px;
+    font-size: 28px;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
@@ -79,7 +80,7 @@ export const GlobalStyles = createGlobalStyle`
 
   }
   .word{
-    margin: 5px 5px;
+    margin: 4px 4px;
     display: flex;
   }
   .error-word{
