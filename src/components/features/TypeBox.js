@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 
 const TypeBox = ({ textInputRef }) => {
   // constants
-  const WORDS_COUNT = 300;
+  const WORDS_COUNT = 250;
   const COUNT_DOWN = 60;
   // set up words state
   const [words, setWords] = useState([]);
@@ -53,10 +53,21 @@ const TypeBox = ({ textInputRef }) => {
     }
   }, [currWordIndex, wordSpanRefs]);
 
-  // function restart(){
-  //   setStatus('finished');
-  //   start();
-  // }
+  function reset(){
+    setStatus('waiting');
+    setWords(wordsGenerator(WORDS_COUNT));
+    setCurrWordIndex(0);
+    setCurrCharIndex(-1);
+    setCurrChar("");
+    setHistory({});
+    setInputWordsHistory({});
+    setWordsCorrect(new Set());
+    setWordsInCorrect(new Set());
+    setShowRestart(false);
+    textInputRef.current.focus();
+    console.log('fully reset waiting for next inputs')
+    wordSpanRefs[0].current.scrollIntoView();
+  }
 
   function start() {
     //textInputRef.current.focus();
@@ -277,7 +288,7 @@ const TypeBox = ({ textInputRef }) => {
       <h3>{  countDown} s   </h3>
       <h3>WPM: {Math.round(wpm)}</h3>
       <div className="restart-button" key="restart-button">
-      {showRestart && <IconButton aria-label="restart" color="secondary" size="medium" onClick = {()=>{start()}}>
+      {showRestart && <IconButton aria-label="restart" color="secondary" size="medium" onClick = {()=>{reset()}}>
         <RestartAltIcon fontSize="inherit" color="red"/>
       </IconButton>}
       </div>
