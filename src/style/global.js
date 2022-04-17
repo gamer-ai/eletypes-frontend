@@ -23,7 +23,7 @@ export const GlobalStyles = createGlobalStyle`
   }
   header {
     position: absolute;
-    top: 0;
+    top: 5%;
     left:0;
     width: 100%;
     text-align: center;
