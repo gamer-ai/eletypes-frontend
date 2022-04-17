@@ -7,13 +7,14 @@ import IconButton from '@mui/material/IconButton';
 const TypeBox = ({ textInputRef }) => {
   // constants
   const WORDS_COUNT = 300;
-  const COUNT_DOWN = 60;
+  const COUNT_DOWN =60;
   // set up words state
   const [words, setWords] = useState([]);
   const wordSpanRefs = useMemo(() => Array(WORDS_COUNT).fill(0).map(i=> React.createRef()), []);
   
   // set up timer state
   const [countDown, setCountDown] = useState(COUNT_DOWN);
+  const [showRestart, setShowRestart] = useState(false);
   // set up game loop status state
   const [status, setStatus] = useState("waiting");
   // set up hidden input input val state
@@ -52,6 +53,10 @@ const TypeBox = ({ textInputRef }) => {
     }
   }, [currWordIndex, wordSpanRefs]);
 
+  // function restart(){
+  //   setStatus('finished');
+  //   start();
+  // }
 
   function start() {
     textInputRef.current.focus();
@@ -61,18 +66,21 @@ const TypeBox = ({ textInputRef }) => {
       setCurrCharIndex(-1);
       setCurrChar("");
       setHistory({});
-      setWordsCorrect({});
-      setWordsInCorrect({});
+      setWordsCorrect(new Set());
+      setWordsInCorrect(new Set());
+      setShowRestart(false);
     }
 
     if (status !== "started") {
       setStatus("started");
+      //setCountDown(COUNT_DOWN);
       let interval = setInterval(() => {
         setCountDown((prevCountdown) => {
           if (prevCountdown === 0) {
             clearInterval(interval);
             setStatus("finished");
             setCurrInput("");
+            setShowRestart(true);
             return COUNT_DOWN;
           } else {
             return prevCountdown - 1;
@@ -260,9 +268,11 @@ const TypeBox = ({ textInputRef }) => {
       <div className="stats">
       <h3>{  countDown} s   </h3>
       <h3>WPM: {Math.round(wpm)}</h3>
-      <IconButton aria-label="restart" color="secondary" size="medium" onClick = {()=>{start()}}>
+      <div className="restart-button" key="restart-button">
+      {showRestart && <IconButton aria-label="restart" color="secondary" size="medium" onClick = {()=>{start()}}>
         <RestartAltIcon fontSize="inherit" color="red"/>
-      </IconButton>
+      </IconButton>}
+      </div>
       </div>
       <input
         key="hidden-input"

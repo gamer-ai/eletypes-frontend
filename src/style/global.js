@@ -95,4 +95,9 @@ export const GlobalStyles = createGlobalStyle`
     border: none;
     min-width: 5%;
   }
+  .restart-button{
+    margin-left: auto;
+    margin-right: auto;
+    width: 8em
+  }
 `;
