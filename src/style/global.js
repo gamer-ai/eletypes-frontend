@@ -33,6 +33,11 @@ export const GlobalStyles = createGlobalStyle`
     bottom: 5%;
     left: 5%;
   }
+  .bottom-info {
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+  }
   small {
     display: block;
   }
