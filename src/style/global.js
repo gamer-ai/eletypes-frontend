@@ -60,6 +60,13 @@ export const GlobalStyles = createGlobalStyle`
     height: 120px;
     overflow: hidden;
     margin: auto;
+    @media only screen 
+    and (min-device-width: 375px) 
+    and (max-device-width: 812px) 
+    and (-webkit-min-device-pixel-ratio: 3) { 
+      top:200px;
+      width: 60%;
+    }
   }
   .words{
     color: ${({ theme }) => theme.textTypeBox};
