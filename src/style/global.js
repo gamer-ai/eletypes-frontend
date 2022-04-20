@@ -37,6 +37,7 @@ export const GlobalStyles = createGlobalStyle`
     position: absolute;
     bottom: 5%;
     right: 5%;
+    font-size: 12px;
   }
   small {
     display: block;

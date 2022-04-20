@@ -28,18 +28,31 @@ const cyberTheme = {
     stats: '#00ff9f'
 };
 
+const steamTheme = {
+  background: '#6e2f3b',
+  text: '#fdd978',
+  toggleBorder: '#37EBF3',
+  gradient: 'linear-gradient(#091236, #1E215D)',
+  title: '#2b211e',
+  textTypeBox: '#605542',
+  stats: '#80acaa'
+};
+
 
 const defaultTheme = darkTheme;
 
 const themesOptions = [
     { value: darkTheme, label: 'Dark' },
     { value: lightTheme, label: 'Light' },
-    { value: cyberTheme, label: 'Cyber' }
+    { value: cyberTheme, label: 'Cyber' },
+    { value: steamTheme, label: 'Steam' },
   ];
 
 export {
     lightTheme,
     darkTheme,
+    cyberTheme,
+    steamTheme,
     defaultTheme,
     themesOptions
 }

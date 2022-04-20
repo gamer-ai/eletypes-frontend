@@ -5,8 +5,10 @@ import { GlobalStyles } from "./style/global";
 import TypeBox from "./components/features/TypeBox";
 import Select from "./components/utils/Select";
 import IconButton from '@mui/material/IconButton';
-import CopyrightIcon from '@mui/icons-material/Copyright';
 import KeyboardAltIcon from '@mui/icons-material/KeyboardAlt';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import Link from '@mui/material/Link';
+
 
 function App() {
   const [theme, setTheme] = useState(defaultTheme);
@@ -42,9 +44,12 @@ function App() {
         </footer>
         <div className="bottom-info">
           <>
-          <IconButton href="https://github.com/gamer-ai/eletype-frontend/blob/main/LICENSE" color="primary" aria-label="add to shopping cart">          
-          <CopyrightIcon></CopyrightIcon>
+          <IconButton href="https://github.com/gamer-ai/eletype-frontend/" color="primary">          
+          <GitHubIcon></GitHubIcon>
           </IconButton>
+          <Link href="https://github.com/gamer-ai/eletype-frontend/blob/main/LICENSE">&copy;GPLv3</Link>
+          <span>  </span>
+          <Link href="https://muyangguo.xyz">@Muyang Guo</Link>
           </>
           </div>
       </>
