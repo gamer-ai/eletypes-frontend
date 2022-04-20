@@ -51,6 +51,13 @@ export const GlobalStyles = createGlobalStyle`
     margin-top: 10px;
     margin-bottom: 10px;
   }
+  h3{
+    margin-right: 10px;
+  }
+  h4{
+    margin-right: 10px;
+    opacity: 0.7;
+  }
   .stats {
     margin-top: 50px;
     color: ${({ theme }) => theme.stats};
