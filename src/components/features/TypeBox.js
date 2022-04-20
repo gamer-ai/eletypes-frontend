@@ -4,19 +4,24 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import IconButton from "../utils/IconButton";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import { DEFAULT_COUNT_DOWN, COUNT_DOWN_60, COUNT_DOWN_30, COUNT_DOWN_15 } from "../../constants/Constants";
+import {
+  DEFAULT_COUNT_DOWN,
+  COUNT_DOWN_60,
+  COUNT_DOWN_30,
+  COUNT_DOWN_15,
+  DEFAULT_WORDS_COUNT,
+} from "../../constants/Constants";
 
 const TypeBox = ({ textInputRef }) => {
   // constants
-  const WORDS_COUNT = 250;
-  const COUNT_DOWN = 60;
-  const [countDownConstant, setCountDownConstant] = useState(DEFAULT_COUNT_DOWN);
+  const [countDownConstant, setCountDownConstant] =
+    useState(DEFAULT_COUNT_DOWN);
 
   // set up words state
   const [words, setWords] = useState([]);
   const wordSpanRefs = useMemo(
     () =>
-      Array(WORDS_COUNT)
+      Array(DEFAULT_WORDS_COUNT)
         .fill(0)
         .map((i) => React.createRef()),
     []
@@ -48,7 +53,7 @@ const TypeBox = ({ textInputRef }) => {
   const [currChar, setCurrChar] = useState("");
 
   useEffect(() => {
-    setWords(wordsGenerator(WORDS_COUNT));
+    setWords(wordsGenerator(DEFAULT_WORDS_COUNT));
   }, []);
 
   useEffect(() => {
@@ -65,8 +70,8 @@ const TypeBox = ({ textInputRef }) => {
 
   function reset(newCountDown) {
     setStatus("waiting");
-    setWords(wordsGenerator(WORDS_COUNT));
-    setCountDownConstant(newCountDown)
+    setWords(wordsGenerator(DEFAULT_WORDS_COUNT));
+    setCountDownConstant(newCountDown);
     setCountDown(newCountDown);
     clearInterval(intervalId);
     setWpm(0);
@@ -84,10 +89,10 @@ const TypeBox = ({ textInputRef }) => {
     console.log("fully reset waiting for next inputs");
     wordSpanRefs[0].current.scrollIntoView();
   }
-  
+
   function start() {
     if (status === "finished") {
-      setWords(wordsGenerator(WORDS_COUNT));
+      setWords(wordsGenerator(DEFAULT_WORDS_COUNT));
       setCurrWordIndex(0);
       setCurrCharIndex(-1);
       setCurrChar("");
@@ -140,7 +145,8 @@ const TypeBox = ({ textInputRef }) => {
     }
 
     // update wpm when typing
-    const currWpm = (wordsCorrect.size / (countDownConstant - countDown)) * 60.0;
+    const currWpm =
+      (wordsCorrect.size / (countDownConstant - countDown)) * 60.0;
     setWpm(currWpm);
 
     // space bar
