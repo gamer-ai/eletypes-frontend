@@ -15,6 +15,8 @@ Typing rule and interactions was inspired by the famous [monkeytype.com](www.mon
 4. Rewind modification till the last correct word input
 5. Caps Lock key detection
 6. Tab key disabled
+7. support three tests duration 60s, 30s, 15s
+
    
 ### `npm start`
 

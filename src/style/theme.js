@@ -5,7 +5,7 @@ const lightTheme = {
     gradient: 'linear-gradient(315deg, #74ebd5 0%, #ACB6E5 94%)',
     title: '#2979ff',
     textTypeBox: '#9E9E9E',
-    stats: '#3D5AFE'
+    stats: '#3D5AFE',
   };
   
 const darkTheme = {
@@ -15,9 +15,7 @@ const darkTheme = {
     gradient: 'linear-gradient(315deg, #F7971E 0%, #FFD200 94%)',
     title: '#ffc107',
     textTypeBox: '#706d6d',
-    stats: '#BB86FC',
-    alert: 'linear-gradient(315deg, #a40606 0%, #d98324 74%)'
-    
+    stats: '#BB86FC',    
   };
 
 const cyberTheme = {
@@ -27,7 +25,8 @@ const cyberTheme = {
     gradient: 'linear-gradient(315deg, #FDF500 0%, #CB1DCD 94%)',
     title: '#FDF500',
     textTypeBox: '#D1C5C0',
-    stats: '#00ff9f'
+    stats: '#00ff9f',
+    fontFamily: 'Tomorrow'
 };
 
 const steamTheme = {
@@ -37,7 +36,8 @@ const steamTheme = {
   gradient: 'linear-gradient(315deg, #80acaa 0%, #fdd978 94%)',
   title: '#2b211e',
   textTypeBox: '#605542',
-  stats: '#80acaa'
+  stats: '#80acaa',
+  fontFamily: 'Tomorrow'
 };
 
 
