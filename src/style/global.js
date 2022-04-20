@@ -61,7 +61,7 @@ export const GlobalStyles = createGlobalStyle`
   .type-box {
     display: block;
     width: 800px;
-    height: 120px;
+    height: 128px;
     overflow: hidden;
     margin: auto;
     @media only screen 

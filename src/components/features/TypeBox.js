@@ -1,20 +1,27 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { wordsGenerator } from "../../scripts/wordsGenerator";
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import IconButton from '@mui/material/IconButton';
-
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import IconButton from "@mui/material/IconButton";
 
 const TypeBox = ({ textInputRef }) => {
   // constants
   const WORDS_COUNT = 250;
   const COUNT_DOWN = 60;
+
   // set up words state
   const [words, setWords] = useState([]);
-  const wordSpanRefs = useMemo(() => Array(WORDS_COUNT).fill(0).map(i=> React.createRef()), []);
-  
+  const wordSpanRefs = useMemo(
+    () =>
+      Array(WORDS_COUNT)
+        .fill(0)
+        .map((i) => React.createRef()),
+    []
+  );
+
   // set up timer state
   const [countDown, setCountDown] = useState(COUNT_DOWN);
-  const [showRestart, setShowRestart] = useState(false);
+  const [intervalId, setIntervalId] = useState(null);
+
   // set up game loop status state
   const [status, setStatus] = useState("waiting");
   // set up hidden input input val state
@@ -30,12 +37,9 @@ const TypeBox = ({ textInputRef }) => {
   const [wordsInCorrect, setWordsInCorrect] = useState(new Set());
   const [inputWordsHistory, setInputWordsHistory] = useState({});
   const [wpm, setWpm] = useState(0);
-  
-  
 
   // set up char examine hisotry
   const [history, setHistory] = useState({});
-
   const keyString = currWordIndex + "." + currCharIndex;
   const [currChar, setCurrChar] = useState("");
 
@@ -43,19 +47,27 @@ const TypeBox = ({ textInputRef }) => {
     setWords(wordsGenerator(WORDS_COUNT));
   }, []);
 
-
   useEffect(() => {
-    if (currWordIndex !== 0 && wordSpanRefs[currWordIndex].current.offsetLeft < wordSpanRefs[currWordIndex - 1].current.offsetLeft){
-      wordSpanRefs[currWordIndex-1].current.scrollIntoView(); 
-    }
-    else{
+    if (
+      currWordIndex !== 0 &&
+      wordSpanRefs[currWordIndex].current.offsetLeft <
+        wordSpanRefs[currWordIndex - 1].current.offsetLeft
+    ) {
+      wordSpanRefs[currWordIndex - 1].current.scrollIntoView();
+    } else {
       return;
     }
   }, [currWordIndex, wordSpanRefs]);
 
-  function reset(){
-    setStatus('waiting');
+  function reset() {
+    setStatus("waiting");
     setWords(wordsGenerator(WORDS_COUNT));
+    setCountDown(COUNT_DOWN);
+    clearInterval(intervalId);
+    setWpm(0);
+    setCurrInput("");
+    setPrevInput("");
+    setIntervalId(null);
     setCurrWordIndex(0);
     setCurrCharIndex(-1);
     setCurrChar("");
@@ -63,14 +75,12 @@ const TypeBox = ({ textInputRef }) => {
     setInputWordsHistory({});
     setWordsCorrect(new Set());
     setWordsInCorrect(new Set());
-    setShowRestart(false);
     textInputRef.current.focus();
-    console.log('fully reset waiting for next inputs')
+    console.log("fully reset waiting for next inputs");
     wordSpanRefs[0].current.scrollIntoView();
   }
 
   function start() {
-    //textInputRef.current.focus();
     if (status === "finished") {
       setWords(wordsGenerator(WORDS_COUNT));
       setCurrWordIndex(0);
@@ -80,7 +90,6 @@ const TypeBox = ({ textInputRef }) => {
       setInputWordsHistory({});
       setWordsCorrect(new Set());
       setWordsInCorrect(new Set());
-      setShowRestart(false);
       setStatus("waiting");
       textInputRef.current.focus();
     }
@@ -88,83 +97,82 @@ const TypeBox = ({ textInputRef }) => {
     if (status !== "started") {
       setStatus("started");
       //setCountDown(COUNT_DOWN);
-      let interval = setInterval(() => {
+      let intervalId = setInterval(() => {
         setCountDown((prevCountdown) => {
           if (prevCountdown === 0) {
-            clearInterval(interval);
+            clearInterval(intervalId);
             setStatus("finished");
             setCurrInput("");
             setPrevInput("");
-            setShowRestart(true);
             return COUNT_DOWN;
           } else {
             return prevCountdown - 1;
           }
         });
       }, 1000);
+      setIntervalId(intervalId);
     }
   }
-  function UpdateInput (e) {
-    if (status === 'finished'){
+  function UpdateInput(e) {
+    if (status === "finished") {
       return;
     }
     setCurrInput(e.target.value);
     inputWordsHistory[currWordIndex] = e.target.value.trim();
     setInputWordsHistory(inputWordsHistory);
   }
+
   function handleKeyDown({ keyCode, key }) {
-    if (status === 'finished'){
+    if (status === "finished") {
       setCurrInput("");
       setPrevInput("");
       return;
     }
 
-    const currWpm = wordsCorrect.size/(COUNT_DOWN - countDown)*(COUNT_DOWN);
-    setWpm(currWpm);
     // start the game by typing any thing
     if (status !== "started" && status !== "finished") {
       start();
     }
 
+    // update wpm when typing
+    const currWpm = (wordsCorrect.size / (COUNT_DOWN - countDown)) * COUNT_DOWN;
+    setWpm(currWpm);
+
     // space bar
     if (keyCode === 32) {
-    const prevCorrectness = checkPrev();
-    // advance to next regardless prev correct/not
-    if (prevCorrectness === true || prevCorrectness === false) {
-      // console.log('history')
-      // console.log(inputWordsHistory)
+      const prevCorrectness = checkPrev();
+      // advance to next regardless prev correct/not
+      if (prevCorrectness === true || prevCorrectness === false) {
         // reset currInput
         setCurrInput("");
         // advance to next
         setCurrWordIndex(currWordIndex + 1);
         setCurrCharIndex(-1);
         return;
-    }
-    else{
+      } else {
         // but don't allow entire word skip
-        console.log('entire word skip not allowed');
+        console.log("entire word skip not allowed");
         return;
-    }
+      }
 
       // backspace
     } else if (keyCode === 8) {
-
       // delete the mapping match records
       delete history[keyString];
 
       // avoid over delete
       if (currCharIndex < 0) {
-          // only allow delete prev word, rewind to previous
-          if (wordsInCorrect.has(currWordIndex - 1)){
-              console.log('detected prev incorrect, rewinding to previous')
-              const prevInputWord = inputWordsHistory[currWordIndex - 1];
-              // console.log(prevInputWord + " ")
-              setCurrInput(prevInputWord + " ");
-              setCurrCharIndex(prevInputWord.length - 1);
-              setCurrWordIndex(currWordIndex - 1);
-              setPrevInput(prevInputWord);
-              return;
-          }
+        // only allow delete prev word, rewind to previous
+        if (wordsInCorrect.has(currWordIndex - 1)) {
+          console.log("detected prev incorrect, rewinding to previous");
+          const prevInputWord = inputWordsHistory[currWordIndex - 1];
+          // console.log(prevInputWord + " ")
+          setCurrInput(prevInputWord + " ");
+          setCurrCharIndex(prevInputWord.length - 1);
+          setCurrWordIndex(currWordIndex - 1);
+          setPrevInput(prevInputWord);
+          return;
+        }
         return;
       }
       setCurrCharIndex(currCharIndex - 1);
@@ -174,68 +182,66 @@ const TypeBox = ({ textInputRef }) => {
       setCurrChar(key);
     }
   }
-  const getExtraCharsDisplay = (word, i) => {
 
-      let input = inputWordsHistory[i];
-      if (!input){
-        input = currInput.trim();
-      }
-      if (i > currWordIndex){
-          return null;
-      }
-      if (input.length <= word.length){
-          return null;
-      }
-      else{
-        const extra = input.slice(word.length, input.length);
-        return (extra.split("").map((c, idx) => (
-          <>
-            <span key={"extra" + idx} className="error-char">
-              {c}
-            </span>
-          </>
-        )));
-      }
-  }
+  const getExtraCharsDisplay = (word, i) => {
+    let input = inputWordsHistory[i];
+    if (!input) {
+      input = currInput.trim();
+    }
+    if (i > currWordIndex) {
+      return null;
+    }
+    if (input.length <= word.length) {
+      return null;
+    } else {
+      const extra = input.slice(word.length, input.length);
+      return extra.split("").map((c, idx) => (
+        <>
+          <span key={"extra" + idx} className="error-char">
+            {c}
+          </span>
+        </>
+      ));
+    }
+  };
+
   function checkPrev() {
     const wordToCompare = words[currWordIndex];
     const currInputWithoutSpaces = currInput.trim();
     const isCorrect = wordToCompare === currInputWithoutSpaces;
-    if (!currInputWithoutSpaces || currInputWithoutSpaces.length === 0){
-        return null;
+    if (!currInputWithoutSpaces || currInputWithoutSpaces.length === 0) {
+      return null;
     }
-    if (isCorrect){
-        console.log('detected match');
-        wordsCorrect.add(currWordIndex);
-        wordsInCorrect.delete(currWordIndex);
-        let inputWordsHistoryUpdate = {...inputWordsHistory};
-        inputWordsHistoryUpdate[currWordIndex] = currInputWithoutSpaces;
-        setInputWordsHistory(inputWordsHistoryUpdate);
-        // reset prevInput to empty (will not go back)
-        setPrevInput("");
-        return true;
+    if (isCorrect) {
+      console.log("detected match");
+      wordsCorrect.add(currWordIndex);
+      wordsInCorrect.delete(currWordIndex);
+      let inputWordsHistoryUpdate = { ...inputWordsHistory };
+      inputWordsHistoryUpdate[currWordIndex] = currInputWithoutSpaces;
+      setInputWordsHistory(inputWordsHistoryUpdate);
+      // reset prevInput to empty (will not go back)
+      setPrevInput("");
+      return true;
+    } else {
+      console.log("detected unmatch");
+      wordsInCorrect.add(currWordIndex);
+      wordsCorrect.delete(currWordIndex);
+      let inputWordsHistoryUpdate = { ...inputWordsHistory };
+      inputWordsHistoryUpdate[currWordIndex] = currInputWithoutSpaces;
+      setInputWordsHistory(inputWordsHistoryUpdate);
+      // append currInput to prevInput
+      setPrevInput(prevInput + " " + currInputWithoutSpaces);
+      return false;
     }
-    else{
-        console.log("detected unmatched");
-        wordsInCorrect.add(currWordIndex);
-        wordsCorrect.delete(currWordIndex);
-        let inputWordsHistoryUpdate = {...inputWordsHistory};
-        inputWordsHistoryUpdate[currWordIndex] = currInputWithoutSpaces;
-        setInputWordsHistory(inputWordsHistoryUpdate);
+  }
+  function getWordClassName(wordIdx) {
+    if (wordsInCorrect.has(wordIdx)) {
+      return "word error-word";
+    } else {
+      return "word";
+    }
+  }
 
-        // append currInput to prevInput
-        setPrevInput(prevInput + " " + currInputWithoutSpaces);
-        return false;
-    }
-  }
-  function getWordClassName(wordIdx){
-      if (wordsInCorrect.has(wordIdx)){
-          return "word error-word";
-      }
-      else{
-          return "word";
-      }
-  }
   function getCharClassName(wordIdx, charIdx, char) {
     const keyString = wordIdx + "." + charIdx;
     if (history[keyString] === true) {
@@ -274,24 +280,33 @@ const TypeBox = ({ textInputRef }) => {
           {words.map((word, i) => (
             <span key={i} ref={wordSpanRefs[i]} className={getWordClassName(i)}>
               {word.split("").map((char, idx) => (
-                  <span key={"word" + idx} className={getCharClassName(i, idx, char)}>
-                    {char}
-                  </span>
+                <span
+                  key={"word" + idx}
+                  className={getCharClassName(i, idx, char)}
+                >
+                  {char}
+                </span>
               ))}
               {getExtraCharsDisplay(word, i)}
             </span>
-
           ))}
         </div>
       </div>
       <div className="stats">
-      <h3>{  countDown} s   </h3>
-      <h3>WPM: {Math.round(wpm)}</h3>
-      <div className="restart-button" key="restart-button">
-      {showRestart && <IconButton aria-label="restart" color="secondary" size="medium" onClick = {()=>{reset()}}>
-        <RestartAltIcon fontSize="inherit" color="red"/>
-      </IconButton>}
-      </div>
+        <h3>{countDown} s </h3>
+        <h3>WPM: {Math.round(wpm)}</h3>
+        <div className="restart-button" key="restart-button">
+          <IconButton
+            aria-label="restart"
+            color="secondary"
+            size="medium"
+            onClick={() => {
+              reset();
+            }}
+          >
+            <RestartAltIcon fontSize="inherit" color="red" />
+          </IconButton>
+        </div>
       </div>
       <input
         key="hidden-input"
