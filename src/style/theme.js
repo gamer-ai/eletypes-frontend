@@ -1,11 +1,11 @@
 const lightTheme = {
-    background: '#E2E2E2',
-    text: '#363537',
+    background: '#F5F5F5',
+    text: '#000000',
     toggleBorder: '#FFF',
     gradient: 'linear-gradient(#39598A, #79D7ED)',
     title: '#2979ff',
-    textTypeBox: '#8f8f8f',
-    stats: '#3E7C17'
+    textTypeBox: '#9E9E9E',
+    stats: '#3D5AFE'
   };
   
 const darkTheme = {
@@ -15,7 +15,7 @@ const darkTheme = {
     gradient: 'linear-gradient(#091236, #1E215D)',
     title: '#ffc107',
     textTypeBox: '#706d6d',
-    stats: '#BB86FC'
+    stats: '#BB86FC',
   };
 
 const cyberTheme = {

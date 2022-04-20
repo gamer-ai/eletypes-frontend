@@ -47,23 +47,26 @@ export const GlobalStyles = createGlobalStyle`
   h1 {
     color: ${({ theme }) => theme.title};
     opacity: 0.9;
-    font: 48px;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
   .stats {
-    margin-top: 100px;
+    margin-top: 50px;
     color: ${({ theme }) => theme.stats};
     bottom: 10%;
   }
   .sub-header {
-    color: ${({ theme }) => theme.text};
-    opacity: 0.9;
+    color: ${({ theme }) => theme.textTypeBox};
+    opacity: 0.5;
   }
   .type-box {
     display: block;
     width: 800px;
     height: 128px;
     overflow: hidden;
-    margin: auto;
+    margin-top: 0.5%;
+    margin-left: auto;
+    margin-right: auto;
     @media only screen 
     and (min-device-width: 375px) 
     and (max-device-width: 812px) 
@@ -80,7 +83,6 @@ export const GlobalStyles = createGlobalStyle`
     width: 100%;
     align-content: flex-start;
     user-select: none;
-
   }
   .word{
     margin: 4px 4px;

@@ -1,12 +1,16 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { wordsGenerator } from "../../scripts/wordsGenerator";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import IconButton from "@mui/material/IconButton";
+import IconButton from "../utils/IconButton";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import { DEFAULT_COUNT_DOWN, COUNT_DOWN_60, COUNT_DOWN_30, COUNT_DOWN_15 } from "../../constants/Constants";
 
 const TypeBox = ({ textInputRef }) => {
   // constants
   const WORDS_COUNT = 250;
   const COUNT_DOWN = 60;
+  const [countDownConstant, setCountDownConstant] = useState(DEFAULT_COUNT_DOWN);
 
   // set up words state
   const [words, setWords] = useState([]);
@@ -19,7 +23,7 @@ const TypeBox = ({ textInputRef }) => {
   );
 
   // set up timer state
-  const [countDown, setCountDown] = useState(COUNT_DOWN);
+  const [countDown, setCountDown] = useState(countDownConstant);
   const [intervalId, setIntervalId] = useState(null);
 
   // set up game loop status state
@@ -59,10 +63,11 @@ const TypeBox = ({ textInputRef }) => {
     }
   }, [currWordIndex, wordSpanRefs]);
 
-  function reset() {
+  function reset(newCountDown) {
     setStatus("waiting");
     setWords(wordsGenerator(WORDS_COUNT));
-    setCountDown(COUNT_DOWN);
+    setCountDownConstant(newCountDown)
+    setCountDown(newCountDown);
     clearInterval(intervalId);
     setWpm(0);
     setCurrInput("");
@@ -79,7 +84,7 @@ const TypeBox = ({ textInputRef }) => {
     console.log("fully reset waiting for next inputs");
     wordSpanRefs[0].current.scrollIntoView();
   }
-
+  
   function start() {
     if (status === "finished") {
       setWords(wordsGenerator(WORDS_COUNT));
@@ -104,7 +109,7 @@ const TypeBox = ({ textInputRef }) => {
             setStatus("finished");
             setCurrInput("");
             setPrevInput("");
-            return COUNT_DOWN;
+            return countDownConstant;
           } else {
             return prevCountdown - 1;
           }
@@ -135,7 +140,7 @@ const TypeBox = ({ textInputRef }) => {
     }
 
     // update wpm when typing
-    const currWpm = (wordsCorrect.size / (COUNT_DOWN - countDown)) * COUNT_DOWN;
+    const currWpm = (wordsCorrect.size / (countDownConstant - countDown)) * 60.0;
     setWpm(currWpm);
 
     // space bar
@@ -296,16 +301,41 @@ const TypeBox = ({ textInputRef }) => {
         <h3>{countDown} s </h3>
         <h3>WPM: {Math.round(wpm)}</h3>
         <div className="restart-button" key="restart-button">
-          <IconButton
-            aria-label="restart"
-            color="secondary"
-            size="medium"
-            onClick={() => {
-              reset();
-            }}
-          >
-            <RestartAltIcon fontSize="inherit" color="red" />
-          </IconButton>
+          <Grid container justifyContent="center" alignItems="center">
+            <Box display="flex" flexDirection="row">
+              <IconButton
+                aria-label="restart"
+                color="secondary"
+                size="medium"
+                onClick={() => {
+                  reset(countDownConstant);
+                }}
+              >
+                <RestartAltIcon />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  reset(COUNT_DOWN_60);
+                }}
+              >
+                60
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  reset(COUNT_DOWN_30);
+                }}
+              >
+                30
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  reset(COUNT_DOWN_15);
+                }}
+              >
+                15
+              </IconButton>
+            </Box>
+          </Grid>
         </div>
       </div>
       <input

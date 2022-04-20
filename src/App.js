@@ -6,6 +6,7 @@ import TypeBox from "./components/features/TypeBox";
 import Select from "./components/utils/Select";
 import IconButton from '@mui/material/IconButton';
 import CopyrightIcon from '@mui/icons-material/Copyright';
+import KeyboardAltIcon from '@mui/icons-material/KeyboardAlt';
 
 function App() {
   const [theme, setTheme] = useState(defaultTheme);
@@ -24,10 +25,9 @@ function App() {
       <>
         <GlobalStyles />
         <header>
-        <h1>Ele Types</h1>
+          <h1>Ele Types <KeyboardAltIcon fontSize="large"/></h1>
           <span className="sub-header" >an elegant typing experience, just start typing</span>
         </header>
-
         <TypeBox textInputRef={textInputRef} key="type-box"></TypeBox>
         <footer>
           <Select
