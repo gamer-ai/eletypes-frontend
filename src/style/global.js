@@ -114,4 +114,8 @@ export const GlobalStyles = createGlobalStyle`
     margin-right: auto;
     width: 8em
   }
+  .alert{
+    opacity: 0.3;
+    background-image: ${({ theme }) => theme.gradient};
+  }
 `;

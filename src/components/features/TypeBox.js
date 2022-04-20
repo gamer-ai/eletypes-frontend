@@ -4,6 +4,10 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import IconButton from "../utils/IconButton";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import Slide from "@mui/material/Slide";
+
 import {
   DEFAULT_COUNT_DOWN,
   COUNT_DOWN_60,
@@ -16,6 +20,9 @@ const TypeBox = ({ textInputRef }) => {
   // constants
   const [countDownConstant, setCountDownConstant] =
     useState(DEFAULT_COUNT_DOWN);
+
+  // Caps Lock
+  const [capsLocked, setCapsLocked] = useState(false);
 
   // set up words state
   const [words, setWords] = useState([]);
@@ -86,7 +93,7 @@ const TypeBox = ({ textInputRef }) => {
     setWordsCorrect(new Set());
     setWordsInCorrect(new Set());
     textInputRef.current.focus();
-    console.log("fully reset waiting for next inputs");
+    // console.log("fully reset waiting for next inputs");
     wordSpanRefs[0].current.scrollIntoView();
   }
 
@@ -106,7 +113,6 @@ const TypeBox = ({ textInputRef }) => {
 
     if (status !== "started") {
       setStatus("started");
-      //setCountDown(COUNT_DOWN);
       let intervalId = setInterval(() => {
         setCountDown((prevCountdown) => {
           if (prevCountdown === 0) {
@@ -123,6 +129,7 @@ const TypeBox = ({ textInputRef }) => {
       setIntervalId(intervalId);
     }
   }
+
   function UpdateInput(e) {
     if (status === "finished") {
       return;
@@ -132,7 +139,20 @@ const TypeBox = ({ textInputRef }) => {
     setInputWordsHistory(inputWordsHistory);
   }
 
-  function handleKeyDown({ keyCode, key }) {
+  function handleKeyUp(e) {
+    setCapsLocked(e.getModifierState("CapsLock"));
+  }
+
+  function handleKeyDown(e) {
+    const key = e.key;
+    const keyCode = e.keyCode;
+    setCapsLocked(e.getModifierState("CapsLock"));
+
+    // disable tab key
+    if (keyCode === 9) {
+      e.preventDefault();
+    }
+
     if (status === "finished") {
       setCurrInput("");
       setPrevInput("");
@@ -162,7 +182,7 @@ const TypeBox = ({ textInputRef }) => {
         return;
       } else {
         // but don't allow entire word skip
-        console.log("entire word skip not allowed");
+        // console.log("entire word skip not allowed");
         return;
       }
 
@@ -175,22 +195,26 @@ const TypeBox = ({ textInputRef }) => {
       if (currCharIndex < 0) {
         // only allow delete prev word, rewind to previous
         if (wordsInCorrect.has(currWordIndex - 1)) {
-          console.log("detected prev incorrect, rewinding to previous");
+          // console.log("detected prev incorrect, rewinding to previous");
           const prevInputWord = inputWordsHistory[currWordIndex - 1];
           // console.log(prevInputWord + " ")
           setCurrInput(prevInputWord + " ");
           setCurrCharIndex(prevInputWord.length - 1);
           setCurrWordIndex(currWordIndex - 1);
           setPrevInput(prevInputWord);
-          return;
         }
         return;
       }
       setCurrCharIndex(currCharIndex - 1);
       setCurrChar("");
+      return;
     } else {
-      setCurrCharIndex(currCharIndex + 1);
-      setCurrChar(key);
+      if (keyCode >= 65 && keyCode <= 90) {
+        setCurrCharIndex(currCharIndex + 1);
+        setCurrChar(key);
+      } else {
+        return;
+      }
     }
   }
 
@@ -207,11 +231,9 @@ const TypeBox = ({ textInputRef }) => {
     } else {
       const extra = input.slice(word.length, input.length);
       return extra.split("").map((c, idx) => (
-        <>
-          <span key={"extra" + idx} className="error-char">
+          <span key={idx} className="error-char">
             {c}
           </span>
-        </>
       ));
     }
   };
@@ -224,7 +246,7 @@ const TypeBox = ({ textInputRef }) => {
       return null;
     }
     if (isCorrect) {
-      console.log("detected match");
+      // console.log("detected match");
       wordsCorrect.add(currWordIndex);
       wordsInCorrect.delete(currWordIndex);
       let inputWordsHistoryUpdate = { ...inputWordsHistory };
@@ -234,7 +256,7 @@ const TypeBox = ({ textInputRef }) => {
       setPrevInput("");
       return true;
     } else {
-      console.log("detected unmatch");
+      // console.log("detected unmatch");
       wordsInCorrect.add(currWordIndex);
       wordsCorrect.delete(currWordIndex);
       let inputWordsHistoryUpdate = { ...inputWordsHistory };
@@ -286,6 +308,21 @@ const TypeBox = ({ textInputRef }) => {
 
   return (
     <>
+      <div>
+        <Snackbar
+          open={capsLocked}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "left",
+          }}
+        >
+          <Slide in={capsLocked} mountOnEnter unmountOnExit>
+            <Alert className="alert" severity="warning" sx={{ width: "100%" }}>
+              Caps Locked
+            </Alert>
+          </Slide>
+        </Snackbar>
+      </div>
       <div className="type-box">
         <div className="words">
           {words.map((word, i) => (
@@ -349,7 +386,8 @@ const TypeBox = ({ textInputRef }) => {
         ref={textInputRef}
         type="text"
         className="hidden-input"
-        onKeyDown={handleKeyDown}
+        onKeyDown={(e) => handleKeyDown(e)}
+        onKeyUp={(e) => handleKeyUp(e)}
         value={currInput}
         onChange={(e) => UpdateInput(e)}
       />
