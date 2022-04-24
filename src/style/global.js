@@ -75,6 +75,7 @@ export const GlobalStyles = createGlobalStyle`
     margin-top: 0.5%;
     margin-left: auto;
     margin-right: auto;
+    position: relative;
     @media only screen 
     and (min-device-width: 375px) 
     and (max-device-width: 812px) 

@@ -33,8 +33,7 @@ const TypeBox = ({ textInputRef }) => {
         .map((i) => React.createRef()),
     []
   );
-  
-  
+
   // set up timer state
   const [countDown, setCountDown] = useState(countDownConstant);
   const [intervalId, setIntervalId] = useState(null);
@@ -127,7 +126,8 @@ const TypeBox = ({ textInputRef }) => {
       let intervalId = setInterval(() => {
         setCountDown((prevCountdown) => {
           if (prevCountdown === 0) {
-            clearInterval(intervalId);    
+            clearInterval(intervalId);
+            checkPrev();
             setStatus("finished");
             setCurrInput("");
             setPrevInput("");
@@ -148,6 +148,8 @@ const TypeBox = ({ textInputRef }) => {
     setCurrInput(e.target.value);
     inputWordsHistory[currWordIndex] = e.target.value.trim();
     setInputWordsHistory(inputWordsHistory);
+    const currAccuracy = 100 - (wordsInCorrect.size / (currWordIndex + 1)) * 100;
+    setAccuracy(currAccuracy);
   }
 
   function handleKeyUp(e) {
@@ -160,7 +162,9 @@ const TypeBox = ({ textInputRef }) => {
     setCapsLocked(e.getModifierState("CapsLock"));
 
     // keydown count for KPM calculations to all types of operations
-    setRawKeyStrokes((rawKeyStrokes + 1));
+    if (status === "started") {
+      setRawKeyStrokes(rawKeyStrokes + 1);
+    }
 
     // disable tab key
     if (keyCode === 9) {
@@ -173,18 +177,15 @@ const TypeBox = ({ textInputRef }) => {
       return;
     }
 
+    // update stats when typing
+    const currWpm = (wordsCorrect.size / (countDownConstant - countDown)) * 60.0;
+    setWpm(currWpm);
+
     // start the game by typing any thing
     if (status !== "started" && status !== "finished") {
       start();
     }
 
-    // update stats when typing
-    const currWpm =
-      (wordsCorrect.size / (countDownConstant - countDown)) * 60.0;
-    setWpm(currWpm);
-    const currAccuracy = (wordsCorrect.size/(currWordIndex))*100;
-    setAccuracy(currAccuracy);
-    
     // space bar
     if (keyCode === 32) {
       const prevCorrectness = checkPrev();
@@ -247,9 +248,9 @@ const TypeBox = ({ textInputRef }) => {
     } else {
       const extra = input.slice(word.length, input.length);
       return extra.split("").map((c, idx) => (
-          <span key={idx} className="error-char">
-            {c}
-          </span>
+        <span key={idx} className="error-char">
+          {c}
+        </span>
       ));
     }
   };
@@ -359,9 +360,15 @@ const TypeBox = ({ textInputRef }) => {
       <div className="stats">
         <h3>{countDown} s </h3>
         <Box display="flex" flexDirection="row">
-        <h3>WPM: {Math.round(wpm)}</h3>
-        {status === 'finished' &&<h4>Words Accuracy: {Math.round(accuracy)} %</h4>}
-        {status === 'finished' &&<h4>Raw KPM: {Math.round(rawKeyStrokes/(countDownConstant) * 60.0)}</h4>}
+          <h3>WPM: {Math.round(wpm)}</h3>
+          {status === "finished" && (
+            <h4>Words Accuracy: {Math.round(accuracy)} %</h4>
+          )}
+          {status === "finished" && (
+            <h4>
+              Raw KPM: {Math.round((rawKeyStrokes / countDownConstant) * 60.0)}
+            </h4>
+          )}
         </Box>
         <div className="restart-button" key="restart-button">
           <Grid container justifyContent="center" alignItems="center">
