@@ -319,7 +319,7 @@ const TypeBox = ({ textInputRef }) => {
     ) {
       return "error-char";
     } else {
-      return "";
+      return "char";
     }
   }
 

@@ -22,7 +22,7 @@ export const GlobalStyles = createGlobalStyle`
     transition: all 0.25s linear;
   }
   header {
-    position: absolute;
+    position: fixed;
     top: 5%;
     left:0;
     width: 100%;
@@ -69,13 +69,13 @@ export const GlobalStyles = createGlobalStyle`
   }
   .type-box {
     display: block;
-    width: 800px;
+    max-width: 1000px;
     height: 128px;
     overflow: hidden;
-    margin-top: 0.5%;
     margin-left: auto;
     margin-right: auto;
-    position: relative;
+    position: relative
+    top: 10%;
     @media only screen 
     and (min-device-width: 375px) 
     and (max-device-width: 812px) 
@@ -96,15 +96,25 @@ export const GlobalStyles = createGlobalStyle`
   .word{
     margin: 4px 4px;
     display: flex;
+    padding-right: 2px;
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    scroll-margin: 4px;
   }
   .error-word{
-    border-bottom: 1px solid red
+    border-bottom: 1px solid red;
+    scroll-margin: 4px;
 }
+  .char{
+    padding-right: 1px;
+  }
   .correct-char{
     color: ${({ theme }) => theme.text};
+    padding-right: 1px;
   }
   .error-char{
     color: red;
+    padding-right: 1px;
   }
 
   .hidden-input{

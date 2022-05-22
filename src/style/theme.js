@@ -15,7 +15,7 @@ const darkTheme = {
     gradient: 'linear-gradient(315deg, #F7971E 0%, #FFD200 94%)',
     title: '#ffc107',
     textTypeBox: '#706d6d',
-    stats: '#BB86FC',    
+    stats: '#BB86FC'
   };
 
 const cyberTheme = {
