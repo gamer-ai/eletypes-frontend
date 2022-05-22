@@ -286,8 +286,14 @@ const TypeBox = ({ textInputRef }) => {
   }
   function getWordClassName(wordIdx) {
     if (wordsInCorrect.has(wordIdx)) {
+      if (currWordIndex === wordIdx){
+        return "word error-word active-word";
+      }
       return "word error-word";
     } else {
+      if (currWordIndex === wordIdx){
+        return "word active-word";
+      }
       return "word";
     }
   }

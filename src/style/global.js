@@ -101,10 +101,21 @@ export const GlobalStyles = createGlobalStyle`
     border-top: 1px solid transparent;
     scroll-margin: 4px;
   }
+  .active-word{
+    animation: blinkingBackground 2s infinite;
+    border-bottom: 1px solid;
+    @keyframes blinkingBackground{
+      0%		{ border-bottom-color: ${({ theme }) => theme.stats};}
+      25%		{ border-bottom-color: white;}
+      50%		{ border-bottom-color: ${({ theme }) => theme.stats};}
+      75%		{border-bottom-color: white;}
+      100%	        {border-bottom-color: ${({ theme }) => theme.stats};}
+    }
+  }
   .error-word{
     border-bottom: 1px solid red;
     scroll-margin: 4px;
-}
+  }
   .char{
     padding-right: 1px;
   }
