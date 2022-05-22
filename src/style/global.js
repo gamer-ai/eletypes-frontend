@@ -70,7 +70,7 @@ export const GlobalStyles = createGlobalStyle`
   .type-box {
     display: block;
     max-width: 1000px;
-    height: 128px;
+    height: 140px;
     overflow: hidden;
     margin-left: auto;
     margin-right: auto;
