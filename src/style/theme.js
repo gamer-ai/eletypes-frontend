@@ -40,14 +40,25 @@ const steamTheme = {
   fontFamily: 'Tomorrow'
 };
 
+const terminalTheme = {
+  background: '#0D0208',
+  text: '#39ff14',
+  toggleBorder: '#6B8096',
+  gradient: 'linear-gradient(315deg, #F7971E 0%, #FFD200 94%)',
+  title: '#008F11',
+  textTypeBox: '#706d6d',
+  stats: '#39ff14',
+  fontFamily: 'Tomorrow'
+};
 
 const defaultTheme = darkTheme;
 
 const themesOptions = [
     { value: darkTheme, label: 'Dark' },
-    { value: lightTheme, label: 'Light' },
+    { value: terminalTheme, label: 'Terminal' },
     { value: cyberTheme, label: 'Cyber' },
     { value: steamTheme, label: 'Steam' },
+    { value: lightTheme, label: 'Light' },
   ];
 
 export {
@@ -55,6 +66,7 @@ export {
     darkTheme,
     cyberTheme,
     steamTheme,
+    terminalTheme,
     defaultTheme,
     themesOptions
 }
