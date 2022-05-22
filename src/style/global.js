@@ -66,6 +66,15 @@ export const GlobalStyles = createGlobalStyle`
   .sub-header {
     color: ${({ theme }) => theme.textTypeBox};
     opacity: 0.5;
+    border-right: 2px solid;
+    animation: blinkingCursor 2s infinite;;
+    @keyframes blinkingCursor{
+      0%		{ border-right-color: ${({ theme }) => theme.stats};}
+      25%		{ border-right-color: white;}
+      50%		{ border-right-color: ${({ theme }) => theme.stats};}
+      75%		{border-right-color: white;}
+      100%	{border-right-color: ${({ theme }) => theme.stats};}
+    }
   }
   .type-box {
     display: block;
