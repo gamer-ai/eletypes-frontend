@@ -44,7 +44,7 @@ const terminalTheme = {
   background: '#0D0208',
   text: '#39ff14',
   toggleBorder: '#6B8096',
-  gradient: 'linear-gradient(315deg, #F7971E 0%, #FFD200 94%)',
+  gradient: 'linear-gradient(315deg, #39ff14 0%, #008F11 94%)',
   title: '#008F11',
   textTypeBox: '#706d6d',
   stats: '#39ff14',
