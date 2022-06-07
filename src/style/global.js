@@ -156,4 +156,17 @@ export const GlobalStyles = createGlobalStyle`
     opacity: 0.3;
     background-image: ${({ theme }) => theme.gradient};
   }
+  .correct-char-stats{
+    color: ${({ theme }) => theme.text};
+  }
+  .incorrect-char-stats{
+    color: red;
+  }
+  .missing-char-stats{
+    color: ${({ theme }) => theme.textTypeBox};
+  }
+  .speedbar{
+    opacity: 0.3;
+    color:  ${({ theme }) => theme.stats};
+  }
 `;

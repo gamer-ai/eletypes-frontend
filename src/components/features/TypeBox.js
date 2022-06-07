@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
+// import LinearProgress from "@mui/material/LinearProgress";
 
 import {
   DEFAULT_COUNT_DOWN,
@@ -15,6 +16,21 @@ import {
   COUNT_DOWN_15,
   DEFAULT_WORDS_COUNT,
 } from "../../constants/Constants";
+
+// function LinearProgressWithLabel(
+//   props
+// ) {
+//   let colorCode = "inherit";
+//   return (
+//     <div className="speedbar">
+//       <Box sx={{ display: "flex", alignItems: "center" }}>
+//         <Box sx={{ width: "30%", mr: 1 }}>
+//           <LinearProgress variant="determinate" color={colorCode} {...props} />
+//         </Box>
+//       </Box>
+//     </div>
+//   );
+// }
 
 const TypeBox = ({ textInputRef }) => {
   // constants
@@ -60,7 +76,7 @@ const TypeBox = ({ textInputRef }) => {
 
   // setup stats
   const [wpm, setWpm] = useState(0);
-  const [accuracy, setAccuracy] = useState(0);
+  const [statsCharCount, setStatsCharCount] = useState([]);
 
   // set up char examine hisotry
   const [history, setHistory] = useState({});
@@ -90,7 +106,6 @@ const TypeBox = ({ textInputRef }) => {
     setCountDown(newCountDown);
     clearInterval(intervalId);
     setWpm(0);
-    setAccuracy(0);
     setRawKeyStrokes(0);
     setCurrInput("");
     setPrevInput("");
@@ -110,6 +125,8 @@ const TypeBox = ({ textInputRef }) => {
   function start() {
     if (status === "finished") {
       setWords(wordsGenerator(DEFAULT_WORDS_COUNT));
+      setCurrInput("");
+      setPrevInput("");
       setCurrWordIndex(0);
       setCurrCharIndex(-1);
       setCurrChar("");
@@ -127,10 +144,46 @@ const TypeBox = ({ textInputRef }) => {
         setCountDown((prevCountdown) => {
           if (prevCountdown === 0) {
             clearInterval(intervalId);
+            // current total extra inputs char count
+            const currCharExtraCount = Object.values(history)
+              .filter((e) => typeof e === "number")
+              .reduce((a, b) => a + b, 0);
+
+            // current correct inputs char count
+            const currCharCorrectCount = Object.values(history).filter(
+              (e) => e === true
+            ).length;
+
+            // current correct inputs char count
+            const currCharIncorrectCount = Object.values(history).filter(
+              (e) => e === false
+            ).length;
+
+            // current missing inputs char count
+            const currCharMissingCount = Object.values(history).filter(
+              (e) => e === undefined
+            ).length;
+
+            // current total advanced char counts
+            const currCharAdvancedCount =
+              currCharCorrectCount +
+              currCharMissingCount +
+              currCharIncorrectCount;
+
+            const accuracy =
+              (currCharCorrectCount / currCharAdvancedCount) * 100;
+            setStatsCharCount([
+              accuracy,
+              currCharCorrectCount,
+              currCharIncorrectCount,
+              currCharMissingCount,
+              currCharAdvancedCount,
+              currCharExtraCount,
+            ]);
+
             checkPrev();
             setStatus("finished");
-            setCurrInput("");
-            setPrevInput("");
+
             return countDownConstant;
           } else {
             return prevCountdown - 1;
@@ -148,8 +201,6 @@ const TypeBox = ({ textInputRef }) => {
     setCurrInput(e.target.value);
     inputWordsHistory[currWordIndex] = e.target.value.trim();
     setInputWordsHistory(inputWordsHistory);
-    const currAccuracy = 100 - (wordsInCorrect.size / (currWordIndex + 1)) * 100;
-    setAccuracy(currAccuracy);
   }
 
   function handleKeyUp(e) {
@@ -178,7 +229,8 @@ const TypeBox = ({ textInputRef }) => {
     }
 
     // update stats when typing
-    const currWpm = (wordsCorrect.size / (countDownConstant - countDown)) * 60.0;
+    const currWpm =
+      (rawKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0;
     setWpm(currWpm);
 
     // start the game by typing any thing
@@ -246,8 +298,9 @@ const TypeBox = ({ textInputRef }) => {
     if (input.length <= word.length) {
       return null;
     } else {
-      const extra = input.slice(word.length, input.length);
-      return extra.split("").map((c, idx) => (
+      const extra = input.slice(word.length, input.length).split("");
+      history[i] = extra.length;
+      return extra.map((c, idx) => (
         <span key={idx} className="error-char">
           {c}
         </span>
@@ -286,12 +339,12 @@ const TypeBox = ({ textInputRef }) => {
   }
   function getWordClassName(wordIdx) {
     if (wordsInCorrect.has(wordIdx)) {
-      if (currWordIndex === wordIdx){
+      if (currWordIndex === wordIdx) {
         return "word error-word active-word";
       }
       return "word error-word";
     } else {
-      if (currWordIndex === wordIdx){
+      if (currWordIndex === wordIdx) {
         return "word active-word";
       }
       return "word";
@@ -319,12 +372,12 @@ const TypeBox = ({ textInputRef }) => {
         history[keyString] = false;
         return "error-char";
       }
-    } else if (
-      wordIdx === currWordIndex &&
-      currCharIndex >= words[currWordIndex].length
-    ) {
-      return "error-char";
     } else {
+      if (wordIdx < currWordIndex) {
+        // missing chars
+        history[keyString] = undefined;
+      }
+
       return "char";
     }
   }
@@ -368,7 +421,17 @@ const TypeBox = ({ textInputRef }) => {
         <Box display="flex" flexDirection="row">
           <h3>WPM: {Math.round(wpm)}</h3>
           {status === "finished" && (
-            <h4>Words Accuracy: {Math.round(accuracy)} %</h4>
+            <h4>Accuracy: {Math.round(statsCharCount[0])} %</h4>
+          )}
+          {status === "finished" && (
+            <h4>
+              Char:{" "}
+              <span className="correct-char-stats">{statsCharCount[1]}</span>/
+              <span className="incorrect-char-stats">{statsCharCount[2]}</span>/
+              <span className="missing-char-stats">{statsCharCount[3]}</span>/
+              <span className="correct-char-stats">{statsCharCount[4]}</span>/
+              <span className="incorrect-char-stats">{statsCharCount[5]}</span>
+            </h4>
           )}
           {status === "finished" && (
             <h4>
@@ -413,6 +476,9 @@ const TypeBox = ({ textInputRef }) => {
             </Box>
           </Grid>
         </div>
+        {/* <Box sx={{ width: "100%" }}>
+          <LinearProgressWithLabel value={wpm} />
+        </Box> */}
       </div>
       <input
         key="hidden-input"
