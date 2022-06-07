@@ -2,7 +2,7 @@
 
 ![ELe Types](https://github.com/gamer-ai/eletype-frontend/blob/main/docs/images/EleTypes.png)
 
-## [www.eletypes.com](www.monkeytype.com)
+## [www.eletypes.com](https://www.eletypes.com)
 
 An elegant typing test tool.
 
