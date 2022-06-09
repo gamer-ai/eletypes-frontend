@@ -61,7 +61,9 @@ function App() {
                 isSelected={false}
                 onChange={handleThemeChange}
                 menuPlacement="top"
-              ></Select>
+              >
+              </Select>
+
               <IconButton
                 onClick={() => {
                   setIsFocusedMode(!isFocusedMode);
@@ -77,19 +79,31 @@ function App() {
           </Grid>
         </footer>
         {!isFocusedMode && (
-            <Box display="block" flexDirection="row" className="bottom-info">
-              <IconButton
-                href="https://github.com/gamer-ai/eletype-frontend/"
-                color="inherit"
-              >
-                <GitHubIcon></GitHubIcon>
-              </IconButton>
-              <Link color="inherit" margin="inherit" underline="none" href="https://github.com/gamer-ai/eletype-frontend/blob/main/LICENSE">
-                &copy;GPLv3
-              </Link>
-              <span>{"    "}</span>
-              <Link color="inherit" margin="inherit" underline="none" href="https://muyangguo.xyz">@Muyang Guo</Link>
-              </Box>
+          <Box display="block" flexDirection="row" className="bottom-info">
+            <IconButton
+              href="https://github.com/gamer-ai/eletype-frontend/"
+              color="inherit"
+            >
+              <GitHubIcon></GitHubIcon>
+            </IconButton>
+            <Link
+              color="inherit"
+              margin="inherit"
+              underline="none"
+              href="https://github.com/gamer-ai/eletype-frontend/blob/main/LICENSE"
+            >
+              &copy;GPLv3
+            </Link>
+            <span>{"    "}</span>
+            <Link
+              color="inherit"
+              margin="inherit"
+              underline="none"
+              href="https://muyangguo.xyz"
+            >
+              @Muyang Guo
+            </Link>
+          </Box>
         )}
         {isFocusedMode && (
           <span className="bottom-info">

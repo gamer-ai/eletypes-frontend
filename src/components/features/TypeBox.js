@@ -396,12 +396,14 @@ const TypeBox = ({ textInputRef, isFocusedMode }) => {
     if (difficulty === buttonDifficulty) {
       return "active-button";
     }
+    return "inactive-button";
   };
 
   const getTimerButtonClassName = (buttonTimerCountDown) => {
     if (countDownConstant === buttonTimerCountDown) {
       return "active-button";
     }
+    return "inactive-button";
   };
 
   return (

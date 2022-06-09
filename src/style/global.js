@@ -173,7 +173,10 @@ export const GlobalStyles = createGlobalStyle`
     color:  ${({ theme }) => theme.stats};
   }
   .active-button{
-    border-bottom: 1px solid ${({ theme }) => theme.stats};
+    color: ${({ theme }) => theme.stats};
+  }
+  .inactive-button{
+    color: ${({ theme }) => theme.textTypeBox};
   }
   .zen-button{
     color: ${({ theme }) => theme.text};
