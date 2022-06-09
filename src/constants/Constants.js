@@ -8,6 +8,7 @@ const DEFAULT_DIFFICULTY = "normal";
 const HARD_DIFFICULTY = "hard";
 const DEFAULT_DIFFICULTY_TOOLTIP_TITLE = "normal mode generates random words from top 1000 most frequently used words in English dataset."
 const HARD_DIFFICULTY_TOOLTIP_TITLE = "hard mode generates random words from blog posts words data, so you may encounter longer and less frequently used word."
+const CHAR_TOOLTIP_TITLE = "correct/incorrect/missing/extra\n extra is recorded even if deleted."
 
 export {
 DEFAULT_WORDS_COUNT,
@@ -18,5 +19,6 @@ COUNT_DOWN_15,
 DEFAULT_DIFFICULTY,
 HARD_DIFFICULTY,
 DEFAULT_DIFFICULTY_TOOLTIP_TITLE,
-HARD_DIFFICULTY_TOOLTIP_TITLE
+HARD_DIFFICULTY_TOOLTIP_TITLE,
+CHAR_TOOLTIP_TITLE
 }

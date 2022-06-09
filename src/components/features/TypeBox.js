@@ -8,7 +8,6 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Slide from "@mui/material/Slide";
 import Tooltip from "@mui/material/Tooltip";
-// import LinearProgress from "@mui/material/LinearProgress";
 
 import {
   DEFAULT_COUNT_DOWN,
@@ -20,22 +19,8 @@ import {
   HARD_DIFFICULTY,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE,
   HARD_DIFFICULTY_TOOLTIP_TITLE,
+  CHAR_TOOLTIP_TITLE
 } from "../../constants/Constants";
-
-// function LinearProgressWithLabel(
-//   props
-// ) {
-//   let colorCode = "inherit";
-//   return (
-//     <div className="speedbar">
-//       <Box sx={{ display: "flex", alignItems: "center" }}>
-//         <Box sx={{ width: "30%", mr: 1 }}>
-//           <LinearProgress variant="determinate" color={colorCode} {...props} />
-//         </Box>
-//       </Box>
-//     </div>
-//   );
-// }
 
 const TypeBox = ({ textInputRef }) => {
   // timer
@@ -79,6 +64,7 @@ const TypeBox = ({ textInputRef }) => {
 
   // setup stats
   const [rawKeyStrokes, setRawKeyStrokes] = useState(0);
+  const [wpmKeyStrokes, setWpmKeyStrokes] = useState(0);
   const [wpm, setWpm] = useState(0);
   const [statsCharCount, setStatsCharCount] = useState([]);
 
@@ -112,6 +98,7 @@ const TypeBox = ({ textInputRef }) => {
     clearInterval(intervalId);
     setWpm(0);
     setRawKeyStrokes(0);
+    setWpmKeyStrokes(0);
     setCurrInput("");
     setPrevInput("");
     setIntervalId(null);
@@ -220,6 +207,9 @@ const TypeBox = ({ textInputRef }) => {
     // keydown count for KPM calculations to all types of operations
     if (status === "started") {
       setRawKeyStrokes(rawKeyStrokes + 1);
+      if (keyCode >= 65 && keyCode <= 90){
+        setWpmKeyStrokes(wpmKeyStrokes + 1);
+      }
     }
 
     // disable tab key
@@ -235,7 +225,7 @@ const TypeBox = ({ textInputRef }) => {
 
     // update stats when typing
     const currWpm =
-      (rawKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0;
+      (wpmKeyStrokes / 4 / (countDownConstant - countDown)) * 60.0;
     setWpm(currWpm);
 
     // start the game by typing any thing
@@ -346,6 +336,7 @@ const TypeBox = ({ textInputRef }) => {
       return false;
     }
   }
+
   const getWordClassName = (wordIdx) => {
     if (wordsInCorrect.has(wordIdx)) {
       if (currWordIndex === wordIdx) {
@@ -445,6 +436,7 @@ const TypeBox = ({ textInputRef }) => {
             <h4>Accuracy: {Math.round(statsCharCount[0])} %</h4>
           )}
           {status === "finished" && (
+            <Tooltip title={<span style={{ whiteSpace: 'pre-line' }}>{CHAR_TOOLTIP_TITLE}</span>}>
             <h4>
               Char:{" "}
               <span className="correct-char-stats">{statsCharCount[1]}</span>/
@@ -453,6 +445,7 @@ const TypeBox = ({ textInputRef }) => {
               <span className="correct-char-stats">{statsCharCount[4]}</span>/
               <span className="incorrect-char-stats">{statsCharCount[5]}</span>
             </h4>
+            </Tooltip>
           )}
           {status === "finished" && (
             <h4>
@@ -531,9 +524,6 @@ const TypeBox = ({ textInputRef }) => {
             </Box>
           </Grid>
         </div>
-        {/* <Box sx={{ width: "100%" }}>
-          <LinearProgressWithLabel value={wpm} />
-        </Box> */}
       </div>
       <input
         key="hidden-input"
