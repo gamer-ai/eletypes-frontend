@@ -169,4 +169,7 @@ export const GlobalStyles = createGlobalStyle`
     opacity: 0.3;
     color:  ${({ theme }) => theme.stats};
   }
+  .active-button{
+    border-bottom: 1px solid ${({ theme }) => theme.stats};
+  }
 `;
