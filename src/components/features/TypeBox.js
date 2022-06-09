@@ -281,14 +281,18 @@ const TypeBox = ({ textInputRef }) => {
       }
       setCurrCharIndex(currCharIndex - 1);
       setCurrChar("");
-      return;
-    } else {
-      if (keyCode >= 65 && keyCode <= 90) {
-        setCurrCharIndex(currCharIndex + 1);
-        setCurrChar(key);
-      } else {
-        return;
-      }
+      return;  
+    } 
+    else {
+      setCurrCharIndex(currCharIndex + 1);
+      setCurrChar(key);
+      return
+      // if (keyCode >= 65 && keyCode <= 90) {
+      //   setCurrCharIndex(currCharIndex + 1);
+      //   setCurrChar(key);
+      // } else {
+      //   return;
+      // }
     }
   }
 
