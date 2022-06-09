@@ -19,10 +19,10 @@ import {
   HARD_DIFFICULTY,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE,
   HARD_DIFFICULTY_TOOLTIP_TITLE,
-  CHAR_TOOLTIP_TITLE
+  CHAR_TOOLTIP_TITLE,
 } from "../../constants/Constants";
 
-const TypeBox = ({ textInputRef }) => {
+const TypeBox = ({ textInputRef, isFocusedMode }) => {
   // timer
   const [countDownConstant, setCountDownConstant] =
     useState(DEFAULT_COUNT_DOWN);
@@ -49,6 +49,10 @@ const TypeBox = ({ textInputRef }) => {
 
   // set up game loop status state
   const [status, setStatus] = useState("waiting");
+
+  // enable menu
+  const menuEnabled = !isFocusedMode || status === "finished";
+
   // set up hidden input input val state
   const [currInput, setCurrInput] = useState("");
   // set up world advancing index
@@ -112,7 +116,7 @@ const TypeBox = ({ textInputRef }) => {
     textInputRef.current.focus();
     // console.log("fully reset waiting for next inputs");
     wordSpanRefs[0].current.scrollIntoView();
-  }
+  };
 
   const start = () => {
     if (status === "finished") {
@@ -184,7 +188,7 @@ const TypeBox = ({ textInputRef }) => {
       }, 1000);
       setIntervalId(intervalId);
     }
-  }
+  };
 
   const UpdateInput = (e) => {
     if (status === "finished") {
@@ -193,11 +197,11 @@ const TypeBox = ({ textInputRef }) => {
     setCurrInput(e.target.value);
     inputWordsHistory[currWordIndex] = e.target.value.trim();
     setInputWordsHistory(inputWordsHistory);
-  }
+  };
 
   const handleKeyUp = (e) => {
     setCapsLocked(e.getModifierState("CapsLock"));
-  }
+  };
 
   const handleKeyDown = (e) => {
     const key = e.key;
@@ -207,14 +211,21 @@ const TypeBox = ({ textInputRef }) => {
     // keydown count for KPM calculations to all types of operations
     if (status === "started") {
       setRawKeyStrokes(rawKeyStrokes + 1);
-      if (keyCode >= 65 && keyCode <= 90){
+      if (keyCode >= 65 && keyCode <= 90) {
         setWpmKeyStrokes(wpmKeyStrokes + 1);
       }
+    }
+
+    // disable Caps Lock key
+    if (keyCode === 20){
+      e.preventDefault();
+      return;
     }
 
     // disable tab key
     if (keyCode === 9) {
       e.preventDefault();
+      return;
     }
 
     if (status === "finished") {
@@ -271,12 +282,11 @@ const TypeBox = ({ textInputRef }) => {
       }
       setCurrCharIndex(currCharIndex - 1);
       setCurrChar("");
-      return;  
-    } 
-    else {
+      return;
+    } else {
       setCurrCharIndex(currCharIndex + 1);
       setCurrChar(key);
-      return
+      return;
       // if (keyCode >= 65 && keyCode <= 90) {
       //   setCurrCharIndex(currCharIndex + 1);
       //   setCurrChar(key);
@@ -284,7 +294,7 @@ const TypeBox = ({ textInputRef }) => {
       //   return;
       // }
     }
-  }
+  };
 
   const getExtraCharsDisplay = (word, i) => {
     let input = inputWordsHistory[i];
@@ -335,7 +345,7 @@ const TypeBox = ({ textInputRef }) => {
       setPrevInput(prevInput + " " + currInputWithoutSpaces);
       return false;
     }
-  }
+  };
 
   const getWordClassName = (wordIdx) => {
     if (wordsInCorrect.has(wordIdx)) {
@@ -349,7 +359,7 @@ const TypeBox = ({ textInputRef }) => {
       }
       return "word";
     }
-  }
+  };
 
   const getCharClassName = (wordIdx, charIdx, char) => {
     const keyString = wordIdx + "." + charIdx;
@@ -380,7 +390,7 @@ const TypeBox = ({ textInputRef }) => {
 
       return "char";
     }
-  }
+  };
 
   const getDifficultyButtonClassName = (buttonDifficulty) => {
     if (difficulty === buttonDifficulty) {
@@ -436,15 +446,26 @@ const TypeBox = ({ textInputRef }) => {
             <h4>Accuracy: {Math.round(statsCharCount[0])} %</h4>
           )}
           {status === "finished" && (
-            <Tooltip title={<span style={{ whiteSpace: 'pre-line' }}>{CHAR_TOOLTIP_TITLE}</span>}>
-            <h4>
-              Char:{" "}
-              <span className="correct-char-stats">{statsCharCount[1]}</span>/
-              <span className="incorrect-char-stats">{statsCharCount[2]}</span>/
-              <span className="missing-char-stats">{statsCharCount[3]}</span>/
-              <span className="correct-char-stats">{statsCharCount[4]}</span>/
-              <span className="incorrect-char-stats">{statsCharCount[5]}</span>
-            </h4>
+            <Tooltip
+              title={
+                <span style={{ whiteSpace: "pre-line" }}>
+                  {CHAR_TOOLTIP_TITLE}
+                </span>
+              }
+            >
+              <h4>
+                Char:{" "}
+                <span className="correct-char-stats">{statsCharCount[1]}</span>/
+                <span className="incorrect-char-stats">
+                  {statsCharCount[2]}
+                </span>
+                /<span className="missing-char-stats">{statsCharCount[3]}</span>
+                /<span className="correct-char-stats">{statsCharCount[4]}</span>
+                /
+                <span className="incorrect-char-stats">
+                  {statsCharCount[5]}
+                </span>
+              </h4>
             </Tooltip>
           )}
           {status === "finished" && (
@@ -466,6 +487,7 @@ const TypeBox = ({ textInputRef }) => {
               >
                 <RestartAltIcon />
               </IconButton>
+              {menuEnabled && (<>
               <IconButton
                 onClick={() => {
                   reset(COUNT_DOWN_60, difficulty);
@@ -493,7 +515,9 @@ const TypeBox = ({ textInputRef }) => {
                   {COUNT_DOWN_15}
                 </span>
               </IconButton>
+              </>)}
             </Box>
+            {menuEnabled && (
             <Box display="flex" flexDirection="row">
               <IconButton
                 onClick={() => {
@@ -521,7 +545,7 @@ const TypeBox = ({ textInputRef }) => {
                   </span>
                 </Tooltip>
               </IconButton>
-            </Box>
+            </Box>)}
           </Grid>
         </div>
       </div>

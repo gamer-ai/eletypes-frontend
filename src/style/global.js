@@ -38,6 +38,9 @@ export const GlobalStyles = createGlobalStyle`
     bottom: 5%;
     right: 5%;
     font-size: 12px;
+    color: ${({ theme }) => theme.text},
+    opacity: 0.7;
+    margin: 4px;
   }
   small {
     display: block;
@@ -171,5 +174,8 @@ export const GlobalStyles = createGlobalStyle`
   }
   .active-button{
     border-bottom: 1px solid ${({ theme }) => theme.stats};
+  }
+  .zen-button{
+    color: ${({ theme }) => theme.text};
   }
 `;

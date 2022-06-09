@@ -5,7 +5,7 @@ export default styled(Select)`
 .Select__control {
     height: 20px;
     width: 100%;
-    border: 1px solid #a1a1a1;
+    border: none;
     border-radius: 4px;
     cursor: pointer;
     color: ${({ theme }) => theme.text};
