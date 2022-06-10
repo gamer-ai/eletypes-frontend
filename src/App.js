@@ -16,6 +16,7 @@ import { FOCUS_MODE, GITHUB_TOOLTIP_TITLE } from "./constants/Constants";
 import MusicPlayer from "./components/features/MusicPlayer";
 import MusicIconButton from "./components/utils/MusicIconButton";
 import { Snackbar } from "@mui/material";
+import SupportMe from "./components/features/SupportMe";
 
 function App() {
   const [theme, setTheme] = useState(defaultTheme);
@@ -106,12 +107,14 @@ function App() {
         </Snackbar>
         {!isFocusedMode && (
           <Box display="block" flexDirection="row" className="bottom-info">
+            <SupportMe></SupportMe>
             <Tooltip
               title={
                 <span style={{ whiteSpace: "pre-line" }}>
                   {GITHUB_TOOLTIP_TITLE}
                 </span>
               }
+              placement="top"
             >
               <IconButton
                 href="https://github.com/gamer-ai/eletype-frontend/"

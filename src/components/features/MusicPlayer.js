@@ -2,10 +2,12 @@ import React from "react";
 import { Slide } from "@mui/material";
 
 const MusicPlayer = ({disabled, isZenMode}) => {
+
+  const height = isZenMode ? "80" : "240";
+
   const players = {
     spotify:
-      '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/2HeW8KNgI5nOZf0yOdO6Mf?utm_source=generator&theme=0" width="100%" height="240" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>',
-    spotifyCompact: '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/2HeW8KNgI5nOZf0yOdO6Mf?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>'
+      '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/2HeW8KNgI5nOZf0yOdO6Mf?utm_source=generator&theme=0" width="100%" height=' + height + ' frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>'
   };
 
   const IframePlayer = (props) => {
@@ -20,9 +22,9 @@ const MusicPlayer = ({disabled, isZenMode}) => {
   };
 
   return (
-    <Slide in={!disabled} mountOnEnter unmountOnExit>
+    <Slide direction="up" style={{ transitionDelay: disabled ? '200ms' : '0ms' }} in={!disabled} mountOnEnter unmountOnExit>
     <div>
-      <IframePlayer iframe={isZenMode ? players["spotifyCompact"] : players["spotify"]}/>
+      <IframePlayer iframe={players["spotify"]}/>
     </div>
     </Slide>
   );

@@ -181,4 +181,25 @@ export const GlobalStyles = createGlobalStyle`
   .zen-button{
     color: ${({ theme }) => theme.text};
   }
+  .support-me{
+    color : #FF4081;
+    animation: blinkingColor 5s infinite;
+    @keyframes blinkingColor{
+      0%		{ color: #F48FB1}
+      25%		{ color: #FF4081;}
+      50%		{ color: #F48FB1}
+      75%		{color: #FF4081;}
+      100%	        {color: #F48FB1}
+    }
+  }
+  .support-me-image{
+    height: 75%;
+    width: 75%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border-radius: 16px;
+  }
 `;
