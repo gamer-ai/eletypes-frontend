@@ -49,11 +49,13 @@ function App() {
             </span>
           </header>
         )}
+        <div onClick={() => focusTextInput()}>
         <TypeBox
           textInputRef={textInputRef}
           isFocusedMode={isFocusedMode}
           key="type-box"
         ></TypeBox>
+        </div>
         <footer>
           <Grid container justifyContent="center" alignItems="center">
             <Box display="flex" flexDirection="row">
