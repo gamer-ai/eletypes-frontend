@@ -12,7 +12,7 @@ const CHAR_TOOLTIP_TITLE = "correct/incorrect/missing/extra\n extra is recorded 
 
 const FOCUS_MODE = "focus mode";
 
-const MUSIC_MODE = "spotify";
+const MUSIC_MODE = "spotify player. You will need to login spotify first to use the full feature.";
 
 export {
 DEFAULT_WORDS_COUNT,
