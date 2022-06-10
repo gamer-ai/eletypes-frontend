@@ -12,7 +12,7 @@ import { Box } from "@mui/system";
 import Link from "@mui/material/Link";
 import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
 import { Tooltip } from "@mui/material";
-import { FOCUS_MODE } from "./constants/Constants";
+import { FOCUS_MODE, GITHUB_TOOLTIP_TITLE } from "./constants/Constants";
 import MusicPlayer from "./components/features/MusicPlayer";
 import MusicIconButton from "./components/utils/MusicIconButton";
 import { Snackbar } from "@mui/material";
@@ -50,11 +50,11 @@ function App() {
           </header>
         )}
         <div onClick={() => focusTextInput()}>
-        <TypeBox
-          textInputRef={textInputRef}
-          isFocusedMode={isFocusedMode}
-          key="type-box"
-        ></TypeBox>
+          <TypeBox
+            textInputRef={textInputRef}
+            isFocusedMode={isFocusedMode}
+            key="type-box"
+          ></TypeBox>
         </div>
         <footer>
           <Grid container justifyContent="center" alignItems="center">
@@ -97,18 +97,29 @@ function App() {
             horizontal: "right",
           }}
         >
-        <IconButton hidden={true} onMouseLeave={() => focusTextInput()}>
-                <MusicPlayer disabled={!isMusicMode} isZenMode={isFocusedMode}></MusicPlayer>
-            </IconButton>
+          <IconButton hidden={true} onMouseLeave={() => focusTextInput()}>
+            <MusicPlayer
+              disabled={!isMusicMode}
+              isZenMode={isFocusedMode}
+            ></MusicPlayer>
+          </IconButton>
         </Snackbar>
         {!isFocusedMode && (
           <Box display="block" flexDirection="row" className="bottom-info">
-            <IconButton
-              href="https://github.com/gamer-ai/eletype-frontend/"
-              color="inherit"
+            <Tooltip
+              title={
+                <span style={{ whiteSpace: "pre-line" }}>
+                  {GITHUB_TOOLTIP_TITLE}
+                </span>
+              }
             >
-              <GitHubIcon></GitHubIcon>
-            </IconButton>
+              <IconButton
+                href="https://github.com/gamer-ai/eletype-frontend/"
+                color="inherit"
+              >
+                <GitHubIcon></GitHubIcon>
+              </IconButton>
+            </Tooltip>
             <Link
               color="inherit"
               margin="inherit"
