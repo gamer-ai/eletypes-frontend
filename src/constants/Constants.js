@@ -12,6 +12,8 @@ const CHAR_TOOLTIP_TITLE = "correct/incorrect/missing/extra\n extra is recorded 
 
 const FOCUS_MODE = "focus mode";
 
+const MUSIC_MODE = "spotify";
+
 export {
 DEFAULT_WORDS_COUNT,
 DEFAULT_COUNT_DOWN,
@@ -23,5 +25,6 @@ HARD_DIFFICULTY,
 DEFAULT_DIFFICULTY_TOOLTIP_TITLE,
 HARD_DIFFICULTY_TOOLTIP_TITLE,
 CHAR_TOOLTIP_TITLE,
-FOCUS_MODE
+FOCUS_MODE,
+MUSIC_MODE
 }

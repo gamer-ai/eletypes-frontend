@@ -13,10 +13,14 @@ import Link from "@mui/material/Link";
 import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
 import { Tooltip } from "@mui/material";
 import { FOCUS_MODE } from "./constants/Constants";
+import MusicPlayer from "./components/features/MusicPlayer";
+import MusicIconButton from "./components/utils/MusicIconButton";
+import { Snackbar } from "@mui/material";
 
 function App() {
   const [theme, setTheme] = useState(defaultTheme);
   const [isFocusedMode, setIsFocusedMode] = useState(false);
+  const [isMusicMode, setIsMusicMode] = useState(false);
   const textInputRef = useRef(null);
 
   const focusTextInput = () => {
@@ -25,7 +29,7 @@ function App() {
 
   useEffect(() => {
     focusTextInput();
-  }, [theme, isFocusedMode]);
+  }, [theme, isFocusedMode, isMusicMode]);
 
   const handleThemeChange = (e) => {
     setTheme(e.value);
@@ -61,8 +65,7 @@ function App() {
                 isSelected={false}
                 onChange={handleThemeChange}
                 menuPlacement="top"
-              >
-              </Select>
+              ></Select>
 
               <IconButton
                 onClick={() => {
@@ -75,9 +78,27 @@ function App() {
                   </span>
                 </Tooltip>
               </IconButton>
+              <IconButton
+                onClick={() => {
+                  setIsMusicMode(!isMusicMode);
+                }}
+              >
+                <MusicIconButton disabled={!isMusicMode}></MusicIconButton>
+              </IconButton>
             </Box>
           </Grid>
         </footer>
+        <Snackbar
+          open={isMusicMode}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+        >
+        <IconButton hidden={true} onMouseLeave={() => focusTextInput()}>
+                <MusicPlayer disabled={!isMusicMode} isZenMode={isFocusedMode}></MusicPlayer>
+            </IconButton>
+        </Snackbar>
         {!isFocusedMode && (
           <Box display="block" flexDirection="row" className="bottom-info">
             <IconButton
