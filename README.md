@@ -1,6 +1,7 @@
 # Ele types
 
-![ELe Types](https://github.com/gamer-ai/eletype-frontend/blob/main/docs/images/EleTypes.png)
+<img width="1109" alt="Screen Shot 2022-06-09 at 11 12 57 PM" src="https://user-images.githubusercontent.com/39578778/173113155-86dd9bdf-8d0a-4c6f-b26f-6e0ebd8a75b4.png">
+
 
 ## [www.eletypes.com](https://www.eletypes.com)
 
@@ -11,25 +12,53 @@ An elegant typing test tool.
 > The app was created purely in react.
 
 ## Feature:
-1. Typing error feed back
-2. Extra input feed back
-3. Random words generation
-4. Rewind modification till the last correct word input
-5. Caps Lock key detection
-6. Tab key disabled
-7. support three tests duration 60s, 30s, 15s
-8. different themes for your choice
+1. Type any to start
+2. Typing error feed back
+3. Extra input feed back
+4. Random words generation (two sources, normal mode from top 1000 frequent words, hard mode from blog posts random words)
+5. Rewind modification till the last correct word input
+6. Caps Lock key detection
+7. Tab key disabled
+8. support three tests duration 60s, 30s, 15s
+9. support difficulty level change
+10. support different themes
+11. support focus mode
+12. support spotify (enable/disable, compact/full modes) (To Use the full feature of spotify, you will need to login to spotify in browser first)
+13. WPM, Char (correct/incorrect/missing/extra) stats, accuracy stats, raw KPM stat
+14. restart test with current settings
+15. Stats to show at test finished
 
 ### Themes:
-![Themes Preview](https://github.com/gamer-ai/eletype-frontend/blob/main/docs/images/EletypesThemes.png)
+<img width="789" alt="Screen Shot 2022-06-10 at 9 48 35 AM" src="https://user-images.githubusercontent.com/39578778/173113712-b2f0f1d0-7ca3-4ae6-b806-6cc3cbcbaf0d.png">
+
+Current Themes:
+
+- Dark
+- Terminal (matrix inspired)
+- Cyber (cyberpunk inspired)
+- Steam (steampunk inspired)
+- Light
 
 ### Caps Lock Detection
 <img width="988" alt="Screen Shot 2022-04-20 at 4 52 24 PM" src="https://user-images.githubusercontent.com/39578778/164343051-2de97570-fcec-49a4-893a-903afe94e5f4.png">
 
 ### Simplist typing Stats is all your need
-<img width="582" alt="Screen Shot 2022-04-20 at 4 54 32 PM" src="https://user-images.githubusercontent.com/39578778/164343202-28eb1a3e-3b6d-4167-91ee-42251750022a.png">
+<img width="491" alt="Screen Shot 2022-06-10 at 9 50 46 AM" src="https://user-images.githubusercontent.com/39578778/173114000-a5f9aa89-6b3c-4e35-98e3-b410421a83c7.png">
+
+### Focus Mode
+Focus mode will move header to footer. hide the setting menu. leave only timer, wpm. If music enabled, a compact spotify will be put in footer.
 
 ### More to come
+*Requests from the community brief*
+
+#### Feature Request
+1. Support CHN pinyin.
+2. Hover/Click focus to typing area.
+3. save settings to local. (current is emphemeral, refresh browser tab will cause settings back to default).
+
+#### Implementation improvements
+1. Standalone source words file.
+2. localStorage implementation.
 
 ### `npm start`
 
@@ -38,6 +67,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 
 ### `npm run build`
+
 
 Builds the app for production to the `build` folder.\
 
