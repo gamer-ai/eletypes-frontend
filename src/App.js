@@ -105,7 +105,7 @@ function App() {
             ></MusicPlayer>
           </IconButton>
         </Snackbar>
-        {!isFocusedMode && (
+        {(!isFocusedMode || isMusicMode) && (
           <Box display="block" flexDirection="row" className="bottom-info">
             <SupportMe></SupportMe>
             <Tooltip

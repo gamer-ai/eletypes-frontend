@@ -183,13 +183,13 @@ export const GlobalStyles = createGlobalStyle`
   }
   .support-me{
     color : #FF4081;
-    animation: blinkingColor 5s infinite;
+    animation: blinkingColor 10s infinite;
     @keyframes blinkingColor{
-      0%		{ color: #F48FB1}
+      0%		{ color: #F48FB1;}
       25%		{ color: #FF4081;}
-      50%		{ color: #F48FB1}
+      50%		{ color: #F48FB1;}
       75%		{color: #FF4081;}
-      100%	        {color: #F48FB1}
+      100%	 {color: #F48FB1;}
     }
   }
   .support-me-image{
