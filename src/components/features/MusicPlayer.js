@@ -6,7 +6,7 @@ const MusicPlayer = ({ disabled, isZenMode }) => {
 
   const players = {
     spotify:
-      '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/2HeW8KNgI5nOZf0yOdO6Mf?utm_source=generator&theme=0" width="100%" height=' +
+      '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/07iwWrF9q54KJ8XaolRj5Y?utm_source=generator&theme=0" width="100%" height=' +
       height +
       ' frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>',
   };

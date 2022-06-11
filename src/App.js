@@ -44,7 +44,7 @@ function App() {
   const toggleFocusedMode = () => {
     setIsFocusedMode(!isFocusedMode);
   };
-  
+
   const [isMusicMode, setIsMusicMode] = useState(false);
   const textInputRef = useRef(null);
 
@@ -123,7 +123,7 @@ function App() {
             ></MusicPlayer>
           </IconButton>
         </Snackbar>
-        {(!isFocusedMode || isMusicMode) && (
+        {(!isFocusedMode && !isMusicMode) && (
           <Box display="block" flexDirection="row" className="bottom-info">
             <SupportMe></SupportMe>
             <Tooltip
