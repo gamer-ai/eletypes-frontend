@@ -23,10 +23,16 @@ function App() {
   // localStorage persist theme setting
   const [theme, setTheme] =useState(() => {
     const stickyTheme = window.localStorage.getItem('theme');
-    return stickyTheme !== null
-      ? JSON.parse(stickyTheme)
-      : defaultTheme;
+    if (stickyTheme !== null){
+      const localTheme = JSON.parse(stickyTheme);
+      const upstreamTheme = themesOptions.find((e) => e.label === localTheme.label).value;
+      // we will do a deep equal here. In case we want to support customized local theme.
+      const isDeepEqual = localTheme === upstreamTheme;
+      return isDeepEqual ? localTheme : upstreamTheme;
+    }
+    return defaultTheme;
   });
+
   const handleThemeChange = (e) => {
     window.localStorage.setItem(
       'theme', JSON.stringify(e.value)
