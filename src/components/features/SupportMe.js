@@ -5,7 +5,7 @@ import { Tooltip } from "@mui/material";
 import IconButton from "../utils/IconButton";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 
-function SupportMe() {
+const SupportMe = () => {
   return (
     <Tooltip
       title={

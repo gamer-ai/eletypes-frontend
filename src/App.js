@@ -19,8 +19,32 @@ import { Snackbar } from "@mui/material";
 import SupportMe from "./components/features/SupportMe";
 
 function App() {
-  const [theme, setTheme] = useState(defaultTheme);
-  const [isFocusedMode, setIsFocusedMode] = useState(false);
+
+  // localStorage persist theme setting
+  const [theme, setTheme] =useState(() => {
+    const stickyTheme = window.localStorage.getItem('theme');
+    return stickyTheme !== null
+      ? JSON.parse(stickyTheme)
+      : defaultTheme;
+  });
+  const handleThemeChange = (e) => {
+    window.localStorage.setItem(
+      'theme', JSON.stringify(e.value)
+    )
+    setTheme(e.value);
+  };
+
+  // localStorage persist focusedMode setting
+  const [isFocusedMode, setIsFocusedMode] =useState(localStorage.getItem('focused-mode') === 'true');
+
+  useEffect(() => {
+    localStorage.setItem('focused-mode', isFocusedMode);
+  }, [isFocusedMode]);
+
+  const toggleFocusedMode = () => {
+    setIsFocusedMode(!isFocusedMode);
+  };
+  
   const [isMusicMode, setIsMusicMode] = useState(false);
   const textInputRef = useRef(null);
 
@@ -31,10 +55,6 @@ function App() {
   useEffect(() => {
     focusTextInput();
   }, [theme, isFocusedMode, isMusicMode]);
-
-  const handleThemeChange = (e) => {
-    setTheme(e.value);
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -62,7 +82,7 @@ function App() {
             <Box display="flex" flexDirection="row">
               <Select
                 classNamePrefix="Select"
-                value={themesOptions.find((e) => e.value === theme)}
+                value={themesOptions.find((e) => e.value.label === theme.label)}
                 options={themesOptions}
                 isSearchable={false}
                 isSelected={false}
@@ -71,9 +91,7 @@ function App() {
               ></Select>
 
               <IconButton
-                onClick={() => {
-                  setIsFocusedMode(!isFocusedMode);
-                }}
+                onClick={toggleFocusedMode}
               >
                 <Tooltip title={FOCUS_MODE}>
                   <span className="zen-button">

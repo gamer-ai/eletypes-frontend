@@ -4,10 +4,9 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import IconButton from "../utils/IconButton";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-import Slide from "@mui/material/Slide";
 import Tooltip from "@mui/material/Tooltip";
+import useLocalPersistState from "../../hooks/useLocalPersistState";
+import CapsLockSnackbar from "./CapsLockSnackbar";
 
 import {
   DEFAULT_COUNT_DOWN,
@@ -23,15 +22,20 @@ import {
 } from "../../constants/Constants";
 
 const TypeBox = ({ textInputRef, isFocusedMode }) => {
-  // timer
-  const [countDownConstant, setCountDownConstant] =
-    useState(DEFAULT_COUNT_DOWN);
+  // local persist timer
+  const [countDownConstant, setCountDownConstant] = useLocalPersistState(DEFAULT_COUNT_DOWN, 'timer-constant');
+
+  // local persist difficulty
+  const [difficulty, setDifficulty] = useLocalPersistState(DEFAULT_DIFFICULTY, 'difficulty');
 
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
 
   // set up words state
-  const [words, setWords] = useState([]);
+  const [words, setWords] = useState(()=>{
+    return wordsGenerator(DEFAULT_WORDS_COUNT, difficulty)
+  });
+
   const wordSpanRefs = useMemo(
     () =>
       Array(DEFAULT_WORDS_COUNT)
@@ -39,9 +43,6 @@ const TypeBox = ({ textInputRef, isFocusedMode }) => {
         .map((i) => React.createRef()),
     []
   );
-
-  // difficulty mode
-  const [difficulty, setDifficulty] = useState(DEFAULT_DIFFICULTY);
 
   // set up timer state
   const [countDown, setCountDown] = useState(countDownConstant);
@@ -78,10 +79,6 @@ const TypeBox = ({ textInputRef, isFocusedMode }) => {
   const [currChar, setCurrChar] = useState("");
 
   useEffect(() => {
-    setWords(wordsGenerator(DEFAULT_WORDS_COUNT, DEFAULT_DIFFICULTY));
-  }, []);
-
-  useEffect(() => {
     if (
       currWordIndex !== 0 &&
       wordSpanRefs[currWordIndex].current.offsetLeft <
@@ -92,7 +89,7 @@ const TypeBox = ({ textInputRef, isFocusedMode }) => {
       return;
     }
   }, [currWordIndex, wordSpanRefs]);
-
+  
   const reset = (newCountDown, difficulty) => {
     setStatus("waiting");
     setWords(wordsGenerator(DEFAULT_WORDS_COUNT, difficulty));
@@ -408,21 +405,7 @@ const TypeBox = ({ textInputRef, isFocusedMode }) => {
 
   return (
     <>
-      <div>
-        <Snackbar
-          open={capsLocked}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          <Slide in={capsLocked} mountOnEnter unmountOnExit>
-            <Alert className="alert" severity="warning" sx={{ width: "100%" }}>
-              Caps Locked
-            </Alert>
-          </Slide>
-        </Snackbar>
-      </div>
+      <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
       <div className="type-box">
         <div className="words">
           {words.map((word, i) => (

@@ -1,4 +1,5 @@
 const lightTheme = {
+    label: 'Light', 
     background: '#F5F5F5',
     text: '#000000',
     toggleBorder: '#FFF',
@@ -9,6 +10,7 @@ const lightTheme = {
   };
   
 const darkTheme = {
+    label: 'Dark', 
     background: '#121212',
     text: '#FAFAFA',
     toggleBorder: '#6B8096',
@@ -19,6 +21,7 @@ const darkTheme = {
   };
 
 const cyberTheme = {
+    label: 'Cyber', 
     background: '#272932',
     text: '#CB1DCD',
     toggleBorder: '#37EBF3',
@@ -30,6 +33,7 @@ const cyberTheme = {
 };
 
 const steamTheme = {
+  label: 'Steam',
   background: '#6e2f3b',
   text: '#fdd978',
   toggleBorder: '#37EBF3',
@@ -41,6 +45,7 @@ const steamTheme = {
 };
 
 const terminalTheme = {
+  label: 'Terminal',
   background: '#0D0208',
   text: '#39ff14',
   toggleBorder: '#6B8096',

@@ -27,6 +27,7 @@ An elegant typing test tool.
 13. WPM, Char (correct/incorrect/missing/extra) stats, accuracy stats, raw KPM stat
 14. restart test with current settings
 15. Stats to show at test finished
+16. local persist storage for themes, difficulty mode, focused mode, timer settings.
 
 ### Themes:
 <img width="789" alt="Screen Shot 2022-06-10 at 9 48 35 AM" src="https://user-images.githubusercontent.com/39578778/173113712-b2f0f1d0-7ca3-4ae6-b806-6cc3cbcbaf0d.png">
@@ -52,13 +53,12 @@ Focus mode will move header to footer. hide the setting menu. leave only timer, 
 *Requests from the community brief*
 
 #### Feature Request
-1. Support CHN pinyin.
-2. Hover/Click focus to typing area.
-3. save settings to local. (current is emphemeral, refresh browser tab will cause settings back to default).
-
+1. Support CHN pinyin. (working)
 #### Implementation improvements
 1. Standalone source words file.
-2. localStorage implementation.
+
+#### Done requests:
+1. localStorage persist states for theme, timer, difficulty, focused mode settings.
 
 ### `npm start`
 

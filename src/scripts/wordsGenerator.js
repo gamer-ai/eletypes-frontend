@@ -19,5 +19,4 @@ const wordsGenerator = (wordsCount, difficulty) => {
     return words;
 };
 
-
 export {wordsGenerator}
