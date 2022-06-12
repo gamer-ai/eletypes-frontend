@@ -3,15 +3,21 @@
 <img width="1109" alt="Screen Shot 2022-06-09 at 11 12 57 PM" src="https://user-images.githubusercontent.com/39578778/173113155-86dd9bdf-8d0a-4c6f-b26f-6e0ebd8a75b4.png">
 
 
-## [www.eletypes.com](https://www.eletypes.com)
+## [www.eletypes.com](https://www.eletypes.com) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/gamer-ai/eletype-frontend?include_prereleases)
 
 An elegant typing test tool.
+
+
+[![GitHub issues](https://img.shields.io/github/issues/gamer-ai/eletype-frontend)](https://github.com/gamer-ai/eletype-frontend/issues)
+[![GitHub stars](https://img.shields.io/github/stars/gamer-ai/eletype-frontend)](https://github.com/gamer-ai/eletype-frontend/stargazers)
+
 
 > Typing rule and interactions was inspired by the famous [monkeytype.com](www.monkeytype.com);
 
 > The app was created purely in react.
 
 ## Feature:
+
 1. Type any to start
 2. Typing error feed back
 3. Extra input feed back
@@ -30,6 +36,7 @@ An elegant typing test tool.
 16. local persist storage for themes, difficulty mode, focused mode, timer settings.
 
 ### Themes:
+
 <img width="789" alt="Screen Shot 2022-06-10 at 9 48 35 AM" src="https://user-images.githubusercontent.com/39578778/173113712-b2f0f1d0-7ca3-4ae6-b806-6cc3cbcbaf0d.png">
 
 Current Themes:
@@ -41,19 +48,24 @@ Current Themes:
 - Light
 
 ### Caps Lock Detection
+
 <img width="988" alt="Screen Shot 2022-04-20 at 4 52 24 PM" src="https://user-images.githubusercontent.com/39578778/164343051-2de97570-fcec-49a4-893a-903afe94e5f4.png">
 
 ### Simplist typing Stats is all your need
+
 <img width="491" alt="Screen Shot 2022-06-10 at 9 50 46 AM" src="https://user-images.githubusercontent.com/39578778/173114000-a5f9aa89-6b3c-4e35-98e3-b410421a83c7.png">
 
 ### Focus Mode
+
 Focus mode will move header to footer. hide the setting menu. leave only timer, wpm. If music enabled, a compact spotify will be put in footer.
 
 ### More to come
-*Requests from the community brief*
+
+> Requests from the community brief*
 
 #### Feature Request
 1. Support CHN pinyin. (working)
+
 #### Implementation improvements
 1. Standalone source words file.
 
