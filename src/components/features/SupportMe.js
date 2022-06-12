@@ -27,6 +27,6 @@ const SupportMe = () => {
       </IconButton>
     </Tooltip>
   );
-}
+};
 
 export default SupportMe;

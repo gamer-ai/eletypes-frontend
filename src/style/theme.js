@@ -51,14 +51,27 @@ const terminalTheme = {
   fontFamily: 'Tomorrow'
 };
 
+const nintendoTheme = {
+  label: 'Nintendo',
+  background: '#000000',
+  text: '#00c3e3',
+  gradient: 'linear-gradient(90deg, 	#dd2020 0%, #00c3e3 100%)',
+  title: '#dd2020',
+  textTypeBox: '#a5a2a2',
+  stats: '#00c3e3',
+  fontFamily: 'Tomorrow'
+};
+
+
 const defaultTheme = darkTheme;
 
 const themesOptions = [
     { value: darkTheme, label: 'Dark' },
     { value: terminalTheme, label: 'Terminal' },
+    { value: nintendoTheme, label: 'Nintendo'},
     { value: cyberTheme, label: 'Cyber' },
     { value: steamTheme, label: 'Steam' },
-    { value: lightTheme, label: 'Light' },
+    { value: lightTheme, label: 'Light' }
   ];
 
 export {
@@ -67,6 +80,7 @@ export {
     cyberTheme,
     steamTheme,
     terminalTheme,
+    nintendoTheme,
     defaultTheme,
     themesOptions
 }

@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { wordsGenerator } from "../../scripts/wordsGenerator";
+import { wordsGenerator } from "../../../scripts/wordsGenerator";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import IconButton from "../utils/IconButton";
+import IconButton from "../../utils/IconButton";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
-import useLocalPersistState from "../../hooks/useLocalPersistState";
-import CapsLockSnackbar from "./CapsLockSnackbar";
+import useLocalPersistState from "../../../hooks/useLocalPersistState";
+import CapsLockSnackbar from "../CapsLockSnackbar";
 
 import {
   DEFAULT_COUNT_DOWN,
@@ -19,21 +19,27 @@ import {
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE,
   HARD_DIFFICULTY_TOOLTIP_TITLE,
   CHAR_TOOLTIP_TITLE,
-} from "../../constants/Constants";
+} from "../../../constants/Constants";
 
-const TypeBox = ({ textInputRef, isFocusedMode }) => {
+const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
   // local persist timer
-  const [countDownConstant, setCountDownConstant] = useLocalPersistState(DEFAULT_COUNT_DOWN, 'timer-constant');
+  const [countDownConstant, setCountDownConstant] = useLocalPersistState(
+    DEFAULT_COUNT_DOWN,
+    "timer-constant"
+  );
 
   // local persist difficulty
-  const [difficulty, setDifficulty] = useLocalPersistState(DEFAULT_DIFFICULTY, 'difficulty');
+  const [difficulty, setDifficulty] = useLocalPersistState(
+    DEFAULT_DIFFICULTY,
+    "difficulty"
+  );
 
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
 
   // set up words state
-  const [words, setWords] = useState(()=>{
-    return wordsGenerator(DEFAULT_WORDS_COUNT, difficulty)
+  const [words, setWords] = useState(() => {
+    return wordsGenerator(DEFAULT_WORDS_COUNT, difficulty);
   });
 
   const wordSpanRefs = useMemo(
@@ -89,7 +95,7 @@ const TypeBox = ({ textInputRef, isFocusedMode }) => {
       return;
     }
   }, [currWordIndex, wordSpanRefs]);
-  
+
   const reset = (newCountDown, difficulty) => {
     setStatus("waiting");
     setWords(wordsGenerator(DEFAULT_WORDS_COUNT, difficulty));
@@ -214,7 +220,7 @@ const TypeBox = ({ textInputRef, isFocusedMode }) => {
     }
 
     // disable Caps Lock key
-    if (keyCode === 20){
+    if (keyCode === 20) {
       e.preventDefault();
       return;
     }
@@ -404,7 +410,7 @@ const TypeBox = ({ textInputRef, isFocusedMode }) => {
   };
 
   return (
-    <>
+    <div onClick={handleInputFocus}>
       <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
       <div className="type-box">
         <div className="words">
@@ -472,65 +478,70 @@ const TypeBox = ({ textInputRef, isFocusedMode }) => {
               >
                 <RestartAltIcon />
               </IconButton>
-              {menuEnabled && (<>
-              <IconButton
-                onClick={() => {
-                  reset(COUNT_DOWN_60, difficulty);
-                }}
-              >
-                <span className={getTimerButtonClassName(COUNT_DOWN_60)}>
-                  {COUNT_DOWN_60}
-                </span>
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  reset(COUNT_DOWN_30, difficulty);
-                }}
-              >
-                <span className={getTimerButtonClassName(COUNT_DOWN_30)}>
-                  {COUNT_DOWN_30}
-                </span>
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  reset(COUNT_DOWN_15, difficulty);
-                }}
-              >
-                <span className={getTimerButtonClassName(COUNT_DOWN_15)}>
-                  {COUNT_DOWN_15}
-                </span>
-              </IconButton>
-              </>)}
+              {menuEnabled && (
+                <>
+                  <IconButton
+                    onClick={() => {
+                      reset(COUNT_DOWN_60, difficulty);
+                    }}
+                  >
+                    <span className={getTimerButtonClassName(COUNT_DOWN_60)}>
+                      {COUNT_DOWN_60}
+                    </span>
+                  </IconButton>
+                  <IconButton
+                    onClick={() => {
+                      reset(COUNT_DOWN_30, difficulty);
+                    }}
+                  >
+                    <span className={getTimerButtonClassName(COUNT_DOWN_30)}>
+                      {COUNT_DOWN_30}
+                    </span>
+                  </IconButton>
+                  <IconButton
+                    onClick={() => {
+                      reset(COUNT_DOWN_15, difficulty);
+                    }}
+                  >
+                    <span className={getTimerButtonClassName(COUNT_DOWN_15)}>
+                      {COUNT_DOWN_15}
+                    </span>
+                  </IconButton>
+                </>
+              )}
             </Box>
             {menuEnabled && (
-            <Box display="flex" flexDirection="row">
-              <IconButton
-                onClick={() => {
-                  reset(countDownConstant, DEFAULT_DIFFICULTY);
-                }}
-              >
-                <Tooltip title={DEFAULT_DIFFICULTY_TOOLTIP_TITLE}>
-                  <span
-                    className={getDifficultyButtonClassName(DEFAULT_DIFFICULTY)}
-                  >
-                    {DEFAULT_DIFFICULTY}
-                  </span>
-                </Tooltip>
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  reset(countDownConstant, HARD_DIFFICULTY);
-                }}
-              >
-                <Tooltip title={HARD_DIFFICULTY_TOOLTIP_TITLE}>
-                  <span
-                    className={getDifficultyButtonClassName(HARD_DIFFICULTY)}
-                  >
-                    {HARD_DIFFICULTY}
-                  </span>
-                </Tooltip>
-              </IconButton>
-            </Box>)}
+              <Box display="flex" flexDirection="row">
+                <IconButton
+                  onClick={() => {
+                    reset(countDownConstant, DEFAULT_DIFFICULTY);
+                  }}
+                >
+                  <Tooltip title={DEFAULT_DIFFICULTY_TOOLTIP_TITLE}>
+                    <span
+                      className={getDifficultyButtonClassName(
+                        DEFAULT_DIFFICULTY
+                      )}
+                    >
+                      {DEFAULT_DIFFICULTY}
+                    </span>
+                  </Tooltip>
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    reset(countDownConstant, HARD_DIFFICULTY);
+                  }}
+                >
+                  <Tooltip title={HARD_DIFFICULTY_TOOLTIP_TITLE}>
+                    <span
+                      className={getDifficultyButtonClassName(HARD_DIFFICULTY)}
+                    >
+                      {HARD_DIFFICULTY}
+                    </span>
+                  </Tooltip>
+                </IconButton>
+              </Box>
+            )}
           </Grid>
         </div>
       </div>
@@ -544,7 +555,7 @@ const TypeBox = ({ textInputRef, isFocusedMode }) => {
         value={currInput}
         onChange={(e) => UpdateInput(e)}
       />
-    </>
+    </div>
   );
 };
 

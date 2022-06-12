@@ -2,30 +2,21 @@ import React, { useState, useRef, useEffect } from "react";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme, themesOptions } from "./style/theme";
 import { GlobalStyles } from "./style/global";
-import TypeBox from "./components/features/TypeBox";
-import Select from "./components/utils/Select";
-import IconButton from "@mui/material/IconButton";
-import KeyboardAltIcon from "@mui/icons-material/KeyboardAlt";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import { Grid } from "@mui/material";
-import { Box } from "@mui/system";
-import Link from "@mui/material/Link";
-import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
-import { Tooltip } from "@mui/material";
-import { FOCUS_MODE, GITHUB_TOOLTIP_TITLE } from "./constants/Constants";
-import MusicPlayer from "./components/features/MusicPlayer";
-import MusicIconButton from "./components/utils/MusicIconButton";
-import { Snackbar } from "@mui/material";
-import SupportMe from "./components/features/SupportMe";
+import TypeBox from "./components/features/TypeBox/TypeBox";
+import Logo from "./components/common/Logo";
+import FooterInfo from "./components/common/FooterInfo";
+import MusicPlayerSnackbar from "./components/features/MusicPlayer/MusicPlayerSnackbar";
+import FooterMenu from "./components/common/FooterMenu";
 
 function App() {
-
   // localStorage persist theme setting
-  const [theme, setTheme] =useState(() => {
-    const stickyTheme = window.localStorage.getItem('theme');
-    if (stickyTheme !== null){
+  const [theme, setTheme] = useState(() => {
+    const stickyTheme = window.localStorage.getItem("theme");
+    if (stickyTheme !== null) {
       const localTheme = JSON.parse(stickyTheme);
-      const upstreamTheme = themesOptions.find((e) => e.label === localTheme.label).value;
+      const upstreamTheme = themesOptions.find(
+        (e) => e.label === localTheme.label
+      ).value;
       // we will do a deep equal here. In case we want to support customized local theme.
       const isDeepEqual = localTheme === upstreamTheme;
       return isDeepEqual ? localTheme : upstreamTheme;
@@ -33,26 +24,33 @@ function App() {
     return defaultTheme;
   });
 
+  // localStorage persist focusedMode setting
+  const [isFocusedMode, setIsFocusedMode] = useState(
+    localStorage.getItem("focused-mode") === "true"
+  );
+
+  // musicMode setting
+  const [isMusicMode, setIsMusicMode] = useState(false);
+
   const handleThemeChange = (e) => {
-    window.localStorage.setItem(
-      'theme', JSON.stringify(e.value)
-    )
+    window.localStorage.setItem("theme", JSON.stringify(e.value));
     setTheme(e.value);
   };
-
-  // localStorage persist focusedMode setting
-  const [isFocusedMode, setIsFocusedMode] =useState(localStorage.getItem('focused-mode') === 'true');
-
-  useEffect(() => {
-    localStorage.setItem('focused-mode', isFocusedMode);
-  }, [isFocusedMode]);
 
   const toggleFocusedMode = () => {
     setIsFocusedMode(!isFocusedMode);
   };
 
-  const [isMusicMode, setIsMusicMode] = useState(false);
+  const toggleMusicMode = () => {
+    setIsMusicMode(!isMusicMode);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("focused-mode", isFocusedMode);
+  }, [isFocusedMode]);
+
   const textInputRef = useRef(null);
+  const isSiteInfoDisabled = isMusicMode || isFocusedMode;
 
   const focusTextInput = () => {
     textInputRef.current && textInputRef.current.focus();
@@ -66,111 +64,27 @@ function App() {
     <ThemeProvider theme={theme}>
       <>
         <GlobalStyles />
-        {!isFocusedMode && (
-          <header>
-            <h1>
-              Ele Types <KeyboardAltIcon fontSize="large" />
-            </h1>
-            <span className="sub-header">
-              an elegant typing experience, just start typing
-            </span>
-          </header>
-        )}
-        <div onClick={() => focusTextInput()}>
-          <TypeBox
-            textInputRef={textInputRef}
-            isFocusedMode={isFocusedMode}
-            key="type-box"
-          ></TypeBox>
-        </div>
-        <footer>
-          <Grid container justifyContent="center" alignItems="center">
-            <Box display="flex" flexDirection="row">
-              <Select
-                classNamePrefix="Select"
-                value={themesOptions.find((e) => e.value.label === theme.label)}
-                options={themesOptions}
-                isSearchable={false}
-                isSelected={false}
-                onChange={handleThemeChange}
-                menuPlacement="top"
-              ></Select>
-
-              <IconButton
-                onClick={toggleFocusedMode}
-              >
-                <Tooltip title={FOCUS_MODE}>
-                  <span className="zen-button">
-                    <SelfImprovementIcon fontSize="medium"></SelfImprovementIcon>
-                  </span>
-                </Tooltip>
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  setIsMusicMode(!isMusicMode);
-                }}
-              >
-                <MusicIconButton disabled={!isMusicMode}></MusicIconButton>
-              </IconButton>
-            </Box>
-          </Grid>
-        </footer>
-        <Snackbar
-          open={isMusicMode}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-        >
-          <IconButton hidden={true} onMouseLeave={() => focusTextInput()}>
-            <MusicPlayer
-              disabled={!isMusicMode}
-              isZenMode={isFocusedMode}
-            ></MusicPlayer>
-          </IconButton>
-        </Snackbar>
-        {(!isFocusedMode && !isMusicMode) && (
-          <Box display="block" flexDirection="row" className="bottom-info">
-            <SupportMe></SupportMe>
-            <Tooltip
-              title={
-                <span style={{ whiteSpace: "pre-line" }}>
-                  {GITHUB_TOOLTIP_TITLE}
-                </span>
-              }
-              placement="top"
-            >
-              <IconButton
-                href="https://github.com/gamer-ai/eletype-frontend/"
-                color="inherit"
-              >
-                <GitHubIcon></GitHubIcon>
-              </IconButton>
-            </Tooltip>
-            <Link
-              color="inherit"
-              margin="inherit"
-              underline="none"
-              href="https://github.com/gamer-ai/eletype-frontend/blob/main/LICENSE"
-            >
-              &copy;GPLv3
-            </Link>
-            <span>{"    "}</span>
-            <Link
-              color="inherit"
-              margin="inherit"
-              underline="none"
-              href="https://muyangguo.xyz"
-            >
-              @Muyang Guo
-            </Link>
-          </Box>
-        )}
-        {isFocusedMode && (
-          <span className="bottom-info">
-            Ele Types <KeyboardAltIcon fontSize="small" />
-          </span>
-        )}
+        <Logo isFocusedMode={isFocusedMode} isMusicMode={isMusicMode}></Logo>
+        <TypeBox
+          textInputRef={textInputRef}
+          isFocusedMode={isFocusedMode}
+          key="type-box"
+          handleInputFocus={() => focusTextInput()}
+        ></TypeBox>
+        <FooterMenu
+          themesOptions={themesOptions}
+          theme={theme}
+          handleThemeChange={handleThemeChange}
+          toggleFocusedMode={toggleFocusedMode}
+          toggleMusicMode={toggleMusicMode}
+          isMusicMode={isMusicMode}
+        ></FooterMenu>
+        <MusicPlayerSnackbar
+          isMusicMode={isMusicMode}
+          isFocusedMode={isFocusedMode}
+          onMouseLeave={() => focusTextInput()}
+        ></MusicPlayerSnackbar>
+        <FooterInfo disabled={isSiteInfoDisabled}></FooterInfo>
       </>
     </ThemeProvider>
   );
