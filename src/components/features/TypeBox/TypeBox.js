@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import Tooltip from "@mui/material/Tooltip";
 import useLocalPersistState from "../../../hooks/useLocalPersistState";
 import CapsLockSnackbar from "../CapsLockSnackbar";
+import Stats from "./Stats";
 
 import {
   DEFAULT_COUNT_DOWN,
@@ -18,7 +19,6 @@ import {
   HARD_DIFFICULTY,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE,
   HARD_DIFFICULTY_TOOLTIP_TITLE,
-  CHAR_TOOLTIP_TITLE,
 } from "../../../constants/Constants";
 
 const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
@@ -430,41 +430,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
         </div>
       </div>
       <div className="stats">
-        <h3>{countDown} s </h3>
-        <Box display="flex" flexDirection="row">
-          <h3>WPM: {Math.round(wpm)}</h3>
-          {status === "finished" && (
-            <h4>Accuracy: {Math.round(statsCharCount[0])} %</h4>
-          )}
-          {status === "finished" && (
-            <Tooltip
-              title={
-                <span style={{ whiteSpace: "pre-line" }}>
-                  {CHAR_TOOLTIP_TITLE}
-                </span>
-              }
-            >
-              <h4>
-                Char:{" "}
-                <span className="correct-char-stats">{statsCharCount[1]}</span>/
-                <span className="incorrect-char-stats">
-                  {statsCharCount[2]}
-                </span>
-                /<span className="missing-char-stats">{statsCharCount[3]}</span>
-                /<span className="correct-char-stats">{statsCharCount[4]}</span>
-                /
-                <span className="incorrect-char-stats">
-                  {statsCharCount[5]}
-                </span>
-              </h4>
-            </Tooltip>
-          )}
-          {status === "finished" && (
-            <h4>
-              Raw KPM: {Math.round((rawKeyStrokes / countDownConstant) * 60.0)}
-            </h4>
-          )}
-        </Box>
+        <Stats status={status} wpm={wpm} countDown={countDown} countDownConstant={countDownConstant} statsCharCount={statsCharCount} rawKeyStrokes={rawKeyStrokes}></Stats>
         <div className="restart-button" key="restart-button">
           <Grid container justifyContent="center" alignItems="center">
             <Box display="flex" flexDirection="row">
