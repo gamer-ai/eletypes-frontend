@@ -1,6 +1,6 @@
 {
   "name": "eletype",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.9.0",

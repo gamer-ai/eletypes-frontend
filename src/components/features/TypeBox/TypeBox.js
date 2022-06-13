@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { wordsGenerator } from "../../../scripts/wordsGenerator";
+import { wordsGenerator, chineseWordsGenerator } from "../../../scripts/wordsGenerator";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import IconButton from "../../utils/IconButton";
 import Grid from "@mui/material/Grid";
@@ -19,6 +19,12 @@ import {
   HARD_DIFFICULTY,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE,
   HARD_DIFFICULTY_TOOLTIP_TITLE,
+  ENGLISH_MODE,
+  CHINESE_MODE,
+  ENGLISH_MODE_TOOLTIP_TITLE,
+  CHINESE_MODE_TOOLTIP_TITLE,
+  DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
+  HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE
 } from "../../../constants/Constants";
 
 const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
@@ -34,13 +40,34 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
     "difficulty"
   );
 
+  // local persist difficulty
+  const [language, setLanguage] = useLocalPersistState(
+    ENGLISH_MODE,
+    "language"
+  );
+
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
 
   // set up words state
-  const [words, setWords] = useState(() => {
-    return wordsGenerator(DEFAULT_WORDS_COUNT, difficulty);
+  const [wordsDict, setWordsDict] = useState(() => {
+    if (language === ENGLISH_MODE){
+      return wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, ENGLISH_MODE);
+    }
+    if (language === CHINESE_MODE){
+      return chineseWordsGenerator(CHINESE_MODE);
+    }
   });
+
+  const words = useMemo(
+    () =>
+      {return wordsDict.map(e => e.val);}
+      ,[wordsDict]);
+
+  const wordsKey = useMemo(
+    () =>
+      {return wordsDict.map(e => e.key);}
+  ,[wordsDict]);
 
   const wordSpanRefs = useMemo(
     () =>
@@ -96,12 +123,19 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
     }
   }, [currWordIndex, wordSpanRefs]);
 
-  const reset = (newCountDown, difficulty) => {
+  const reset = (newCountDown, difficulty, language) => {
     setStatus("waiting");
-    setWords(wordsGenerator(DEFAULT_WORDS_COUNT, difficulty));
+    if (language===CHINESE_MODE){
+      setWordsDict(chineseWordsGenerator(language));
+    }
+    if (language === ENGLISH_MODE){
+      setWordsDict(wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, language));
+
+    }
     setCountDownConstant(newCountDown);
     setCountDown(newCountDown);
     setDifficulty(difficulty);
+    setLanguage(language);
     clearInterval(intervalId);
     setWpm(0);
     setRawKeyStrokes(0);
@@ -123,7 +157,6 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
 
   const start = () => {
     if (status === "finished") {
-      setWords(wordsGenerator(DEFAULT_WORDS_COUNT));
       setCurrInput("");
       setPrevInput("");
       setCurrWordIndex(0);
@@ -363,6 +396,20 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
       return "word";
     }
   };
+  
+  const getChineseWordKeyClassName = (wordIdx) => {
+    if (wordsInCorrect.has(wordIdx)) {
+      if (currWordIndex === wordIdx) {
+        return "chinese-word-key error-chinese active-chinese";
+      }
+      return "chinese-word-key error-chinese";
+    } else {
+      if (currWordIndex === wordIdx) {
+        return "chinese-word-key active-chinese";
+      }
+      return "chinese-word-key";
+    }
+  };
 
   const getCharClassName = (wordIdx, charIdx, char) => {
     const keyString = wordIdx + "." + charIdx;
@@ -409,10 +456,17 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
     return "inactive-button";
   };
 
+  const getLanguageButtonClassName = (buttonLanguage) => {
+    if (language === buttonLanguage) {
+      return "active-button";
+    }
+    return "inactive-button";
+  };
+
   return (
     <div onClick={handleInputFocus}>
       <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
-      <div className="type-box">
+      {language === ENGLISH_MODE && <div className="type-box">
         <div className="words">
           {words.map((word, i) => (
             <span key={i} ref={wordSpanRefs[i]} className={getWordClassName(i)}>
@@ -428,9 +482,36 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
             </span>
           ))}
         </div>
-      </div>
+      </div> }
+      {language === CHINESE_MODE && <div className="type-box-chinese">
+        <div className="words">
+          {words.map((word, i) => (
+            <div key={i+"word"}>
+            <span key={i + "anchor"} className={getChineseWordKeyClassName(i)} ref={wordSpanRefs[i]} > {wordsKey[i]}</span>
+            <span key={i + "val"} className={getWordClassName(i)}>
+              {word.split("").map((char, idx) => (
+                <span
+                  key={"word" + idx}
+                  className={getCharClassName(i, idx, char)}
+                >
+                  {char}
+                </span>
+              ))}
+              {getExtraCharsDisplay(word, i)}
+            </span>
+            </div>
+          ))}
+        </div>
+      </div> }
       <div className="stats">
-        <Stats status={status} wpm={wpm} countDown={countDown} countDownConstant={countDownConstant} statsCharCount={statsCharCount} rawKeyStrokes={rawKeyStrokes}></Stats>
+        <Stats
+          status={status}
+          wpm={wpm}
+          countDown={countDown}
+          countDownConstant={countDownConstant}
+          statsCharCount={statsCharCount}
+          rawKeyStrokes={rawKeyStrokes}
+        ></Stats>
         <div className="restart-button" key="restart-button">
           <Grid container justifyContent="center" alignItems="center">
             <Box display="flex" flexDirection="row">
@@ -439,7 +520,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
                 color="secondary"
                 size="medium"
                 onClick={() => {
-                  reset(countDownConstant, difficulty);
+                  reset(countDownConstant, difficulty, language);
                 }}
               >
                 <RestartAltIcon />
@@ -448,7 +529,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
                 <>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_60, difficulty);
+                      reset(COUNT_DOWN_60, difficulty, language);
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_60)}>
@@ -457,7 +538,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_30, difficulty);
+                      reset(COUNT_DOWN_30, difficulty, language);
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_30)}>
@@ -466,7 +547,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_15, difficulty);
+                      reset(COUNT_DOWN_15, difficulty,language);
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_15)}>
@@ -480,10 +561,10 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
               <Box display="flex" flexDirection="row">
                 <IconButton
                   onClick={() => {
-                    reset(countDownConstant, DEFAULT_DIFFICULTY);
+                    reset(countDownConstant, DEFAULT_DIFFICULTY, language);
                   }}
                 >
-                  <Tooltip title={DEFAULT_DIFFICULTY_TOOLTIP_TITLE}>
+                  <Tooltip title={language === ENGLISH_MODE ? DEFAULT_DIFFICULTY_TOOLTIP_TITLE : DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE}>
                     <span
                       className={getDifficultyButtonClassName(
                         DEFAULT_DIFFICULTY
@@ -495,14 +576,40 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    reset(countDownConstant, HARD_DIFFICULTY);
+                    reset(countDownConstant, HARD_DIFFICULTY, language);
                   }}
                 >
-                  <Tooltip title={HARD_DIFFICULTY_TOOLTIP_TITLE}>
+                  <Tooltip title={language === ENGLISH_MODE ? HARD_DIFFICULTY_TOOLTIP_TITLE : HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE}>
                     <span
                       className={getDifficultyButtonClassName(HARD_DIFFICULTY)}
                     >
                       {HARD_DIFFICULTY}
+                    </span>
+                  </Tooltip>
+                </IconButton>
+                <IconButton>
+                  {" "}
+                  <span className="menu-separator"> | </span>{" "}
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    reset(countDownConstant, difficulty, ENGLISH_MODE);
+                  }}
+                >
+                  <Tooltip title={ENGLISH_MODE_TOOLTIP_TITLE}>
+                    <span className={getLanguageButtonClassName(ENGLISH_MODE)}>
+                      eng
+                    </span>
+                  </Tooltip>
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    reset(countDownConstant, difficulty, CHINESE_MODE);
+                  }}
+                >
+                  <Tooltip title={CHINESE_MODE_TOOLTIP_TITLE}>
+                    <span className={getLanguageButtonClassName(CHINESE_MODE)}>
+                      chn
                     </span>
                   </Tooltip>
                 </IconButton>

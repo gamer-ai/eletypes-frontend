@@ -96,6 +96,23 @@ export const GlobalStyles = createGlobalStyle`
       width: 60%;
     }
   }
+  .type-box-chinese {
+    display: block;
+    max-width: 1000px;
+    height: 150px;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative
+    top: 10%;
+    @media only screen 
+    and (min-device-width: 375px) 
+    and (max-device-width: 812px) 
+    and (-webkit-min-device-pixel-ratio: 3) { 
+      top:200px;
+      width: 60%;
+    }
+  }
   .words{
     color: ${({ theme }) => theme.textTypeBox};
     font-size: 28px;
@@ -201,5 +218,23 @@ export const GlobalStyles = createGlobalStyle`
     margin-top: 8px;
     margin-bottom: 8px;
     border-radius: 16px;
+  }
+  .menu-separater{
+    color: ${({ theme }) => theme.textTypeBox};
+    background-color: none;
+    font-size: 16px;
+  }
+  .chinese-word-key{
+    margin: 4px 4px;
+    color: ${({ theme }) => theme.textTypeBox};
+    background-color: none;
+    font-size: 15px;
+    scroll-margin: 4px;
+  }
+  .error-chinese{
+    color: red;
+  }
+  .active-chinese{
+    color: ${({ theme }) => theme.stats};
   }
 `;
