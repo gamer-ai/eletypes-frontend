@@ -224,6 +224,14 @@ export const GlobalStyles = createGlobalStyle`
     background-color: none;
     font-size: 16px;
   }
+  .chinese-word{
+    margin-left: 4px;
+    margin-right: 4px;
+    display: flex;
+    padding-right: 2px;
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+  }
   .chinese-word-key{
     margin: 4px 4px;
     color: ${({ theme }) => theme.textTypeBox};

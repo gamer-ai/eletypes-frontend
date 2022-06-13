@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { wordsGenerator, chineseWordsGenerator } from "../../../scripts/wordsGenerator";
+import {
+  wordsGenerator,
+  chineseWordsGenerator,
+} from "../../../scripts/wordsGenerator";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import IconButton from "../../utils/IconButton";
 import Grid from "@mui/material/Grid";
@@ -24,7 +27,7 @@ import {
   ENGLISH_MODE_TOOLTIP_TITLE,
   CHINESE_MODE_TOOLTIP_TITLE,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
-  HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE
+  HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
 } from "../../../constants/Constants";
 
 const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
@@ -51,23 +54,21 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
 
   // set up words state
   const [wordsDict, setWordsDict] = useState(() => {
-    if (language === ENGLISH_MODE){
+    if (language === ENGLISH_MODE) {
       return wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, ENGLISH_MODE);
     }
-    if (language === CHINESE_MODE){
+    if (language === CHINESE_MODE) {
       return chineseWordsGenerator(CHINESE_MODE);
     }
   });
 
-  const words = useMemo(
-    () =>
-      {return wordsDict.map(e => e.val);}
-      ,[wordsDict]);
+  const words = useMemo(() => {
+    return wordsDict.map((e) => e.val);
+  }, [wordsDict]);
 
-  const wordsKey = useMemo(
-    () =>
-      {return wordsDict.map(e => e.key);}
-  ,[wordsDict]);
+  const wordsKey = useMemo(() => {
+    return wordsDict.map((e) => e.key);
+  }, [wordsDict]);
 
   const wordSpanRefs = useMemo(
     () =>
@@ -125,12 +126,11 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
 
   const reset = (newCountDown, difficulty, language) => {
     setStatus("waiting");
-    if (language===CHINESE_MODE){
+    if (language === CHINESE_MODE) {
       setWordsDict(chineseWordsGenerator(language));
     }
-    if (language === ENGLISH_MODE){
+    if (language === ENGLISH_MODE) {
       setWordsDict(wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, language));
-
     }
     setCountDownConstant(newCountDown);
     setCountDown(newCountDown);
@@ -396,7 +396,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
       return "word";
     }
   };
-  
+
   const getChineseWordKeyClassName = (wordIdx) => {
     if (wordsInCorrect.has(wordIdx)) {
       if (currWordIndex === wordIdx) {
@@ -411,6 +411,19 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
     }
   };
 
+  const getChineseWordClassName = (wordIdx) => {
+    if (wordsInCorrect.has(wordIdx)) {
+      if (currWordIndex === wordIdx) {
+        return "chinese-word error-word active-word";
+      }
+      return "chinese-word error-word";
+    } else {
+      if (currWordIndex === wordIdx) {
+        return "chinese-word active-word";
+      }
+      return "chinese-word";
+    }
+  };
   const getCharClassName = (wordIdx, charIdx, char) => {
     const keyString = wordIdx + "." + charIdx;
     if (history[keyString] === true) {
@@ -466,43 +479,58 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
   return (
     <div onClick={handleInputFocus}>
       <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
-      {language === ENGLISH_MODE && <div className="type-box">
-        <div className="words">
-          {words.map((word, i) => (
-            <span key={i} ref={wordSpanRefs[i]} className={getWordClassName(i)}>
-              {word.split("").map((char, idx) => (
-                <span
-                  key={"word" + idx}
-                  className={getCharClassName(i, idx, char)}
-                >
-                  {char}
-                </span>
-              ))}
-              {getExtraCharsDisplay(word, i)}
-            </span>
-          ))}
+      {language === ENGLISH_MODE && (
+        <div className="type-box">
+          <div className="words">
+            {words.map((word, i) => (
+              <span
+                key={i}
+                ref={wordSpanRefs[i]}
+                className={getWordClassName(i)}
+              >
+                {word.split("").map((char, idx) => (
+                  <span
+                    key={"word" + idx}
+                    className={getCharClassName(i, idx, char)}
+                  >
+                    {char}
+                  </span>
+                ))}
+                {getExtraCharsDisplay(word, i)}
+              </span>
+            ))}
+          </div>
         </div>
-      </div> }
-      {language === CHINESE_MODE && <div className="type-box-chinese">
-        <div className="words">
-          {words.map((word, i) => (
-            <div key={i+"word"}>
-            <span key={i + "anchor"} className={getChineseWordKeyClassName(i)} ref={wordSpanRefs[i]} > {wordsKey[i]}</span>
-            <span key={i + "val"} className={getWordClassName(i)}>
-              {word.split("").map((char, idx) => (
+      )}
+      {language === CHINESE_MODE && (
+        <div className="type-box-chinese">
+          <div className="words">
+            {words.map((word, i) => (
+              <div key={i + "word"}>
                 <span
-                  key={"word" + idx}
-                  className={getCharClassName(i, idx, char)}
+                  key={i + "anchor"}
+                  className={getChineseWordKeyClassName(i)}
+                  ref={wordSpanRefs[i]}
                 >
-                  {char}
+                  {" "}
+                  {wordsKey[i]}
                 </span>
-              ))}
-              {getExtraCharsDisplay(word, i)}
-            </span>
-            </div>
-          ))}
+                <span key={i + "val"} className={getChineseWordClassName(i)}>
+                  {word.split("").map((char, idx) => (
+                    <span
+                      key={"word" + idx}
+                      className={getCharClassName(i, idx, char)}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                  {getExtraCharsDisplay(word, i)}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
-      </div> }
+      )}
       <div className="stats">
         <Stats
           status={status}
@@ -547,7 +575,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_15, difficulty,language);
+                      reset(COUNT_DOWN_15, difficulty, language);
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_15)}>
@@ -564,7 +592,13 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
                     reset(countDownConstant, DEFAULT_DIFFICULTY, language);
                   }}
                 >
-                  <Tooltip title={language === ENGLISH_MODE ? DEFAULT_DIFFICULTY_TOOLTIP_TITLE : DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE}>
+                  <Tooltip
+                    title={
+                      language === ENGLISH_MODE
+                        ? DEFAULT_DIFFICULTY_TOOLTIP_TITLE
+                        : DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE
+                    }
+                  >
                     <span
                       className={getDifficultyButtonClassName(
                         DEFAULT_DIFFICULTY
@@ -579,7 +613,13 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
                     reset(countDownConstant, HARD_DIFFICULTY, language);
                   }}
                 >
-                  <Tooltip title={language === ENGLISH_MODE ? HARD_DIFFICULTY_TOOLTIP_TITLE : HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE}>
+                  <Tooltip
+                    title={
+                      language === ENGLISH_MODE
+                        ? HARD_DIFFICULTY_TOOLTIP_TITLE
+                        : HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE
+                    }
+                  >
                     <span
                       className={getDifficultyButtonClassName(HARD_DIFFICULTY)}
                     >
