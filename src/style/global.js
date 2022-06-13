@@ -99,7 +99,7 @@ export const GlobalStyles = createGlobalStyle`
   .type-box-chinese {
     display: block;
     max-width: 1000px;
-    height: 228px;
+    height: 240px;
     overflow: hidden;
     margin-left: auto;
     margin-right: auto;
