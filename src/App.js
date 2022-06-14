@@ -4,7 +4,6 @@ import { defaultTheme, themesOptions } from "./style/theme";
 import { GlobalStyles } from "./style/global";
 import TypeBox from "./components/features/TypeBox/TypeBox";
 import Logo from "./components/common/Logo";
-import FooterInfo from "./components/common/FooterInfo";
 import MusicPlayerSnackbar from "./components/features/MusicPlayer/MusicPlayerSnackbar";
 import FooterMenu from "./components/common/FooterMenu";
 
@@ -50,7 +49,6 @@ function App() {
   }, [isFocusedMode]);
 
   const textInputRef = useRef(null);
-  const isSiteInfoDisabled = isMusicMode || isFocusedMode;
 
   const focusTextInput = () => {
     textInputRef.current && textInputRef.current.focus();
@@ -63,6 +61,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <>
+      <div className="canvas">
         <GlobalStyles />
         <Logo isFocusedMode={isFocusedMode} isMusicMode={isMusicMode}></Logo>
         <TypeBox
@@ -78,13 +77,14 @@ function App() {
           toggleFocusedMode={toggleFocusedMode}
           toggleMusicMode={toggleMusicMode}
           isMusicMode={isMusicMode}
+          isFocusedMode = {isFocusedMode}
         ></FooterMenu>
         <MusicPlayerSnackbar
           isMusicMode={isMusicMode}
           isFocusedMode={isFocusedMode}
           onMouseLeave={() => focusTextInput()}
         ></MusicPlayerSnackbar>
-        <FooterInfo disabled={isSiteInfoDisabled}></FooterInfo>
+        </div>
       </>
     </ThemeProvider>
   );

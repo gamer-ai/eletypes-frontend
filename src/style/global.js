@@ -13,7 +13,8 @@ export const GlobalStyles = createGlobalStyle`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 100%;
+    width: 100%;
     background: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.text};
     padding: 0;
@@ -21,25 +22,37 @@ export const GlobalStyles = createGlobalStyle`
     font-family: ${({ theme }) => theme.fontFamily};
     transition: all 0.25s linear;
   }
-  header {
-    position: fixed;
-    top: 5%;
+  .canvas {
+      align-items: center;
+      display: grid;
+      gap: 2rem;
+      grid-auto-flow: row;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+      padding: 1rem;
+      transition: padding-top .125s;
+      width: 100vw;
+  }
+  .header {
+    position: relative;
+    display: block;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 3%;
+    top: 0;
     left:0;
     width: 100%;
     text-align: center;
   }
-  footer {
-    position: absolute;
-    bottom: 5%;
-    left: 5%;
+  .footer {
+    font-size: .75rem;
+    line-height: 1rem;
+    padding: 0;
+    position: relative;
+    text-align: center;
   }
   .bottom-info {
-    position: absolute;
-    bottom: 5%;
-    right: 5%;
-    font-size: 12px;
-    color: ${({ theme }) => theme.text},
-    opacity: 0.7;
+    color: ${({ theme }) => theme.title};
     margin: 4px;
   }
   small {
@@ -62,7 +75,12 @@ export const GlobalStyles = createGlobalStyle`
     opacity: 0.7;
   }
   .stats {
+    position: relative;
+    max-width: 1000px;
     margin-top: 50px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
     color: ${({ theme }) => theme.stats};
     bottom: 10%;
   }
@@ -119,11 +137,11 @@ export const GlobalStyles = createGlobalStyle`
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    align-content: flex-start;
+    align-content: center;
     user-select: none;
   }
   .word{
-    margin: 4px 4px;
+    margin: 5px 5px;
     display: flex;
     padding-right: 2px;
     border-bottom: 1px solid transparent;
@@ -236,8 +254,9 @@ export const GlobalStyles = createGlobalStyle`
     margin: 4px 4px;
     color: ${({ theme }) => theme.textTypeBox};
     background-color: none;
-    font-size: 15px;
+    font-size: 20px;
     scroll-margin: 4px;
+    text-align: center;
   }
   .error-chinese{
     color: red;
