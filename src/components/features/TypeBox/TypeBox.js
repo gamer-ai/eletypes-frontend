@@ -11,6 +11,8 @@ import Tooltip from "@mui/material/Tooltip";
 import useLocalPersistState from "../../../hooks/useLocalPersistState";
 import CapsLockSnackbar from "../CapsLockSnackbar";
 import Stats from "./Stats";
+import { Dialog } from "@mui/material";
+import DialogTitle from "@mui/material/DialogTitle";
 
 import {
   DEFAULT_COUNT_DOWN,
@@ -51,6 +53,23 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
 
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
+
+  // tab-enter restart dialog
+  const [openRestart, setOpenRestart] = useState(false);
+
+  const EnterkeyPressReset = (e) => {
+    // press enter/or tab to reset;
+    if (e.keyCode === 13 || e.keyCode === 9) {
+      e.preventDefault();
+      setOpenRestart(false);
+      reset(countDownConstant, difficulty, language);
+    } else {
+      setOpenRestart(false);
+    }
+  };
+  const handleTabKeyOpen = () => {
+    setOpenRestart(true);
+  };
 
   // set up words state
   const [wordsDict, setWordsDict] = useState(() => {
@@ -261,6 +280,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
     // disable tab key
     if (keyCode === 9) {
       e.preventDefault();
+      handleTabKeyOpen();
       return;
     }
 
@@ -668,6 +688,29 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
         value={currInput}
         onChange={(e) => UpdateInput(e)}
       />
+      <Dialog
+        PaperProps={{
+          style: {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+          },
+        }}
+        open={openRestart}
+        onKeyDown={EnterkeyPressReset}
+      >
+        <DialogTitle>
+          <div>
+            <span className="key-note"> press </span>
+            <span className="key-type">Tab</span>{" "}
+            <span className="key-note">/</span>{" "}
+            <span className="key-type">Enter</span>{" "}
+            <span className="key-note">to restart</span>
+          </div>
+          <span className="key-note"> press </span>
+          <span className="key-type">any key </span>{" "}
+          <span className="key-note">to exit</span>
+        </DialogTitle>
+      </Dialog>
     </div>
   );
 };

@@ -264,4 +264,16 @@ export const GlobalStyles = createGlobalStyle`
   .active-chinese{
     color: ${({ theme }) => theme.stats};
   }
+  .dialog{
+    background: ${({ theme }) => theme.background};
+  }
+  .key-type{
+    background: ${({ theme }) => theme.textTypeBox};
+    color: ${({ theme }) => theme.stats};
+    border-radius: 4px;
+  }
+  .key-note{
+    color: ${({ theme }) => theme.stats};
+    background: transparent;
+  }
 `;
