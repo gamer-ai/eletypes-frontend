@@ -2,6 +2,7 @@ import randomWords from "random-words";
 import {
   COMMON_WORDS,
   COMMON_CHINESE_WORDS,
+  COMMON_CHINESE_IDIOMS_WORDS
 } from "../constants/WordsMostCommon";
 import {
   DEFAULT_DIFFICULTY,
@@ -37,17 +38,30 @@ const wordsGenerator = (wordsCount, difficulty, languageMode) => {
   return ["something", "went", "wrong"];
 };
 
-const chineseWordsGenerator = (languageMode) => {
+const chineseWordsGenerator = ( difficulty, languageMode) => {
   if (languageMode === CHINESE_MODE) {
-    const ChineseWordList = [];
+    if (difficulty === DEFAULT_DIFFICULTY){
+      const ChineseWordList = [];
+      for (let i = 0; i < DEFAULT_WORDS_COUNT; i++) {
+        const rand = randomIntFromRange(0, 5000);
+        if (COMMON_CHINESE_WORDS[rand] && COMMON_CHINESE_WORDS[rand].val){
+          ChineseWordList.push(COMMON_CHINESE_WORDS[rand]);
+        }
+      }
+  
+      return ChineseWordList;
+    }
+
+    const ChineseIdiomsList = [];
     for (let i = 0; i < DEFAULT_WORDS_COUNT; i++) {
       const rand = randomIntFromRange(0, 5000);
-      if (COMMON_CHINESE_WORDS[rand] && COMMON_CHINESE_WORDS[rand].val){
-        ChineseWordList.push(COMMON_CHINESE_WORDS[rand]);
+      if (COMMON_CHINESE_IDIOMS_WORDS[rand] && COMMON_CHINESE_IDIOMS_WORDS[rand].val){
+        ChineseIdiomsList.push(COMMON_CHINESE_IDIOMS_WORDS[rand]);
       }
     }
 
-    return ChineseWordList;
+    return ChineseIdiomsList;
+
   }
 };
 

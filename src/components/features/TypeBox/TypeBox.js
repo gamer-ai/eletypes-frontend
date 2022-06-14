@@ -77,7 +77,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
       return wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, ENGLISH_MODE);
     }
     if (language === CHINESE_MODE) {
-      return chineseWordsGenerator(CHINESE_MODE);
+      return chineseWordsGenerator(difficulty ,CHINESE_MODE);
     }
   });
 
@@ -146,7 +146,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
   const reset = (newCountDown, difficulty, language) => {
     setStatus("waiting");
     if (language === CHINESE_MODE) {
-      setWordsDict(chineseWordsGenerator(language));
+      setWordsDict(chineseWordsGenerator(difficulty, language));
     }
     if (language === ENGLISH_MODE) {
       setWordsDict(wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, language));
