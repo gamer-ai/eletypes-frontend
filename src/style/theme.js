@@ -66,7 +66,7 @@ const arakiNobuyoshiTheme = {
   label: 'Araki Nobuyoshi',
   background: '#232335',
   text: '#0a4951',
-  gradient: 'linear-gradient(90deg, 	#dd2020 0%, #00c3e3 100%)',
+  gradient: 'linear-gradient(90deg, 	#232335 0%, #0a4951 100%)',
   title: '#B42D2C',
   textTypeBox: '#CCB1B0',
   stats: '#1a5426'
