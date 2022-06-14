@@ -42,7 +42,7 @@ const chineseWordsGenerator = (languageMode) => {
     const ChineseWordList = [];
     for (let i = 0; i < DEFAULT_WORDS_COUNT; i++) {
       const rand = randomIntFromRange(0, 5000);
-      if (COMMON_CHINESE_WORDS[rand] !== null){
+      if (COMMON_CHINESE_WORDS[rand].val !== null){
         ChineseWordList.push(COMMON_CHINESE_WORDS[rand]);
       }
     }
