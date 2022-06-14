@@ -277,6 +277,12 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
       return;
     }
 
+    // disable shift alt ctrl
+    if (keyCode  >= 16 && keyCode <= 18) {
+      e.preventDefault();
+      return;
+    }
+
     // disable tab key
     if (keyCode === 9) {
       e.preventDefault();
