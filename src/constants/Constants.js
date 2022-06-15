@@ -20,6 +20,7 @@ const SUPPORT_TOOLTIP_TITLE = "Help me keep the site live with your support : D 
 const FOCUS_MODE = "focus mode";
 
 const MUSIC_MODE = "spotify player. You will need to login spotify first to use the full feature.";
+const FREE_MODE = "Free typing mode\nType any thing, no pressure, it's coffee time! \n ";
 
 const ENGLISH_MODE = "ENGLISH_MODE";
 const CHINESE_MODE = "CHINESE_MODE";
@@ -44,5 +45,6 @@ CHINESE_MODE,
 ENGLISH_MODE_TOOLTIP_TITLE,
 CHINESE_MODE_TOOLTIP_TITLE,
 DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
-HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE
+HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
+FREE_MODE
 }

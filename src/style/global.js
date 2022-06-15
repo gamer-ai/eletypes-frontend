@@ -214,7 +214,10 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.textTypeBox};
   }
   .zen-button{
-    color: ${({ theme }) => theme.text};
+    color: ${({ theme }) => theme.stats};
+  }
+  .zen-button-deactive{
+    color: ${({ theme }) => theme.textTypeBox};
   }
   .support-me{
     color : #FF4081;
@@ -275,5 +278,28 @@ export const GlobalStyles = createGlobalStyle`
   .key-note{
     color: ${({ theme }) => theme.stats};
     background: transparent;
+  }
+  .textarea{
+    color: ${({ theme }) => theme.textTypeBox};
+    font-size: 28px;
+    background: transparent;
+    border: none;
+    width: 80%;
+    height: 80%;
+    caret-color: ${({ theme }) => theme.stats};
+    overflow: auto;
+    resize: none;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    outline: none;
+    border-radius: 4px;
+    @media only screen 
+    and (min-device-width: 375px) 
+    and (max-device-width: 812px) 
+    and (-webkit-min-device-pixel-ratio: 3) { 
+      top:200px;
+      width: 60%;
+    }
   }
 `;

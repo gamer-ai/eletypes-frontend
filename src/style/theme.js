@@ -65,7 +65,7 @@ const nintendoTheme = {
 const arakiNobuyoshiTheme = {
   label: 'Araki Nobuyoshi',
   background: '#232335',
-  text: '#0a4951',
+  text: '#086063',
   gradient: 'linear-gradient(90deg, 	#232335 0%, #0a4951 100%)',
   title: '#B42D2C',
   textTypeBox: '#CCB1B0',

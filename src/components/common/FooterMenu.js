@@ -3,16 +3,16 @@ import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
 import { Tooltip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import MusicIconButton from "../utils/MusicIconButton";
 import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
 import Select from "../utils/Select";
-import { FOCUS_MODE } from "../../constants/Constants";
+import { FOCUS_MODE, FREE_MODE, MUSIC_MODE } from "../../constants/Constants";
 import { Link } from "@mui/material";
 import SupportMe from "../features/SupportMe";
 import { GITHUB_TOOLTIP_TITLE } from "../../constants/Constants";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import KeyboardAltIcon from "@mui/icons-material/KeyboardAlt";
-
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
+import EmojiFoodBeverageIcon from "@mui/icons-material/EmojiFoodBeverage";
 
 const FooterMenu = ({
   themesOptions,
@@ -20,11 +20,20 @@ const FooterMenu = ({
   handleThemeChange,
   toggleFocusedMode,
   toggleMusicMode,
+  toggleCoffeeMode,
   isMusicMode,
   isFocusedMode,
+  isCoffeeMode,
 }) => {
   const isSiteInfoDisabled = isMusicMode || isFocusedMode;
   const isBottomLogoEnabled = isFocusedMode && !isMusicMode;
+
+  const getModeButtonClassName = (mode) => {
+    if (mode) {
+      return "zen-button";
+    }
+    return "zen-button-deactive";
+  };
 
   return (
     <div className="footer">
@@ -42,13 +51,29 @@ const FooterMenu = ({
 
           <IconButton onClick={toggleFocusedMode}>
             <Tooltip title={FOCUS_MODE}>
-              <span className="zen-button">
+              <span className={getModeButtonClassName(isFocusedMode)}>
                 <SelfImprovementIcon fontSize="medium"></SelfImprovementIcon>
               </span>
             </Tooltip>
           </IconButton>
+          <IconButton onClick={toggleCoffeeMode}>
+            <Tooltip
+              title={
+                <span style={{ whiteSpace: "pre-line" }}>{FREE_MODE}</span>
+              }
+            >
+              <span className={getModeButtonClassName(isCoffeeMode)}>
+                <EmojiFoodBeverageIcon fontSize="medium"></EmojiFoodBeverageIcon>
+              </span>
+            </Tooltip>
+          </IconButton>
+
           <IconButton onClick={toggleMusicMode}>
-            <MusicIconButton disabled={!isMusicMode}></MusicIconButton>
+            <Tooltip title={MUSIC_MODE}>
+              <span className={getModeButtonClassName(isMusicMode)}>
+                <MusicNoteIcon fontSize="medium"></MusicNoteIcon>
+              </span>
+            </Tooltip>{" "}
           </IconButton>
         </Box>
         {!isSiteInfoDisabled && (
@@ -95,7 +120,8 @@ const FooterMenu = ({
               color="inherit"
             >
               <span>
-              Ele Types <KeyboardAltIcon fontSize="small" /></span>
+                Ele Types <KeyboardAltIcon fontSize="small" />
+              </span>
             </IconButton>
           </Box>
         )}
