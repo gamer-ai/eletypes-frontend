@@ -25,7 +25,7 @@ export const GlobalStyles = createGlobalStyle`
   .canvas {
       align-items: center;
       display: grid;
-      gap: 2rem;
+      gap: 0.5rem;
       grid-auto-flow: row;
       grid-template-rows: auto 1fr auto;
       min-height: 100vh;
