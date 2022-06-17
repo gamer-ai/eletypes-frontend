@@ -298,7 +298,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
 
     // update stats when typing
     const currWpm =
-      (wpmKeyStrokes / 4 / (countDownConstant - countDown)) * 60.0;
+      (wpmKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0;
     setWpm(currWpm);
 
     // start the game by typing any thing
@@ -395,6 +395,9 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
       setInputWordsHistory(inputWordsHistoryUpdate);
       // reset prevInput to empty (will not go back)
       setPrevInput("");
+
+      // here count the space as effective wpm. 
+      setWpmKeyStrokes(wpmKeyStrokes + 1);
       return true;
     } else {
       // console.log("detected unmatch");
