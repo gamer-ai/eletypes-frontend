@@ -7,9 +7,10 @@
 
 An elegant typing test tool.
 
+![GitHub stars](https://img.shields.io/github/stars/gamer-ai/eletype-frontend?style=social)
+![GitHub forks](https://img.shields.io/github/forks/gamer-ai/eletype-frontend?style=social)
 
 [![GitHub issues](https://img.shields.io/github/issues/gamer-ai/eletype-frontend)](https://github.com/gamer-ai/eletype-frontend/issues)
-[![GitHub stars](https://img.shields.io/github/stars/gamer-ai/eletype-frontend)](https://github.com/gamer-ai/eletype-frontend/stargazers)
 
 
 > Typing rule and interactions was inspired by the famous [monkeytype.com](www.monkeytype.com);
@@ -34,6 +35,14 @@ An elegant typing test tool.
 14. restart test with current settings
 15. Stats to show at test finished
 16. local persist storage for themes, difficulty mode, focused mode, timer settings.
+17. language mode:
+  - Eng Hard: Random blogs Words data source
+  - Eng Normal: Top 1000 most frequent used English words
+  - CHN Pinyin Hard: Chinese top 1500 idioms
+  - CHN Pinyin Normal: Chinese top 5000 words/char
+18. Free typing mode: an aesthetic pleasing typing area for free typing.
+
+
 
 ### Themes:
 
@@ -46,6 +55,8 @@ Current Themes:
 - Cyber (cyberpunk inspired)
 - Steam (steampunk inspired)
 - Light
+- Nintendo
+- Araki Nobuyoshi
 
 ### Caps Lock Detection
 
@@ -59,18 +70,9 @@ Current Themes:
 
 Focus mode will move header to footer. hide the setting menu. leave only timer, wpm. If music enabled, a compact spotify will be put in footer.
 
-### More to come
+#### Feature Requests
 
-> Requests from the community brief*
-
-#### Feature Request
-1. Support CHN pinyin. (working)
-
-#### Implementation improvements
-1. Standalone source words file.
-
-#### Done requests:
-1. localStorage persist states for theme, timer, difficulty, focused mode settings.
+https://github.com/gamer-ai/eletype-frontend/issues
 
 ### `npm start`
 
