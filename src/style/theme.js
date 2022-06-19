@@ -72,6 +72,15 @@ const arakiNobuyoshiTheme = {
   stats: '#1a5426'
 };
 
+const heroTheme = {
+  label: 'Hero',
+  background: '#440402',
+  text: '#3A3E47',
+  gradient: 'linear-gradient(90deg, 	#70A960 0%, #76C9A5 100%)',
+  title: '#B80100',
+  textTypeBox: '#CD6A5A',
+  stats: '#6A839D'
+};
 
 const defaultTheme = darkTheme;
 
@@ -82,7 +91,8 @@ const themesOptions = [
     { value: cyberTheme, label: 'Cyber' },
     { value: steamTheme, label: 'Steam' },
     { value: lightTheme, label: 'Light' },
-    { value: arakiNobuyoshiTheme, label: 'Araki Nobuyoshi'}
+    { value: arakiNobuyoshiTheme, label: 'Araki Nobuyoshi'},
+    { value: heroTheme, label: 'Hero'}
   ];
 
 export {
@@ -93,6 +103,7 @@ export {
     terminalTheme,
     nintendoTheme,
     arakiNobuyoshiTheme,
+    heroTheme,
     defaultTheme,
     themesOptions
 }
