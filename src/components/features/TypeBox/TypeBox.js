@@ -91,10 +91,10 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
 
   const wordSpanRefs = useMemo(
     () =>
-      Array(DEFAULT_WORDS_COUNT)
+      Array(words.length)
         .fill(0)
         .map((i) => React.createRef()),
-    []
+    [words]
   );
 
   // set up timer state
@@ -132,6 +132,16 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
   const [currChar, setCurrChar] = useState("");
 
   useEffect(() => {
+    if (currWordIndex === DEFAULT_WORDS_COUNT - 1){
+      if (language === ENGLISH_MODE) {
+        const generatedEng =  wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, ENGLISH_MODE);
+        setWordsDict(currentArray => [...currentArray, ...generatedEng]);
+      }
+      if (language === CHINESE_MODE) {
+        const generatedChinese = chineseWordsGenerator(difficulty ,CHINESE_MODE);
+        setWordsDict(currentArray => [...currentArray, ...generatedChinese]);
+      }
+    }
     if (
       currWordIndex !== 0 &&
       wordSpanRefs[currWordIndex].current.offsetLeft <
@@ -141,7 +151,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
     } else {
       return;
     }
-  }, [currWordIndex, wordSpanRefs]);
+  }, [currWordIndex, wordSpanRefs, difficulty, language]);
 
   const reset = (newCountDown, difficulty, language) => {
     setStatus("waiting");
