@@ -82,6 +82,16 @@ const heroTheme = {
   stats: '#6A839D'
 };
 
+const budapestTheme = {
+  label: 'Budapest',
+  background: 'linear-gradient(to right, #d48fa2,#d48fa2 15%,#74647f 15%, #74647f 85%,#d48fa2 85%);',
+  text: '#b1b7cd',
+  gradient: 'linear-gradient(90deg, 	#d48fa2 0%, #74647f 100%)',
+  title: '#647e99',
+  textTypeBox: '#ecca9c',
+  stats: '#be9198'
+};
+
 const defaultTheme = darkTheme;
 
 const themesOptions = [
@@ -90,9 +100,10 @@ const themesOptions = [
     { value: nintendoTheme, label: 'Nintendo'},
     { value: cyberTheme, label: 'Cyber' },
     { value: steamTheme, label: 'Steam' },
-    { value: lightTheme, label: 'Light' },
     { value: arakiNobuyoshiTheme, label: 'Araki Nobuyoshi'},
-    { value: heroTheme, label: 'Hero'}
+    { value: heroTheme, label: 'Hero'},
+    { value: budapestTheme, label: 'Budapest'},
+    { value: lightTheme, label: 'Light' }
   ];
 
 export {
@@ -104,6 +115,7 @@ export {
     nintendoTheme,
     arakiNobuyoshiTheme,
     heroTheme,
+    budapestTheme,
     defaultTheme,
     themesOptions
 }
