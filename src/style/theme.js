@@ -6,6 +6,7 @@ const lightTheme = {
     title: '#2979ff',
     textTypeBox: '#9E9E9E',
     stats: '#3D5AFE',
+    fontFamily: 'sans-serif'
   };
   
 const darkTheme = {
@@ -15,7 +16,8 @@ const darkTheme = {
     gradient: 'linear-gradient(315deg, #F7971E 0%, #FFD200 94%)',
     title: '#ffc107',
     textTypeBox: '#706d6d',
-    stats: '#BB86FC'
+    stats: '#BB86FC',
+    fontFamily: 'sans-serif'
   };
 
 const cyberTheme = {
@@ -69,7 +71,8 @@ const arakiNobuyoshiTheme = {
   gradient: 'linear-gradient(90deg, 	#232335 0%, #0a4951 100%)',
   title: '#B42D2C',
   textTypeBox: '#CCB1B0',
-  stats: '#1a5426'
+  stats: '#1a5426',
+  fontFamily: 'sans-serif'
 };
 
 const heroTheme = {
@@ -79,7 +82,8 @@ const heroTheme = {
   gradient: 'linear-gradient(90deg, 	#70A960 0%, #76C9A5 100%)',
   title: '#B80100',
   textTypeBox: '#CD6A5A',
-  stats: '#6A839D'
+  stats: '#6A839D',
+  fontFamily: 'sans-serif'
 };
 
 const budapestTheme = {
@@ -89,7 +93,8 @@ const budapestTheme = {
   gradient: 'linear-gradient(90deg, 	#d48fa2 0%, #74647f 100%)',
   title: '#647e99',
   textTypeBox: '#ecca9c',
-  stats: '#be9198'
+  stats: '#be9198',
+  fontFamily: 'sans-serif'
 };
 
 const defaultTheme = darkTheme;
