@@ -3,7 +3,7 @@ import { ThemeProvider } from "styled-components";
 import { defaultTheme, themesOptions } from "./style/theme";
 import { GlobalStyles } from "./style/global";
 import TypeBox from "./components/features/TypeBox/TypeBox";
-import SentenceBox from './components/features/SentenceBox/SentenceBox';
+import SentenceBox from "./components/features/SentenceBox/SentenceBox";
 import Logo from "./components/common/Logo";
 import MusicPlayerSnackbar from "./components/features/MusicPlayer/MusicPlayerSnackbar";
 import FooterMenu from "./components/common/FooterMenu";
@@ -96,7 +96,7 @@ function App() {
       focusTextInput();
       return;
     }
-    if (isSentenceGameMode){
+    if (isSentenceGameMode) {
       focusSentenceInput();
       return;
     }
@@ -105,7 +105,14 @@ function App() {
       return;
     }
     return;
-  }, [theme, isFocusedMode, isMusicMode, isCoffeeMode, isWordGameMode, isSentenceGameMode]);
+  }, [
+    theme,
+    isFocusedMode,
+    isMusicMode,
+    isCoffeeMode,
+    isWordGameMode,
+    isSentenceGameMode,
+  ]);
 
   return (
     <ThemeProvider theme={theme}>
