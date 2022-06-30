@@ -1,6 +1,4 @@
-
-   
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
   *,
@@ -75,7 +73,7 @@ export const GlobalStyles = createGlobalStyle`
     opacity: 0.7;
   }
   .stats {
-    position: relative;
+    display: block;
     max-width: 1000px;
     margin-top: 50px;
     margin-bottom: 20px;
@@ -294,6 +292,60 @@ export const GlobalStyles = createGlobalStyle`
     position: relative;
     outline: none;
     border-radius: 4px;
+    @media only screen 
+    and (min-device-width: 375px) 
+    and (max-device-width: 812px) 
+    and (-webkit-min-device-pixel-ratio: 3) { 
+      top:200px;
+      width: 60%;
+    }
+  }
+  .active-game-mode-button{
+    color: ${({ theme }) => theme.stats};
+    font-size: 16px;
+  }
+  .inactive-game-mode-button{
+    color: ${({ theme }) => theme.textTypeBox};
+    font-size: 16px;
+  }
+  .error-sentence-char{
+    color: red;
+  }
+  .sentence-char{
+    color: ${({ theme }) => theme.textTypeBox};
+  }
+  .correct-sentence-char{
+    color: ${({ theme }) => theme.text};
+  }
+  .sentence-input-field{
+    color: ${({ theme }) => theme.textTypeBox};
+    font-size: 28px;
+    background: transparent;
+    border: none;
+    caret-color: ${({ theme }) => theme.stats};
+    outline: none;
+    padding: 0;
+    font-family: ${({ theme }) => theme.fontFamily};
+  }
+  .sentence-display-field{
+    font-size: 28px;
+  }
+  .next-sentence-display{
+    font-family: ${({ theme }) => theme.fontFamily};
+    color: ${({ theme }) => theme.textTypeBox};
+    display: block;
+    margin-top: 10px;
+    font-size: 16px;
+  }
+  .type-box-sentence {
+    display: block;
+    max-width: 1000px;
+    height: 240px;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative
+    top: 10%;
     @media only screen 
     and (min-device-width: 375px) 
     and (max-device-width: 812px) 

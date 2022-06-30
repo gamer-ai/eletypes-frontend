@@ -5,7 +5,7 @@ import { Tooltip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
 import Select from "../utils/Select";
-import { FOCUS_MODE, FREE_MODE, MUSIC_MODE } from "../../constants/Constants";
+import { FOCUS_MODE, FREE_MODE, MUSIC_MODE, WORD_MODE_LABEL, SENTENCE_MODE_LABEL, GAME_MODE_DEFAULT, GAME_MODE_SENTENCE} from "../../constants/Constants";
 import { Link } from "@mui/material";
 import SupportMe from "../features/SupportMe";
 import { GITHUB_TOOLTIP_TITLE } from "../../constants/Constants";
@@ -24,6 +24,8 @@ const FooterMenu = ({
   isMusicMode,
   isFocusedMode,
   isCoffeeMode,
+  gameMode,
+  handleGameModeChange,
 }) => {
   const isSiteInfoDisabled = isMusicMode || isFocusedMode;
   const isBottomLogoEnabled = isFocusedMode && !isMusicMode;
@@ -34,6 +36,13 @@ const FooterMenu = ({
     }
     return "zen-button-deactive";
   };
+
+  const getGameModeButtonClassName = (currMode, buttonMode) => {
+    if (currMode === buttonMode){
+      return "active-game-mode-button";
+    }
+    return "inactive-game-mode-button";
+  }
 
   return (
     <div className="footer">
@@ -75,6 +84,27 @@ const FooterMenu = ({
               </span>
             </Tooltip>{" "}
           </IconButton>
+          { !isCoffeeMode && (<>
+            <IconButton
+              onClick={() => {
+                handleGameModeChange(GAME_MODE_DEFAULT)
+              }}
+            >
+              <span className={getGameModeButtonClassName(gameMode, GAME_MODE_DEFAULT)}>
+                {WORD_MODE_LABEL}
+              </span>
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                handleGameModeChange(GAME_MODE_SENTENCE)
+              }}
+            >
+              <span className={getGameModeButtonClassName(gameMode, GAME_MODE_SENTENCE)}>
+                {SENTENCE_MODE_LABEL}
+              </span>
+            </IconButton>
+
+          </>)}
         </Box>
         {!isSiteInfoDisabled && (
           <Box display="block" flexDirection="row">

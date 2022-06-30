@@ -10,13 +10,7 @@ import {
   CHINESE_MODE,
   DEFAULT_WORDS_COUNT,
 } from "../constants/Constants";
-
-const randomIntFromRange = (min, max) => {
-  const minNorm = Math.ceil(min);
-  const maxNorm = Math.floor(max);
-  const idx = Math.floor(Math.random() * (maxNorm - minNorm + 1) + minNorm);
-  return idx;
-};
+import { randomIntFromRange } from "./randomUtils";
 
 const wordsGenerator = (wordsCount, difficulty, languageMode) => {
   if (languageMode === ENGLISH_MODE) {
