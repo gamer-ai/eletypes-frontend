@@ -18,6 +18,15 @@ const SupportMe = () => {
             src={WechatQRCode}
             alt="WechatQRCode"
           />
+          <span style={{ whiteSpace: "pre-line" }}>
+            <a href="https://www.buymeacoffee.com/daguozi">
+              <img
+                className="support-me-image"
+                alt="buy-me-a-coffee"
+                src="https://img.buymeacoffee.com/button-api/?text=or Buy me a coffee&emoji=&slug=daguozi&button_colour=FFDD00&font_colour=000000&font_family=Arial&outline_colour=000000&coffee_colour=ffffff"
+              />
+            </a>
+          </span>
         </div>
       }
       placement="top"
