@@ -124,14 +124,6 @@ const FooterMenu = ({
                 <GitHubIcon></GitHubIcon>
               </IconButton>
             </Tooltip>
-            <Link
-              color="inherit"
-              margin="inherit"
-              underline="none"
-              href="https://github.com/gamer-ai/eletype-frontend/blob/main/LICENSE"
-            >
-              &copy;GPLv3
-            </Link>
             <span>{"    "}</span>
             <Link
               color="inherit"
