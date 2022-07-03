@@ -163,7 +163,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
 
     if (keyCode === 13) {
       if (currInput.length >= sentences[currSentenceIndex].length) {
-        if (currSentenceIndex + 1 === DEFAULT_SENTENCES_COUNT) {
+        if (currSentenceIndex + 1 === sentencesCountConstant) {
           setStatus("finished");
           setTimeRunning(false);
           return;
