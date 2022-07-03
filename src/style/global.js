@@ -244,8 +244,9 @@ export const GlobalStyles = createGlobalStyle`
     font-size: 16px;
   }
   .chinese-word{
-    margin-left: 4px;
-    margin-right: 4px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
     display: flex;
     padding-right: 2px;
     border-bottom: 1px solid transparent;
@@ -255,6 +256,8 @@ export const GlobalStyles = createGlobalStyle`
     margin: 4px 4px;
     color: ${({ theme }) => theme.textTypeBox};
     background-color: none;
+    display: flex;
+    justify-content: center;
     font-size: 20px;
     scroll-margin: 4px;
     text-align: center;
