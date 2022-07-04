@@ -17,7 +17,7 @@ const sentencesGenerator = (sentencesCount, language) => {
   if (language === CHINESE_MODE) {
     const ChinseseSentencesList = [];
     for (let i = 0; i < sentencesCount; i++) {
-      const rand = randomIntFromRange(0, 36);
+      const rand = randomIntFromRange(0, 45);
       ChinseseSentencesList.push(CHINESE_SENTENCES[rand]);
     }
     return ChinseseSentencesList;
