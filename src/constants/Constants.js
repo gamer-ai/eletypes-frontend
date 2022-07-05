@@ -14,8 +14,10 @@ const CHINESE_MODE_TOOLTIP_TITLE = "Chinese Pinyin Mode";
 const DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE = "normal mode generates random words from top 5000 most frequently used words in Chinese dataset.";
 const HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE = "hard mode generates random words from top 1500 most used Chinese idioms.";
 
-const GITHUB_TOOLTIP_TITLE = "Dear visitors: \n For feature requests or bug reports, please submit an issue to the github repo. \n Welcome contributing with a fork. \n If you like my works, please star the project. \n Thanks!";
-const SUPPORT_TOOLTIP_TITLE = "Help me keep the site live with your support : D \n Appreciate with love!";
+const GITHUB_TOOLTIP_TITLE = "Dear visitors: \n For feature requests or bug reports, please submit an issue to the github repo. \n Welcome contributing with a fork. \n If you like my works, please star the project. \n Thanks! \n";
+const SUPPORT_TOOLTIP_TITLE = "Help me keep the site live with your support : D \n Appreciate with love! \n";
+const AUTHOR = "author: @Muyang Guo\n";
+const GITHUB_REPO_LINK = "project: @Github\n";
 
 const FOCUS_MODE = "focus mode";
 
@@ -70,5 +72,7 @@ DEFAULT_SENTENCES_COUNT,
 TEN_SENTENCES_COUNT,
 FIFTEEN_SENTENCES_COUNT,
 ENGLISH_SENTENCE_MODE_TOOLTIP_TITLE,
-CHINESE_SENTENCE_MODE_TOOLTIP_TITLE
+CHINESE_SENTENCE_MODE_TOOLTIP_TITLE,
+AUTHOR,
+GITHUB_REPO_LINK
 }

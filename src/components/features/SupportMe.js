@@ -10,7 +10,7 @@ const SupportMe = () => {
     <Tooltip
       title={
         <div>
-          <span style={{ whiteSpace: "pre-line" }}>
+          <span style={{ whiteSpace: "pre-line", fontSize:"12px"}}>
             {SUPPORT_TOOLTIP_TITLE}
           </span>
           <img
@@ -29,7 +29,7 @@ const SupportMe = () => {
           </span>
         </div>
       }
-      placement="top"
+      placement="top-start"
     >
       <IconButton color="inherit">
         <VolunteerActivismIcon className="support-me"></VolunteerActivismIcon>
