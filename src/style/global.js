@@ -435,8 +435,8 @@ export const GlobalStyles = createGlobalStyle`
   }
   .VIBRATE {
     background-color: ${({ theme }) => theme.textTypeBox};
-      -webkit-animation: vibrate-1 0.3s linear infinite both;
-            animation: vibrate-1 0.3s linear infinite both;
+      -webkit-animation: vibrate-1 0.8s linear infinite both;
+            animation: vibrate-1 0.8s linear infinite both;
   }
 
   @keyframes vibrate-1 {
