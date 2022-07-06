@@ -280,16 +280,24 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.stats};
     background: transparent;
   }
+  .novelty-container{
+    width: 80%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    display: block;
+  }
   .textarea{
     color: ${({ theme }) => theme.textTypeBox};
     font-size: 28px;
     background: transparent;
     border: none;
-    width: 80%;
-    height: 80%;
     caret-color: ${({ theme }) => theme.stats};
     overflow: auto;
     resize: none;
+    width: 100%;
+    height: 80%;
     margin-left: auto;
     margin-right: auto;
     position: relative;
@@ -355,6 +363,106 @@ export const GlobalStyles = createGlobalStyle`
     and (-webkit-min-device-pixel-ratio: 3) { 
       top:200px;
       width: 60%;
+    }
+  }
+
+  .keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .row {
+    list-style: none;
+    display: flex;
+  }
+  .row-1{
+    padding-left: 0em;
+  }
+  .row-2{
+    padding-left: 0.25em;
+  }
+  .row-3{
+    padding-left: 0.5em;
+  }
+  .row-3{
+    padding-left: 0em;
+  }
+  ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 0.25em;
+    margin-block-end: 0.25em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 0px;
+  }
+  .SPACEKEY { 
+    height: 3em;
+    width: 21em;
+    color: ${({ theme }) => theme.text};
+    font-family: ${({ theme }) => theme.fontFamily};
+    border-radius: 0.4em;
+    line-height: 3em;
+    letter-spacing: 1px;
+    margin: 0.4em;
+    transition: 0.3s;
+    text-align: center;
+    font-size: 1em;
+    background-color: ${({ theme }) => theme.background};
+    border: 2px solid ${({ theme }) => theme.stats};
+    opacity: 0.8;
+  }
+  .UNITKEY { 
+    height: 3em;
+    width: 3em;
+    color: rgba(0,0,0,0.7);
+    border-radius: 0.4em;
+    line-height: 3em;
+    letter-spacing: 1px;
+    margin: 0.4em;
+    transition: 0.3s;
+    text-align: center;
+    font-size: 1em;
+    font-family: ${({ theme }) => theme.fontFamily};
+    background-color: ${({ theme }) => theme.background};
+    border: 2px solid ${({ theme }) => theme.stats};
+    opacity: 1;
+    color: ${({ theme }) => theme.text};
+    opacity: 0.8;
+  }
+  .VIBRATE {
+    background-color: ${({ theme }) => theme.textTypeBox};
+      -webkit-animation: vibrate-1 0.3s linear infinite both;
+            animation: vibrate-1 0.3s linear infinite both;
+  }
+
+  @keyframes vibrate-1 {
+    0% {
+      -webkit-transform: translate(0);
+              transform: translate(0);
+    }
+    20% {
+      -webkit-transform: translate(-2px, 2px);
+              transform: translate(-2px, 2px);
+    }
+    40% {
+      -webkit-transform: translate(-2px, -2px);
+              transform: translate(-2px, -2px);
+    }
+    60% {
+      -webkit-transform: translate(2px, 2px);
+              transform: translate(2px, 2px);
+    }
+    80% {
+      -webkit-transform: translate(2px, -2px);
+              transform: translate(2px, -2px);
+    }
+    100% {
+      -webkit-transform: translate(0);
+              transform: translate(0);
     }
   }
 `;

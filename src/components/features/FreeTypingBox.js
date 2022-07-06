@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 const FreeTypingBox = ({ spaces = 4, textAreaRef }) => {
-
   const [text, setText] = useState({ value: "", caret: -1, target: null });
 
   useEffect(() => {
@@ -30,15 +29,18 @@ const FreeTypingBox = ({ spaces = 4, textAreaRef }) => {
     setText({ value: e.target.value, caret: -1, target: e.target });
 
   return (
-    <textarea
-      onChange={handleText}
-      onKeyDown={handleTab}
-      value={text.value}
-      ref={textAreaRef}
-      className="textarea"
-      spellCheck="false"
-      placeholder=" ... "
-    />
+    <div className="novelty-container">
+    
+      <textarea
+        onChange={handleText}
+        onKeyDown={handleTab}
+        value={text.value}
+        ref={textAreaRef}
+        className="textarea"
+        spellCheck="false"
+        placeholder=" ... "
+      />
+    </div>
   );
 };
 

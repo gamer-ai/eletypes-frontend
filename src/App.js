@@ -14,6 +14,7 @@ import {
   GAME_MODE_SENTENCE,
 } from "./constants/Constants";
 import useLocalPersistState from "./hooks/useLocalPersistState";
+import DefaultKeyboard from "./components/features/Keyboard/DefaultKeyboard";
 
 function App() {
   // localStorage persist theme setting
@@ -52,8 +53,11 @@ function App() {
   // coffeeMode setting
   const [isCoffeeMode, setIsCoffeeMode] = useState(false);
 
-  const isWordGameMode = gameMode === GAME_MODE_DEFAULT && !isCoffeeMode;
-  const isSentenceGameMode = gameMode === GAME_MODE_SENTENCE && !isCoffeeMode;
+  // trainer mode setting
+  const [isTrainerMode, setIsTrainerMode] = useState(false);
+
+  const isWordGameMode = gameMode === GAME_MODE_DEFAULT && !isCoffeeMode && !isTrainerMode;
+  const isSentenceGameMode = gameMode === GAME_MODE_SENTENCE && !isCoffeeMode && !isTrainerMode;
 
   const handleThemeChange = (e) => {
     window.localStorage.setItem("theme", JSON.stringify(e.value));
@@ -70,6 +74,12 @@ function App() {
 
   const toggleCoffeeMode = () => {
     setIsCoffeeMode(!isCoffeeMode);
+    setIsTrainerMode(false);
+  };
+
+  const toggleTrainerMode = () => {
+    setIsTrainerMode(!isTrainerMode);
+    setIsCoffeeMode(false);
   };
 
   useEffect(() => {
@@ -136,7 +146,8 @@ function App() {
               handleInputFocus={() => focusSentenceInput()}
             ></SentenceBox>
           )}
-          {isCoffeeMode && <FreeTypingBox textAreaRef={textAreaRef} />}
+          {isCoffeeMode && (!isTrainerMode) && <FreeTypingBox textAreaRef={textAreaRef} />}
+          {isTrainerMode && (!isCoffeeMode) && <DefaultKeyboard></DefaultKeyboard>}
           <FooterMenu
             themesOptions={themesOptions}
             theme={theme}
@@ -149,6 +160,8 @@ function App() {
             isFocusedMode={isFocusedMode}
             gameMode={gameMode}
             handleGameModeChange={handleGameModeChange}
+            isTrainerMode={isTrainerMode}
+            toggleTrainerMode={toggleTrainerMode}
           ></FooterMenu>
           <MusicPlayerSnackbar
             isMusicMode={isMusicMode}

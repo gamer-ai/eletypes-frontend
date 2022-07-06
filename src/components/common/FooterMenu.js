@@ -13,6 +13,7 @@ import {
   SENTENCE_MODE_LABEL,
   GAME_MODE_DEFAULT,
   GAME_MODE_SENTENCE,
+  TRAINER_MODE
 } from "../../constants/Constants";
 import { Link } from "@mui/material";
 import SupportMe from "../features/SupportMe";
@@ -27,6 +28,7 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import EmojiFoodBeverageIcon from "@mui/icons-material/EmojiFoodBeverage";
 import { ReactComponent as DiscordIcon } from "../../assets/Icons/discord.svg";
 import { SvgIcon } from "@mui/material";
+import KeyboardAltOutlinedIcon from '@mui/icons-material/KeyboardAltOutlined';
 
 const FooterMenu = ({
   themesOptions,
@@ -40,6 +42,8 @@ const FooterMenu = ({
   isCoffeeMode,
   gameMode,
   handleGameModeChange,
+  isTrainerMode,
+  toggleTrainerMode
 }) => {
   const isSiteInfoDisabled = isMusicMode || isFocusedMode;
   const isBottomLogoEnabled = isFocusedMode && !isMusicMode;
@@ -90,7 +94,13 @@ const FooterMenu = ({
               </span>
             </Tooltip>
           </IconButton>
-
+          <IconButton onClick={toggleTrainerMode}>
+            <Tooltip title={TRAINER_MODE}>
+              <span className={getModeButtonClassName(isTrainerMode)}>
+                <KeyboardAltOutlinedIcon fontSize="medium"></KeyboardAltOutlinedIcon>
+              </span>
+            </Tooltip>
+          </IconButton>
           <IconButton onClick={toggleMusicMode}>
             <Tooltip title={MUSIC_MODE}>
               <span className={getModeButtonClassName(isMusicMode)}>
@@ -98,7 +108,7 @@ const FooterMenu = ({
               </span>
             </Tooltip>{" "}
           </IconButton>
-          {!isCoffeeMode && (
+          {(!isCoffeeMode && !isTrainerMode) && (
             <>
               <IconButton
                 onClick={() => {
