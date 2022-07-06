@@ -17,7 +17,7 @@ An elegant typing test tool.
 
 > The app was created purely in react.
 
-## Feature:
+## Features:
 
 1. Type any to start
 2. Typing error feed back
@@ -41,7 +41,11 @@ An elegant typing test tool.
   - CHN Pinyin Hard: Chinese top 1500 idioms
   - CHN Pinyin Normal: Chinese top 5000 words/char
 18. Free typing mode: an aesthetic pleasing typing area for free typing.
-
+19. Sentence mode:
+  - CHN: Random chinese short sentences
+  - ENG: Random English short sentences
+  - Support Three Sentences Count Setting: 5, 10, 15
+20. Local Storage Persist game mode setting (word mode, sentence mode)
 
 
 ### Themes:
@@ -57,6 +61,8 @@ Current Themes:
 - Light
 - Nintendo
 - Araki Nobuyoshi
+- Hero
+- Budapest
 
 ### Caps Lock Detection
 
@@ -85,6 +91,15 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 Builds the app for production to the `build` folder.\
 
+## Community:
+
+Discord:
+
+![Discord](https://img.shields.io/discord/993567075589181621?style=for-the-badge)
+
+Buy Me A Coffee:
+
+https://www.buymeacoffee.com/daguozi
 
 
 
