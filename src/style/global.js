@@ -82,6 +82,18 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.stats};
     bottom: 10%;
   }
+  .keyboard-stats {
+    display: flex;
+    max-width: 1000px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    color: ${({ theme }) => theme.stats};
+    bottom: 10%;
+    justify-content: center;
+    text-align: center;
+  }
   .sub-header {
     color: ${({ theme }) => theme.textTypeBox};
     opacity: 0.5;

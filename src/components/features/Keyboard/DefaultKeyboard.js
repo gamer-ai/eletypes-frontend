@@ -192,7 +192,7 @@ const DefaultKeyboard = () => {
           </div>
         </ul>{" "}
       </div>
-      <div className="stats">
+      <div className="keyboard-stats">
         <Box display="flex" flexDirection="row">
           <h3>Accuracy: {accuracy} %</h3>
           <h3>
