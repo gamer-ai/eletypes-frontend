@@ -448,7 +448,7 @@ export const GlobalStyles = createGlobalStyle`
             animation: vibrate-1 0.2s linear infinity both;
   }
   .NOVIBRATE-CORRECT {
-    background-color: ${({ theme }) => theme.stats};
+    background-color: ${({ theme }) => theme.textTypeBox};
  }
 
   @keyframes vibrate-1 {
