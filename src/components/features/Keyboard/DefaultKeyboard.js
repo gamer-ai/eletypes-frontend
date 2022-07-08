@@ -74,7 +74,13 @@ const DefaultKeyboard = () => {
   };
   const getSpaceKeyClassName = () => {
     if (" " !== randomKey) {
+      if (inputChar !== "" && inputChar === " ") {
+        return "SPACEKEY VIBRATE-ERROR";
+      }
       return "SPACEKEY";
+    }
+    if (inputChar !== "" && inputChar === " ") {
+      return "SPACEKEY NOVIBRATE-CORRECT";
     }
     return "SPACEKEY VIBRATE";
   };
