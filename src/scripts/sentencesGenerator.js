@@ -9,7 +9,7 @@ const sentencesGenerator = (sentencesCount, language) => {
   if (language === ENGLISH_MODE) {
     const EnglishSentencesList = [];
     for (let i = 0; i < sentencesCount; i++) {
-      const rand = randomIntFromRange(0, 45);
+      const rand = randomIntFromRange(0, 50);
       EnglishSentencesList.push(ENGLISH_SENTENCES[rand]);
     }
     return EnglishSentencesList;
@@ -17,7 +17,7 @@ const sentencesGenerator = (sentencesCount, language) => {
   if (language === CHINESE_MODE) {
     const ChinseseSentencesList = [];
     for (let i = 0; i < sentencesCount; i++) {
-      const rand = randomIntFromRange(0, 45);
+      const rand = randomIntFromRange(0, 55);
       ChinseseSentencesList.push(CHINESE_SENTENCES[rand]);
     }
     return ChinseseSentencesList;

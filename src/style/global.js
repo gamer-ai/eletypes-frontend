@@ -322,6 +322,9 @@ export const GlobalStyles = createGlobalStyle`
   .error-sentence-char{
     color: red;
   }
+  .error-sentence-space-char{
+    border-bottom: 1px solid red;
+  }
   .sentence-char{
     color: ${({ theme }) => theme.textTypeBox};
   }
@@ -387,9 +390,10 @@ export const GlobalStyles = createGlobalStyle`
   .row-3{
     padding-left: 0.5em;
   }
-  .row-3{
+  .row-4{
     padding-left: 0em;
   }
+
   ul {
     display: block;
     list-style-type: disc;
@@ -438,6 +442,14 @@ export const GlobalStyles = createGlobalStyle`
       -webkit-animation: vibrate-1 0.8s linear infinite both;
             animation: vibrate-1 0.8s linear infinite both;
   }
+  .VIBRATE-ERROR {
+     background-color: red;
+      -webkit-animation: vibrate-1 0.2s linear infinity both;
+            animation: vibrate-1 0.2s linear infinity both;
+  }
+  .NOVIBRATE-CORRECT {
+    background-color: ${({ theme }) => theme.stats};
+ }
 
   @keyframes vibrate-1 {
     0% {
@@ -464,5 +476,11 @@ export const GlobalStyles = createGlobalStyle`
       -webkit-transform: translate(0);
               transform: translate(0);
     }
+  }
+  .CorrectKeyDowns{
+    color: inherit;
+  }
+  .IncorrectKeyDowns{
+    color: red;
   }
 `;

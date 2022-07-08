@@ -43,6 +43,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
       setOpenRestart(false);
       reset(sentencesCountConstant, language);
     } else {
+      e.preventDefault();
       setOpenRestart(false);
     }
   };
@@ -181,6 +182,9 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
     if (idx < currInput.length) {
       if (currInput[idx] === char) {
         return "correct-sentence-char";
+      }
+      if (char === " "){
+        return "error-sentence-space-char";
       }
       return "error-sentence-char";
     }
