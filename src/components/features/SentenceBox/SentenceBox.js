@@ -2,7 +2,6 @@ import React from "react";
 import { useState, useMemo, useEffect } from "react";
 import { sentencesGenerator } from "../../../scripts/sentencesGenerator";
 import { Stack } from "@mui/material";
-import Stats from "../TypeBox/Stats";
 import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
 import IconButton from "../../utils/IconButton";
@@ -22,6 +21,7 @@ import {
 import { Tooltip } from "@mui/material";
 import { Dialog } from "@mui/material";
 import { DialogTitle } from "@mui/material";
+import SentenceBoxStats from "./SentenceBoxStats";
 
 const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
   // local persist timer
@@ -126,6 +126,11 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
     sentenceInputRef.current.focus();
     sentenceInputRef.current.value = "";
     setRawKeyStroke(0);
+    setStats({
+      correct: 0,
+      incorrect: 0,
+      extra: 0,
+    });
   };
 
   const start = () => {
@@ -136,6 +141,30 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
       setStatus("started");
       setTimeRunning(true);
     }
+  };
+
+  const [stats, setStats] = useState({
+    correct: 0,
+    incorrect: 0,
+    extra: 0,
+  });
+
+  const checkAndUpdateStats = (currSentence, currInput) => {
+    const newStats = stats;
+    for (let i = 0; i < currSentence.length; i++) {
+      if (currSentence[i] === currInput[i]) {
+        newStats.correct++;
+      } else {
+        newStats.incorrect++;
+      }
+    }
+    const deltaCharDifference = currInput.length - currSentence.length;
+
+    if (deltaCharDifference > 0) {
+      newStats.extra = deltaCharDifference;
+    }
+
+    setStats(newStats);
   };
 
   const handleKeyDown = (e) => {
@@ -164,6 +193,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
 
     if (keyCode === 13) {
       if (currInput.length >= sentences[currSentenceIndex].length) {
+        checkAndUpdateStats(currSentence, currInput);
         if (currSentenceIndex + 1 === sentencesCountConstant) {
           setStatus("finished");
           setTimeRunning(false);
@@ -183,7 +213,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
       if (currInput[idx] === char) {
         return "correct-sentence-char";
       }
-      if (char === " "){
+      if (char === " ") {
         return "error-sentence-space-char";
       }
       return "error-sentence-char";
@@ -201,11 +231,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
       currentTarget: { value },
     } = e;
     if (type === "compositionend") {
-      /**
-       * 合成事件结束，可以触发输入实时校验
-       * 这里多做一次针对 chrome 的逻辑是因为 chrome 中
-       * `compositionend` 事件在 `onChange` 事件之后触发
-       */
+      // composition finished
       isOnComposition = false;
       if (
         e.currentTarget instanceof HTMLInputElement &&
@@ -215,7 +241,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
         setCurrInput(value);
       }
     } else {
-      // 合成事件进行时
+      // composition ongoing
       isOnComposition = true;
     }
   };
@@ -224,9 +250,6 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
     const {
       currentTarget: { value },
     } = e;
-    /**
-     * 非合成事件，可以触发输入实时校验
-     */
     if (e.currentTarget instanceof HTMLInputElement && !isOnComposition) {
       setCurrInput(value);
     }
@@ -250,9 +273,6 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
             spellCheck="false"
             className="sentence-input-field"
             onKeyDown={(e) => handleKeyDown(e)}
-            // // onKeyUp={(e) => handleKeyUp(e)}
-            // value={currInput}
-            // onChange={(e) => UpdateInput(e)}
             onCompositionStart={handleComposition}
             onCompositionUpdate={handleComposition}
             onCompositionEnd={handleComposition}
@@ -266,7 +286,13 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
         </Stack>
       </div>
       <div className="stats">
-        <Stats countDown={time} wpm={wpm}></Stats>
+        <SentenceBoxStats
+          countDown={time}
+          wpm={wpm}
+          status={status}
+          stats={stats}
+          rawKeyStrokes={rawKeyStroke}
+        ></SentenceBoxStats>
 
         <div className="restart-button" key="restart-button">
           <Grid container justifyContent="center" alignItems="center">

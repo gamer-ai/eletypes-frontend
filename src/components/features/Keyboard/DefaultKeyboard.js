@@ -157,8 +157,8 @@ const DefaultKeyboard = () => {
           <div className={getClassName("l")} id="L">
             L
           </div>
-          <div className={getClassName(":")}>:</div>
-          <div className={getClassName("''")}>''</div>
+          <div className={getClassName(";")}>;</div>
+          <div className={getClassName("'")}>'</div>
         </ul>
         <ul className="row row-3">
           <div className={getClassName("z")} id="Z">
@@ -184,7 +184,7 @@ const DefaultKeyboard = () => {
           </div>
           <div className={getClassName(",")}>,</div>
           <div className={getClassName(".")}>.</div>
-          <div className={getClassName(";")}>;</div>
+          <div className={getClassName("/")}>/</div>
         </ul>
         <ul className="row row-4">
           <div className={getSpaceKeyClassName()} id="SPACE">
