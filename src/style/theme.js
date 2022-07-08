@@ -101,11 +101,11 @@ const budapestTheme = {
 const eva01Theme = {
   label: "EVA-01",
   background: "#6d45a1",
-  text: "#e6770b",
+  text: "#1d1a2f",
   gradient: "linear-gradient(90deg, 	#3f6d4e 0%, #52d053 100%)",
   title: "#52d053",
   textTypeBox: "#50b349",
-  stats: "#e6770b",
+  stats: "#1d1a2f",
   fontFamily: "Tomorrow",
 };
 

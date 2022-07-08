@@ -416,7 +416,7 @@ export const GlobalStyles = createGlobalStyle`
     text-align: center;
     font-size: 1em;
     background-color: ${({ theme }) => theme.background};
-    border: 2px solid ${({ theme }) => theme.stats};
+    border: 2px solid ${({ theme }) => theme.textTypeBox};
     opacity: 0.8;
   }
   .UNITKEY { 
@@ -432,7 +432,7 @@ export const GlobalStyles = createGlobalStyle`
     font-size: 1em;
     font-family: ${({ theme }) => theme.fontFamily};
     background-color: ${({ theme }) => theme.background};
-    border: 2px solid ${({ theme }) => theme.stats};
+    border: 2px solid ${({ theme }) => theme.textTypeBox};
     opacity: 1;
     color: ${({ theme }) => theme.text};
     opacity: 0.8;
