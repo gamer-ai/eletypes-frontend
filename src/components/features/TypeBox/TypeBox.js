@@ -30,6 +30,7 @@ import {
   CHINESE_MODE_TOOLTIP_TITLE,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
   HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
+  RESTART_BUTTON_TOOLTIP_TITLE
 } from "../../../constants/Constants";
 
 const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
@@ -590,7 +591,9 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
                   reset(countDownConstant, difficulty, language);
                 }}
               >
-                <RestartAltIcon />
+                <Tooltip title={RESTART_BUTTON_TOOLTIP_TITLE}>
+                  <RestartAltIcon />
+                </Tooltip>
               </IconButton>
               {menuEnabled && (
                 <>

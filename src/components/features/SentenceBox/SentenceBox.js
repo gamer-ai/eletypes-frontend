@@ -10,6 +10,7 @@ import {
   DEFAULT_SENTENCES_COUNT,
   TEN_SENTENCES_COUNT,
   FIFTEEN_SENTENCES_COUNT,
+  RESTART_BUTTON_TOOLTIP_TITLE
 } from "../../../constants/Constants";
 import useLocalPersistState from "../../../hooks/useLocalPersistState";
 import {
@@ -305,7 +306,9 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
                   reset(sentencesCountConstant, language);
                 }}
               >
-                <RestartAltIcon />
+                <Tooltip title={RESTART_BUTTON_TOOLTIP_TITLE}>
+                  <RestartAltIcon />
+                </Tooltip>
               </IconButton>
               {menuEnabled && (
                 <>

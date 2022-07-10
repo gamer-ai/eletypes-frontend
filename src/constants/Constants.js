@@ -6,6 +6,7 @@ const DEFAULT_COUNT_DOWN = COUNT_DOWN_60;
 
 const DEFAULT_DIFFICULTY = "normal";
 const HARD_DIFFICULTY = "hard";
+const RESTART_BUTTON_TOOLTIP_TITLE = "[Tab] + [Enter] to quick restart";
 const DEFAULT_DIFFICULTY_TOOLTIP_TITLE =
   "normal mode generates random words from top 1000 most frequently used words in English dataset.";
 const HARD_DIFFICULTY_TOOLTIP_TITLE =
@@ -69,6 +70,7 @@ export {
   MUSIC_MODE,
   ENGLISH_MODE,
   CHINESE_MODE,
+  RESTART_BUTTON_TOOLTIP_TITLE,
   ENGLISH_MODE_TOOLTIP_TITLE,
   CHINESE_MODE_TOOLTIP_TITLE,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
