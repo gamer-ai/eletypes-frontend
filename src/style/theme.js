@@ -164,5 +164,5 @@ export {
   aluminiumTheme,
   pianoTheme,
   defaultTheme,
-  themesOptions,
+  themesOptions
 };
