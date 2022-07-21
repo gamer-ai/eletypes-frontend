@@ -19,6 +19,7 @@ export const GlobalStyles = createGlobalStyle`
     margin: 0;
     font-family: ${({ theme }) => theme.fontFamily};
     transition: all 0.25s linear;
+    text-shadow: ${({ theme }) => theme.textShadow};
   }
   .canvas {
       align-items: center;
@@ -101,9 +102,9 @@ export const GlobalStyles = createGlobalStyle`
     animation: blinkingCursor 2s infinite;;
     @keyframes blinkingCursor{
       0%		{ border-right-color: ${({ theme }) => theme.stats};}
-      25%		{ border-right-color: white;}
+      25%		{ border-right-color: transparent;}
       50%		{ border-right-color: ${({ theme }) => theme.stats};}
-      75%		{border-right-color: white;}
+      75%		{border-right-color: transparent;}
       100%	{border-right-color: ${({ theme }) => theme.stats};}
     }
   }
@@ -163,9 +164,9 @@ export const GlobalStyles = createGlobalStyle`
     border-bottom: 1px solid;
     @keyframes blinkingBackground{
       0%		{ border-bottom-color: ${({ theme }) => theme.stats};}
-      25%		{ border-bottom-color: white;}
+      25%		{ border-bottom-color: ${({ theme }) => theme.textTypeBox};}
       50%		{ border-bottom-color: ${({ theme }) => theme.stats};}
-      75%		{border-bottom-color: white;}
+      75%		{border-bottom-color: ${({ theme }) => theme.textTypeBox};}
       100%	        {border-bottom-color: ${({ theme }) => theme.stats};}
     }
   }
@@ -306,6 +307,7 @@ export const GlobalStyles = createGlobalStyle`
     background: transparent;
     border: none;
     caret-color: ${({ theme }) => theme.stats};
+    font-family: ${({ theme }) => theme.fontFamily};
     overflow: auto;
     resize: none;
     width: 100%;

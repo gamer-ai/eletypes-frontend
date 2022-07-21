@@ -109,10 +109,36 @@ const eva01Theme = {
   fontFamily: "Tomorrow",
 };
 
+const aluminiumTheme = {
+  label: "Aluminium",
+  background: "linear-gradient(to left top, rgba(0, 0, 0, 0.25),  #888B8D)",
+  text: "#353535",
+  gradient: "linear-gradient(90deg, #888B8D 0%, #FAF9F6 100%)",
+  title: "#2f2f2f",
+  textTypeBox: "#FAF9F6",
+  stats: "#2D3436",
+  fontFamily: "Rufina",
+  textShadow: "0px -1px 0px rgba(0,0,0,0.3)"
+};
+
+const pianoTheme = {
+  label: "Piano",
+  background: "linear-gradient(to bottom,  #000, #222)",
+  text: "#FAF9F6",
+  gradient: "linear-gradient(90deg, #000 0%, #222 100%)",
+  title: "#f5f2e7",
+  textTypeBox: "#555",
+  stats: "#FAF9F6",
+  fontFamily: "Rufina",
+  textShadow: "0px -1px 0px rgba(0,0,0,0.3)"
+};
+
 const defaultTheme = darkTheme;
 
 const themesOptions = [
   { value: darkTheme, label: "Dark" },
+  { value: aluminiumTheme, label: "Aluminium" },
+  { value: pianoTheme, label: "Piano" },
   { value: terminalTheme, label: "Terminal" },
   { value: nintendoTheme, label: "Nintendo" },
   { value: cyberTheme, label: "Cyber" },
@@ -121,7 +147,7 @@ const themesOptions = [
   { value: arakiNobuyoshiTheme, label: "Araki Nobuyoshi" },
   { value: heroTheme, label: "Hero" },
   { value: budapestTheme, label: "Budapest" },
-  { value: lightTheme, label: "Light" },
+  { value: lightTheme, label: "Light" }
 ];
 
 export {
@@ -135,6 +161,7 @@ export {
   arakiNobuyoshiTheme,
   heroTheme,
   budapestTheme,
+  aluminiumTheme,
   defaultTheme,
   themesOptions,
 };
