@@ -162,6 +162,7 @@ export {
   heroTheme,
   budapestTheme,
   aluminiumTheme,
+  pianoTheme,
   defaultTheme,
   themesOptions,
 };
