@@ -7,6 +7,9 @@ const DEFAULT_COUNT_DOWN = COUNT_DOWN_60;
 const DEFAULT_DIFFICULTY = "normal";
 const HARD_DIFFICULTY = "hard";
 const RESTART_BUTTON_TOOLTIP_TITLE = "[Tab] + [Enter] to quick restart";
+const RESTART_BUTTON_TOOLTIP_TITLE_WORDSCARD = "[Tab] + [Enter] to quick restart the chapter";
+const SELECT_ONE_OR_MORE_CHAPTERS = "Open to select one or more chapters. Pick the chapters in the typing area."
+const RECITE_MODE_TITLE = "hide the word (默写模式)";
 const DEFAULT_DIFFICULTY_TOOLTIP_TITLE =
   "normal mode generates random words from top 1000 most frequently used words in English dataset.";
 const HARD_DIFFICULTY_TOOLTIP_TITLE =
@@ -52,6 +55,8 @@ const FIFTEEN_SENTENCES_COUNT = 15;
 const ENGLISH_SENTENCE_MODE_TOOLTIP_TITLE = "English Sentence Mode";
 const CHINESE_SENTENCE_MODE_TOOLTIP_TITLE = "Chinese Sentence Mode";
 
+const WORDS_CARD_MODE = "Words Card Mode, learn something in typing!"
+
 export {
   DEFAULT_WORDS_COUNT,
   DEFAULT_COUNT_DOWN,
@@ -89,4 +94,8 @@ export {
   AUTHOR,
   GITHUB_REPO_LINK,
   TRAINER_MODE,
+  WORDS_CARD_MODE,
+  RESTART_BUTTON_TOOLTIP_TITLE_WORDSCARD,
+  SELECT_ONE_OR_MORE_CHAPTERS,
+  RECITE_MODE_TITLE
 };

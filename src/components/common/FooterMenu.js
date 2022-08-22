@@ -13,7 +13,8 @@ import {
   SENTENCE_MODE_LABEL,
   GAME_MODE_DEFAULT,
   GAME_MODE_SENTENCE,
-  TRAINER_MODE
+  TRAINER_MODE,
+  WORDS_CARD_MODE
 } from "../../constants/Constants";
 import { Link } from "@mui/material";
 import SupportMe from "../features/SupportMe";
@@ -29,6 +30,7 @@ import EmojiFoodBeverageIcon from "@mui/icons-material/EmojiFoodBeverage";
 import { ReactComponent as DiscordIcon } from "../../assets/Icons/discord.svg";
 import { SvgIcon } from "@mui/material";
 import KeyboardAltOutlinedIcon from '@mui/icons-material/KeyboardAltOutlined';
+import SchoolIcon from '@mui/icons-material/School';
 
 const FooterMenu = ({
   themesOptions,
@@ -43,10 +45,13 @@ const FooterMenu = ({
   gameMode,
   handleGameModeChange,
   isTrainerMode,
-  toggleTrainerMode
+  toggleTrainerMode,
+  isWordsCardMode,
+  toggleWordsCardMode
 }) => {
   const isSiteInfoDisabled = isMusicMode || isFocusedMode;
   const isBottomLogoEnabled = isFocusedMode && !isMusicMode;
+  const isTypeTestEnabled = !isCoffeeMode && !isTrainerMode && !isWordsCardMode;
 
   const getModeButtonClassName = (mode) => {
     if (mode) {
@@ -83,6 +88,17 @@ const FooterMenu = ({
               </span>
             </Tooltip>
           </IconButton>
+          <IconButton onClick={toggleWordsCardMode}>
+            <Tooltip
+              title={
+                <span style={{ whiteSpace: "pre-line" }}>{WORDS_CARD_MODE}</span>
+              }
+            >
+              <span className={getModeButtonClassName(isWordsCardMode)}>
+                <SchoolIcon fontSize="medium"></SchoolIcon>
+              </span>
+            </Tooltip>
+          </IconButton>
           <IconButton onClick={toggleCoffeeMode}>
             <Tooltip
               title={
@@ -108,7 +124,7 @@ const FooterMenu = ({
               </span>
             </Tooltip>{" "}
           </IconButton>
-          {(!isCoffeeMode && !isTrainerMode) && (
+          {isTypeTestEnabled && (
             <>
               <IconButton
                 onClick={() => {

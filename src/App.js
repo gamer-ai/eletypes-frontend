@@ -15,6 +15,7 @@ import {
 } from "./constants/Constants";
 import useLocalPersistState from "./hooks/useLocalPersistState";
 import DefaultKeyboard from "./components/features/Keyboard/DefaultKeyboard";
+import WordsCard from "./components/features/WordsCard/WordsCard";
 
 function App() {
   // localStorage persist theme setting
@@ -56,8 +57,11 @@ function App() {
   // trainer mode setting
   const [isTrainerMode, setIsTrainerMode] = useState(false);
 
-  const isWordGameMode = gameMode === GAME_MODE_DEFAULT && !isCoffeeMode && !isTrainerMode;
-  const isSentenceGameMode = gameMode === GAME_MODE_SENTENCE && !isCoffeeMode && !isTrainerMode;
+  // words card mode
+  const [isWordsCardMode, setIsWordsCardMode] = useLocalPersistState(false, "IsInWordsCardMode");
+
+  const isWordGameMode = gameMode === GAME_MODE_DEFAULT && !isCoffeeMode && !isTrainerMode && !isWordsCardMode;
+  const isSentenceGameMode = gameMode === GAME_MODE_SENTENCE && !isCoffeeMode && !isTrainerMode && !isWordsCardMode;
 
   const handleThemeChange = (e) => {
     window.localStorage.setItem("theme", JSON.stringify(e.value));
@@ -75,11 +79,19 @@ function App() {
   const toggleCoffeeMode = () => {
     setIsCoffeeMode(!isCoffeeMode);
     setIsTrainerMode(false);
+    setIsWordsCardMode(false);
   };
 
   const toggleTrainerMode = () => {
     setIsTrainerMode(!isTrainerMode);
     setIsCoffeeMode(false);
+    setIsWordsCardMode(false);
+  };
+
+  const toggleWordsCardMode = () => {
+    setIsTrainerMode(false);
+    setIsCoffeeMode(false);
+    setIsWordsCardMode(!isWordsCardMode);
   };
 
   useEffect(() => {
@@ -146,8 +158,9 @@ function App() {
               handleInputFocus={() => focusSentenceInput()}
             ></SentenceBox>
           )}
-          {isCoffeeMode && (!isTrainerMode) && <FreeTypingBox textAreaRef={textAreaRef} />}
-          {isTrainerMode && (!isCoffeeMode) && <DefaultKeyboard></DefaultKeyboard>}
+          {isCoffeeMode && (!isTrainerMode && !isWordsCardMode) && <FreeTypingBox textAreaRef={textAreaRef} />}
+          {isTrainerMode && (!isCoffeeMode && !isWordsCardMode) && <DefaultKeyboard></DefaultKeyboard>}
+          {isWordsCardMode && (!isCoffeeMode && !isTrainerMode) && <WordsCard></WordsCard>}
           <FooterMenu
             themesOptions={themesOptions}
             theme={theme}
@@ -162,6 +175,8 @@ function App() {
             handleGameModeChange={handleGameModeChange}
             isTrainerMode={isTrainerMode}
             toggleTrainerMode={toggleTrainerMode}
+            isWordsCardMode={isWordsCardMode}
+            toggleWordsCardMode={toggleWordsCardMode}
           ></FooterMenu>
           <MusicPlayerSnackbar
             isMusicMode={isMusicMode}

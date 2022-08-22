@@ -83,6 +83,23 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.stats};
     bottom: 10%;
   }
+  .wordscard-UI{
+    display: block;
+    max-width: 1000px;
+    margin-top: 200px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 10%;
+  }
+  .wordscard-UI-info{
+    margin-top: 50px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    color: ${({ theme }) => theme.textTypeBox};
+    bottom: 10%;
+  }
   .keyboard-stats {
     display: flex;
     max-width: 1000px;
@@ -339,6 +356,23 @@ export const GlobalStyles = createGlobalStyle`
   .error-sentence-space-char{
     border-bottom: 1px solid red;
   }
+  .wordcard-error-char-space-char{
+    border-bottom: 1px solid red;
+    white-space:pre;
+    padding-right: 4px;
+  }
+  .wordcard-error-char{
+    color: red;
+    padding-right: 4px;
+  }
+  .wordcard-char{
+    color: ${({ theme }) => theme.textTypeBox};
+    padding-right: 4px;
+  }
+  .correct-wordcard-char{
+    color: ${({ theme }) => theme.text};
+    padding-right: 4px;
+  }
   .sentence-char{
     color: ${({ theme }) => theme.textTypeBox};
   }
@@ -357,6 +391,14 @@ export const GlobalStyles = createGlobalStyle`
   }
   .sentence-display-field{
     font-size: 28px;
+  }
+  .wordcard-word-display-field{
+    font-size: 64px;
+    margin: 40px;
+  }
+  .wordcard-meaning-display-field{
+    font-size: 20px;
+    margin: 40px;
   }
   .next-sentence-display{
     font-family: ${({ theme }) => theme.fontFamily};
@@ -496,5 +538,63 @@ export const GlobalStyles = createGlobalStyle`
   }
   .IncorrectKeyDowns{
     color: red;
+  }
+  .words-card-container{
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .words-card-catalog{
+    width: 10%;
+    float: left;
+    text-align: left;
+    border-left: 2px groove ${({ theme }) => theme.stats};
+    border-top: 1px solid ${({ theme }) => theme.stats};
+    border-radius: 12px;
+    padding-left: 20px;
+  }
+  .words-card-main{
+    width: 80%;
+    height: 90%;
+    float: left;
+    text-align: center;
+  }
+  .Catalog{
+    list-style-type: none;
+    padding: 10px;
+    max-height: 300px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    overflow-y:scroll;
+    text-align: left;
+    margin-top: 10px;
+  }
+  .Catalog-title{
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  .Catalog-li{
+    margin-bottom: 10px;
+    color: ${({ theme }) => theme.textTypeBox};
+  }
+  .Catalog-li-Activated{
+    margin-bottom: 10px;
+    color: ${({ theme }) => theme.stats};
+  }
+  .Catalog-Button{
+    background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.textTypeBox};
+  }
+  .Catalog-Button-Activated{
+    background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.stats};
+  }
+  .Catalog-Selected{
+    background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.textTypeBox};
+    margin-top: 20px;
+  }
+  .select-chapter-title{
+    font-size: 16px;
   }
 `;
