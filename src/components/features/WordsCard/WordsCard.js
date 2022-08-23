@@ -282,8 +282,11 @@ const WordsCard = () => {
     // if enter key pressed.
     // advance to next sentence only if the input val length is equal to the current sentence char count);
     if (currInput.length >= currWord.length) {
-      if (keyCode === 13) {
+      if (keyCode === 13 || keyCode === 32) {
         if (currWord === currInput) {
+          if (keyCode === 32) {
+            e.preventDefault()
+          }
           const nextIndex = index + 1;
           // to next chapter or back to default
           if (nextIndex === currChapterCount) {
