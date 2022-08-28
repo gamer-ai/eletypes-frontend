@@ -1,7 +1,6 @@
 # Ele types
 
-<img width="1109" alt="Screen Shot 2022-06-09 at 11 12 57 PM" src="https://user-images.githubusercontent.com/39578778/173113155-86dd9bdf-8d0a-4c6f-b26f-6e0ebd8a75b4.png">
-
+<img width="1000" alt="Screen Shot 2022-08-28 at 9 15 36 AM" src="https://user-images.githubusercontent.com/39578778/187084111-97d69aa7-53e4-46b9-b156-3ecc4d180d08.png">
 
 ## [www.eletypes.com](https://www.eletypes.com) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/gamer-ai/eletype-frontend?include_prereleases) ![GitHub stars](https://img.shields.io/github/stars/gamer-ai/eletype-frontend?style=social) ![GitHub forks](https://img.shields.io/github/forks/gamer-ai/eletype-frontend?style=social)
 
@@ -12,8 +11,9 @@ An elegant typing test tool.
 > The app was created purely in react.
 
 
+## Feature Requests / Issues / Bug Reports
 
-## Feature Requests [![GitHub issues](https://img.shields.io/github/issues/gamer-ai/eletype-frontend)](https://github.com/gamer-ai/eletype-frontend/issues)
+[![GitHub issues](https://img.shields.io/github/issues/gamer-ai/eletype-frontend)](https://github.com/gamer-ai/eletype-frontend/issues)
 
 https://github.com/gamer-ai/eletype-frontend/issues
 
@@ -65,7 +65,7 @@ Discord: ![Discord](https://img.shields.io/discord/993567075589181621?style=for-
 
  - A spotify player 
  
-#### 6. themes collection
+#### 6. Themes Collection
 
   - Dark
   - Piano
@@ -88,19 +88,24 @@ Discord: ![Discord](https://img.shields.io/discord/993567075589181621?style=for-
   - move header to footer. 
   - hide the setting menu. leave only timer, wpm stats. 
   - If music enabled, a compact spotify will be put in footer.
+  
+#### 9. [Tab] key to Fast reset
+
+  - [Tab] + [Enter] / [Tab] + [Tab] for quickly reset
+  - [Tab] + [Any Key] to exit the dialog
 
 
-### Themes:
+### Some Themes
 
-<img width="789" alt="Screen Shot 2022-06-10 at 9 48 35 AM" src="https://user-images.githubusercontent.com/39578778/173113712-b2f0f1d0-7ca3-4ae6-b806-6cc3cbcbaf0d.png">
+<img width="600" alt="EletypesThemes" src="https://user-images.githubusercontent.com/39578778/187084245-364b6c5f-97e4-42c9-a0c6-010505ad3283.png">
 
 ### Caps Lock Detection
 
 <img width="400" alt="Screen Shot 2022-04-20 at 4 52 24 PM" src="https://user-images.githubusercontent.com/39578778/164343051-2de97570-fcec-49a4-893a-903afe94e5f4.png">
 
-### Simplist typing Stats is all your need
+### Simplist typing stats is all your need
 
-<img width="400" alt="Screen Shot 2022-06-10 at 9 50 46 AM" src="https://user-images.githubusercontent.com/39578778/173114000-a5f9aa89-6b3c-4e35-98e3-b410421a83c7.png">
+<img width="800" alt="Screen Shot 2022-08-28 at 9 24 55 AM" src="https://user-images.githubusercontent.com/39578778/187084372-a4d18d33-286e-4e7b-97d0-d069c7fd1d53.png">
 
 ### Words Card Demo
 
@@ -129,7 +134,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 Builds the app for production to the `build` folder.\
 
 
-Buy Me A Coffee:
+### Buy Me A Coffee:
 
 https://www.buymeacoffee.com/daguozi
 
