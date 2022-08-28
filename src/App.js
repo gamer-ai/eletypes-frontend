@@ -136,6 +136,7 @@ function App() {
     isSentenceGameMode,
   ]);
 
+  console.log(process.env.REACT_APP_BACKEND_API);
   return (
     <ThemeProvider theme={theme}>
       <>
