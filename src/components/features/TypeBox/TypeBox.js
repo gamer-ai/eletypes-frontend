@@ -13,7 +13,6 @@ import CapsLockSnackbar from "../CapsLockSnackbar";
 import Stats from "./Stats";
 import { Dialog } from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
-
 import {
   DEFAULT_COUNT_DOWN,
   COUNT_DOWN_60,
@@ -30,7 +29,11 @@ import {
   CHINESE_MODE_TOOLTIP_TITLE,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
   HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
-  RESTART_BUTTON_TOOLTIP_TITLE
+  RESTART_BUTTON_TOOLTIP_TITLE,
+  PACING_CARET,
+  PACING_PULSE,
+  PACING_CARET_TOOLTIP,
+  PACING_PULSE_TOOLTIP,
 } from "../../../constants/Constants";
 
 const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
@@ -38,6 +41,12 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
   const [countDownConstant, setCountDownConstant] = useLocalPersistState(
     DEFAULT_COUNT_DOWN,
     "timer-constant"
+  );
+
+  // local persist pacing style
+  const [pacingStyle, setPacingStyle] = useLocalPersistState(
+    PACING_PULSE,
+    "pacing-style"
   );
 
   // local persist difficulty
@@ -78,7 +87,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
       return wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, ENGLISH_MODE);
     }
     if (language === CHINESE_MODE) {
-      return chineseWordsGenerator(difficulty ,CHINESE_MODE);
+      return chineseWordsGenerator(difficulty, CHINESE_MODE);
     }
   });
 
@@ -133,14 +142,21 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
   const [currChar, setCurrChar] = useState("");
 
   useEffect(() => {
-    if (currWordIndex === DEFAULT_WORDS_COUNT - 1){
+    if (currWordIndex === DEFAULT_WORDS_COUNT - 1) {
       if (language === ENGLISH_MODE) {
-        const generatedEng =  wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, ENGLISH_MODE);
-        setWordsDict(currentArray => [...currentArray, ...generatedEng]);
+        const generatedEng = wordsGenerator(
+          DEFAULT_WORDS_COUNT,
+          difficulty,
+          ENGLISH_MODE
+        );
+        setWordsDict((currentArray) => [...currentArray, ...generatedEng]);
       }
       if (language === CHINESE_MODE) {
-        const generatedChinese = chineseWordsGenerator(difficulty ,CHINESE_MODE);
-        setWordsDict(currentArray => [...currentArray, ...generatedChinese]);
+        const generatedChinese = chineseWordsGenerator(
+          difficulty,
+          CHINESE_MODE
+        );
+        setWordsDict((currentArray) => [...currentArray, ...generatedChinese]);
       }
     }
     if (
@@ -289,7 +305,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
     }
 
     // disable shift alt ctrl
-    if (keyCode  >= 16 && keyCode <= 18) {
+    if (keyCode >= 16 && keyCode <= 18) {
       e.preventDefault();
       return;
     }
@@ -369,6 +385,13 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
     }
   };
 
+  const getExtraCharClassName = (i, idx, extra) => {
+    if (currWordIndex === i && idx === extra.length - 1) {
+      return "caret-extra-char-right-error";
+    }
+    return "error-char";
+  };
+
   const getExtraCharsDisplay = (word, i) => {
     let input = inputWordsHistory[i];
     if (!input) {
@@ -383,7 +406,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
       const extra = input.slice(word.length, input.length).split("");
       history[i] = extra.length;
       return extra.map((c, idx) => (
-        <span key={idx} className="error-char">
+        <span key={idx} className={getExtraCharClassName(i, idx, extra)}>
           {c}
         </span>
       ));
@@ -407,7 +430,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
       // reset prevInput to empty (will not go back)
       setPrevInput("");
 
-      // here count the space as effective wpm. 
+      // here count the space as effective wpm.
       setWpmKeyStrokes(wpmKeyStrokes + 1);
       return true;
     } else {
@@ -426,12 +449,20 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
   const getWordClassName = (wordIdx) => {
     if (wordsInCorrect.has(wordIdx)) {
       if (currWordIndex === wordIdx) {
-        return "word error-word active-word";
+        if (pacingStyle === PACING_PULSE) {
+          return "word error-word active-word";
+        } else {
+          return "word error-word active-word-no-pulse";
+        }
       }
       return "word error-word";
     } else {
       if (currWordIndex === wordIdx) {
-        return "word active-word";
+        if (pacingStyle === PACING_PULSE) {
+          return "word active-word";
+        } else {
+          return "word active-word-no-pulse";
+        }
       }
       return "word";
     }
@@ -454,22 +485,57 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
   const getChineseWordClassName = (wordIdx) => {
     if (wordsInCorrect.has(wordIdx)) {
       if (currWordIndex === wordIdx) {
-        return "chinese-word error-word active-word";
+        if (pacingStyle === PACING_PULSE) {
+          return "chinese-word error-word active-word";
+        } else {
+          return "chinese-word error-word active-word-no-pulse";
+        }
       }
       return "chinese-word error-word";
     } else {
       if (currWordIndex === wordIdx) {
-        return "chinese-word active-word";
+        if (pacingStyle === PACING_PULSE) {
+          return "chinese-word active-word";
+        } else {
+          return "chinese-word active-word-no-pulse";
+        }
       }
       return "chinese-word";
     }
   };
-  const getCharClassName = (wordIdx, charIdx, char) => {
+
+  const getCharClassName = (wordIdx, charIdx, char, word) => {
     const keyString = wordIdx + "." + charIdx;
+    if (
+      pacingStyle === PACING_CARET &&
+      wordIdx === currWordIndex &&
+      charIdx === currCharIndex + 1 &&
+      status !== "finished"
+    ) {
+      return "caret-char-left";
+    }
     if (history[keyString] === true) {
+      if (
+        pacingStyle === PACING_CARET &&
+        wordIdx === currWordIndex &&
+        word.length - 1 === currCharIndex &&
+        charIdx === currCharIndex &&
+        status !== "finished"
+      ) {
+        return "caret-char-right-correct";
+      }
       return "correct-char";
     }
     if (history[keyString] === false) {
+      if (
+        pacingStyle === PACING_CARET &&
+        wordIdx === currWordIndex &&
+        word.length - 1 === currCharIndex &&
+        charIdx === currCharIndex &&
+        status !== "finished"
+      ) {
+        return "caret-char-right-error";
+      }
       return "error-char";
     }
     if (
@@ -497,6 +563,13 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
 
   const getDifficultyButtonClassName = (buttonDifficulty) => {
     if (difficulty === buttonDifficulty) {
+      return "active-button";
+    }
+    return "inactive-button";
+  };
+
+  const getPacingStyleButtonClassName = (buttonPacingStyle) => {
+    if (pacingStyle === buttonPacingStyle) {
       return "active-button";
     }
     return "inactive-button";
@@ -531,7 +604,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
                 {word.split("").map((char, idx) => (
                   <span
                     key={"word" + idx}
-                    className={getCharClassName(i, idx, char)}
+                    className={getCharClassName(i, idx, char, word)}
                   >
                     {char}
                   </span>
@@ -559,7 +632,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
                   {word.split("").map((char, idx) => (
                     <span
                       key={"word" + idx}
-                      className={getCharClassName(i, idx, char)}
+                      className={getCharClassName(i, idx, char, word)}
                     >
                       {char}
                     </span>
@@ -692,6 +765,36 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
                   <Tooltip title={CHINESE_MODE_TOOLTIP_TITLE}>
                     <span className={getLanguageButtonClassName(CHINESE_MODE)}>
                       chn
+                    </span>
+                  </Tooltip>
+                </IconButton>
+              </Box>
+            )}
+            {menuEnabled && (
+              <Box display="flex" flexDirection="row">
+                <IconButton
+                  onClick={() => {
+                    setPacingStyle(PACING_PULSE);
+                  }}
+                >
+                  <Tooltip title={PACING_PULSE_TOOLTIP}>
+                    <span
+                      className={getPacingStyleButtonClassName(PACING_PULSE)}
+                    >
+                      {PACING_PULSE}
+                    </span>
+                  </Tooltip>
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    setPacingStyle(PACING_CARET);
+                  }}
+                >
+                  <Tooltip title={PACING_CARET_TOOLTIP}>
+                    <span
+                      className={getPacingStyleButtonClassName(PACING_CARET)}
+                    >
+                      {PACING_CARET}
                     </span>
                   </Tooltip>
                 </IconButton>

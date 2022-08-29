@@ -9,15 +9,16 @@ const DefaultKeyboard = () => {
   const [inputChar, setInputChar] = useState("");
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
-  const accuracy = (correctCount + incorrectCount) === 0 ? 0 : Math.floor(
-    (correctCount / (correctCount + incorrectCount)) * 100
-  );
+  const accuracy =
+    correctCount + incorrectCount === 0
+      ? 0
+      : Math.floor((correctCount / (correctCount + incorrectCount)) * 100);
   const keys = [..." abcdefghijklmnopqrstuvwxyz "];
   const resetStats = () => {
     setCorrectCount(0);
     setIncorrectCount(0);
   };
- 
+
   useEffect(() => {
     keyboardRef.current && keyboardRef.current.focus();
   });
@@ -25,7 +26,6 @@ const DefaultKeyboard = () => {
     keyboardRef.current && keyboardRef.current.focus();
   };
   const handleKeyDown = (event) => {
-
     setInputChar(event.key);
     event.preventDefault();
     return;
