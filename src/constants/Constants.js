@@ -31,10 +31,10 @@ const SUPPORT_TOOLTIP_TITLE =
 const AUTHOR = "author: @Muyang Guo\n";
 const GITHUB_REPO_LINK = "project: @Github\n";
 
-const FOCUS_MODE = "focus mode";
+const FOCUS_MODE = "Focus mode";
 
 const MUSIC_MODE =
-  "spotify player. You will need to login spotify first to use the full feature.";
+  "Spotify player. You will need to login spotify first to use the full feature.";
 const FREE_MODE =
   "Free typing mode\nType any thing, no pressure, it's coffee time! \n ";
 
@@ -55,7 +55,13 @@ const FIFTEEN_SENTENCES_COUNT = 15;
 const ENGLISH_SENTENCE_MODE_TOOLTIP_TITLE = "English Sentence Mode";
 const CHINESE_SENTENCE_MODE_TOOLTIP_TITLE = "Chinese Sentence Mode";
 
-const WORDS_CARD_MODE = "Words Card Mode, learn something in typing!"
+const WORDS_CARD_MODE = "Words Card mode, learn something in typing!"
+
+const PACING_CARET = "caret";
+const PACING_PULSE = "pulse";
+
+const PACING_CARET_TOOLTIP = "type the word with a caret \"|\" , character by character.";
+const PACING_PULSE_TOOLTIP = "type the word with a pulse \"____\", this helps improving wpm and your speed typing pace habit.";
 
 export {
   DEFAULT_WORDS_COUNT,
@@ -97,5 +103,9 @@ export {
   WORDS_CARD_MODE,
   RESTART_BUTTON_TOOLTIP_TITLE_WORDSCARD,
   SELECT_ONE_OR_MORE_CHAPTERS,
-  RECITE_MODE_TITLE
+  RECITE_MODE_TITLE,
+  PACING_CARET,
+  PACING_PULSE,
+  PACING_CARET_TOOLTIP,
+  PACING_PULSE_TOOLTIP
 };
