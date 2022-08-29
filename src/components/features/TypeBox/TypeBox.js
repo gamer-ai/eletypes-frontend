@@ -386,7 +386,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
   };
 
   const getExtraCharClassName = (i, idx, extra) => {
-    if (currWordIndex === i && idx === extra.length - 1) {
+    if (pacingStyle === PACING_CARET && currWordIndex === i && idx === extra.length - 1) {
       return "caret-extra-char-right-error";
     }
     return "error-char";
