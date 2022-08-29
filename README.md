@@ -17,7 +17,6 @@ An elegant typing test tool.
 
 https://github.com/gamer-ai/eletype-frontend/issues
 
-
 ## Community Channel:
 
 Discord: ![Discord](https://img.shields.io/discord/993567075589181621?style=for-the-badge)
@@ -41,6 +40,9 @@ Discord: ![Discord](https://img.shields.io/discord/993567075589181621?style=for-
     - KPM
     - Accuracy
     - Error analysis (correct/error/missing/extra chars count)
+  - Pacing Style (word pulse/ character caret):
+    - Pulse mode: the active word will have an underlien pulse, which helps improve the speed typing habit.
+    - Caret mode: a pacing caret, advancing character by character, which aligns normal typing habit.
 
 #### 2. Words Card (for English learners)
 
