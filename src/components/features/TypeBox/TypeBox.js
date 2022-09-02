@@ -15,6 +15,7 @@ import { Dialog } from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import {
   DEFAULT_COUNT_DOWN,
+  COUNT_DOWN_90,
   COUNT_DOWN_60,
   COUNT_DOWN_30,
   COUNT_DOWN_15,
@@ -386,7 +387,11 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
   };
 
   const getExtraCharClassName = (i, idx, extra) => {
-    if (pacingStyle === PACING_CARET && currWordIndex === i && idx === extra.length - 1) {
+    if (
+      pacingStyle === PACING_CARET &&
+      currWordIndex === i &&
+      idx === extra.length - 1
+    ) {
       return "caret-extra-char-right-error";
     }
     return "error-char";
@@ -670,6 +675,15 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
               </IconButton>
               {menuEnabled && (
                 <>
+                  <IconButton
+                    onClick={() => {
+                      reset(COUNT_DOWN_90, difficulty, language);
+                    }}
+                  >
+                    <span className={getTimerButtonClassName(COUNT_DOWN_90)}>
+                      {COUNT_DOWN_90}
+                    </span>
+                  </IconButton>
                   <IconButton
                     onClick={() => {
                       reset(COUNT_DOWN_60, difficulty, language);

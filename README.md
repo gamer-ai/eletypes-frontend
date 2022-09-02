@@ -30,7 +30,7 @@ Discord: ![Discord](https://img.shields.io/discord/993567075589181621?style=for-
     - Eng Normal: Top 1000 most frequent used English words
     - CHN Pinyin Hard: Chinese top 1500 idioms
     - CHN Pinyin Normal: Chinese top 5000 words/char
-    - support three tests duration 60s, 30s, 15s
+    - support three tests duration 90s, 60s, 30s, 15s
   - Sentence mode
     - CHN: Random chinese short sentences
     - ENG: Random English short sentences
