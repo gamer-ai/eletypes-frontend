@@ -73,7 +73,6 @@ const FooterMenu = ({
         container
         justifyContent="space-between"
         alignItems="center"
-        spacing={2}
       >
         <Box display="flex" flexDirection="row">
           <Select
