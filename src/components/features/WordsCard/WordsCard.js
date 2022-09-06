@@ -411,6 +411,8 @@ const WordsCard = () => {
                   size="medium"
                   onClick={() => {
                     setIndex(0);
+                    setCurrInput("");
+                    hiddenInputRef.current.value = "";
                   }}
                 >
                   <Tooltip title={RESTART_BUTTON_TOOLTIP_TITLE_WORDSCARD}>

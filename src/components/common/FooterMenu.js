@@ -14,7 +14,7 @@ import {
   GAME_MODE_DEFAULT,
   GAME_MODE_SENTENCE,
   TRAINER_MODE,
-  WORDS_CARD_MODE
+  WORDS_CARD_MODE,
 } from "../../constants/Constants";
 import { Link } from "@mui/material";
 import SupportMe from "../features/SupportMe";
@@ -29,8 +29,8 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import EmojiFoodBeverageIcon from "@mui/icons-material/EmojiFoodBeverage";
 import { ReactComponent as DiscordIcon } from "../../assets/Icons/discord.svg";
 import { SvgIcon } from "@mui/material";
-import KeyboardAltOutlinedIcon from '@mui/icons-material/KeyboardAltOutlined';
-import SchoolIcon from '@mui/icons-material/School';
+import KeyboardAltOutlinedIcon from "@mui/icons-material/KeyboardAltOutlined";
+import SchoolIcon from "@mui/icons-material/School";
 
 const FooterMenu = ({
   themesOptions,
@@ -47,7 +47,7 @@ const FooterMenu = ({
   isTrainerMode,
   toggleTrainerMode,
   isWordsCardMode,
-  toggleWordsCardMode
+  toggleWordsCardMode,
 }) => {
   const isSiteInfoDisabled = isMusicMode || isFocusedMode;
   const isBottomLogoEnabled = isFocusedMode && !isMusicMode;
@@ -69,7 +69,12 @@ const FooterMenu = ({
 
   return (
     <div className="footer">
-      <Grid container justifyContent="space-between" alignItems="center">
+      <Grid
+        container
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={2}
+      >
         <Box display="flex" flexDirection="row">
           <Select
             classNamePrefix="Select"
@@ -91,7 +96,9 @@ const FooterMenu = ({
           <IconButton onClick={toggleWordsCardMode}>
             <Tooltip
               title={
-                <span style={{ whiteSpace: "pre-line" }}>{WORDS_CARD_MODE}</span>
+                <span style={{ whiteSpace: "pre-line" }}>
+                  {WORDS_CARD_MODE}
+                </span>
               }
             >
               <span className={getModeButtonClassName(isWordsCardMode)}>
@@ -158,24 +165,21 @@ const FooterMenu = ({
           )}
         </Box>
         {!isSiteInfoDisabled && (
-          <Box display="block" flexDirection="row">
+          <Box display="flex" flexDirection="row">
             <SupportMe></SupportMe>
             <Tooltip
               title={
-                <span style={{ whiteSpace: "pre-line", fontSize:"12px" }}>
+                <span style={{ whiteSpace: "pre-line", fontSize: "12px" }}>
                   {GITHUB_TOOLTIP_TITLE}
-                    <Link
-                      margin="inherit"
-                      href="https://muyangguo.xyz"
-                    >
-                      {AUTHOR}
-                    </Link>
-                    <Link
-                      margin="inherit"
-                      href="https://github.com/gamer-ai/eletype-frontend/"
-                    >
-                      {GITHUB_REPO_LINK}
-                    </Link>
+                  <Link margin="inherit" href="https://muyangguo.xyz">
+                    {AUTHOR}
+                  </Link>
+                  <Link
+                    margin="inherit"
+                    href="https://github.com/gamer-ai/eletype-frontend/"
+                  >
+                    {GITHUB_REPO_LINK}
+                  </Link>
                 </span>
               }
               placement="top-start"
@@ -191,7 +195,7 @@ const FooterMenu = ({
               title={
                 <span style={{ whiteSpace: "pre-line" }}>
                   <iframe
-                  title="discord-widget"
+                    title="discord-widget"
                     src="https://discord.com/widget?id=993567075589181621&theme=dark"
                     width="100%"
                     height="300"

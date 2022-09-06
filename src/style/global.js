@@ -37,12 +37,17 @@ export const GlobalStyles = createGlobalStyle`
     display: block;
     align-items: center;
     justify-content: center;
-    padding-bottom: 3%;
+    padding-bottom: 1%;
     top: 0;
     left:0;
     width: 100%;
     text-align: center;
   }
+  .topNav {
+    display: flex;
+    align-items: center;
+  }
+
   .footer {
     font-size: .75rem;
     line-height: 1rem;

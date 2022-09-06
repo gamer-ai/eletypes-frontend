@@ -38,6 +38,10 @@ import {
 } from "../../../constants/Constants";
 
 const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
+
+  useEffect(() => {
+    textInputRef.current && textInputRef.current.focus();
+  });
   // local persist timer
   const [countDownConstant, setCountDownConstant] = useLocalPersistState(
     DEFAULT_COUNT_DOWN,
