@@ -34,6 +34,17 @@ export default styled(Select)`
     border: 1px solid ${({ theme }) => theme.text};
     font-size: 12px;
   }
+
+  .Select__menu-list::-webkit-scrollbar {
+    width: 6px;
+  }
+  .Select__menu-list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .Select__menu-list::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.text};
+  }
+
   .Select__option--is-focused {
     color: ${({ theme }) => theme.text};
     background:  ${({ theme }) => theme.background};
