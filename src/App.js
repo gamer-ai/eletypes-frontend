@@ -16,7 +16,7 @@ import {
 import useLocalPersistState from "./hooks/useLocalPersistState";
 import DefaultKeyboard from "./components/features/Keyboard/DefaultKeyboard";
 import WordsCard from "./components/features/WordsCard/WordsCard";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import PageNotFound from "./components/common/PageNotFound";
 
 function App() {
@@ -147,7 +147,7 @@ function App() {
   ]);
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <ThemeProvider theme={theme}>
         <>
           <div className="canvas">
@@ -221,7 +221,7 @@ function App() {
           </div>
         </>
       </ThemeProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
