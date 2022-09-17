@@ -39,6 +39,7 @@ const WordsCard = () => {
       setCurrInput("");
       hiddenInputRef.current.value = "";
     } else {
+      e.preventDefault();
       setOpenRestart(false);
     }
   };

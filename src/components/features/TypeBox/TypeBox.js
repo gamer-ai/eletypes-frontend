@@ -75,6 +75,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
       setOpenRestart(false);
       reset(countDownConstant, difficulty, language);
     } else {
+      e.preventDefault();
       setOpenRestart(false);
     }
   };
