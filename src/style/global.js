@@ -264,6 +264,10 @@ export const GlobalStyles = createGlobalStyle`
     margin-right: auto;
     width: 8em
   }
+  .restart-button button:hover{
+    transform:scale(1.18);
+    transition:0.3s;
+  }
   .alert{
     opacity: 0.3;
     background-image: ${({ theme }) => theme.gradient};
@@ -615,15 +619,27 @@ export const GlobalStyles = createGlobalStyle`
     text-align: left;
     margin-top: 10px;
   }
+  .Catalog::-webkit-scrollbar{
+    width:5px;
+  }
+  .Catalog::-webkit-scrollbar-track{
+    background:transparent;
+  }
+  .Catalog::-webkit-scrollbar-thumb{
+    background:${({ theme }) => theme.stats};
+    border-radius:12px;
+  }
   .Catalog-title{
     margin-top: 20px;
     margin-bottom: 10px;
   }
   .Catalog-li{
+    cursor:pointer;
     margin-bottom: 10px;
     color: ${({ theme }) => theme.textTypeBox};
   }
   .Catalog-li-Activated{
+    cursor:default;
     margin-bottom: 10px;
     color: ${({ theme }) => theme.stats};
   }
