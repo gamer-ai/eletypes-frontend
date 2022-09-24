@@ -250,8 +250,14 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
               currCharMissingCount +
               currCharIncorrectCount;
 
+            // When total inputs char count is 0,
+            // that is to say, both currCharCorrectCount and currCharAdvancedCount are 0,
+            // accuracy turns out to be 0 but NaN.
             const accuracy =
-              (currCharCorrectCount / currCharAdvancedCount) * 100;
+              currCharCorrectCount === 0
+                ? 0
+                : (currCharCorrectCount / currCharAdvancedCount) * 100;
+
             setStatsCharCount([
               accuracy,
               currCharCorrectCount,
