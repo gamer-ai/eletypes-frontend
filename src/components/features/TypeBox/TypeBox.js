@@ -325,10 +325,12 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
       return;
     }
 
-    // update stats when typing
-    const currWpm =
-      (wpmKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0;
-    setWpm(currWpm);
+    // update stats when typing unless there is no effective wpm
+    if (wpmKeyStrokes !== 0) {
+      const currWpm =
+        (wpmKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0;
+      setWpm(currWpm);
+    }
 
     // start the game by typing any thing
     if (status !== "started" && status !== "finished") {
