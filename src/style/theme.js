@@ -133,6 +133,18 @@ const pianoTheme = {
   textShadow: "0px -1px 0px rgba(0,0,0,0.3)"
 };
 
+const coolKidTheme = {
+  label: "Cool Kid",
+  background: "#112E96",
+  text: "#EA00BA",
+  gradient: "linear-gradient(to top,  #16C4ED, #EA00BA)",
+  title: "#ECECEC",
+  textTypeBox: "#090261",
+  stats: "#EA00BA",
+  fontFamily: "Tomorrow",
+  textShadow: "0px -1px 0px rgba(0,0,0,0.3)"
+};
+
 const defaultTheme = darkTheme;
 
 const themesOptions = [
@@ -146,6 +158,7 @@ const themesOptions = [
   { value: steamTheme, label: "Steam" },
   { value: arakiNobuyoshiTheme, label: "Araki Nobuyoshi" },
   { value: heroTheme, label: "Hero" },
+  { value: coolKidTheme, label: "Cool Kid" },
   { value: budapestTheme, label: "Budapest" },
   { value: lightTheme, label: "Light" }
 ];
@@ -160,6 +173,7 @@ export {
   nintendoTheme,
   arakiNobuyoshiTheme,
   heroTheme,
+  coolKidTheme,
   budapestTheme,
   aluminiumTheme,
   pianoTheme,
