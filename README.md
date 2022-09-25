@@ -30,18 +30,18 @@ Discord: ![Discord](https://img.shields.io/discord/993567075589181621?style=for-
     - Eng Normal: Top 1000 most frequent used English words
     - CHN Pinyin Hard: Chinese top 1500 idioms
     - CHN Pinyin Normal: Chinese top 5000 words/char
-    - support three tests duration 90s, 60s, 30s, 15s
+    - support four tests duration 90s, 60s, 30s, 15s
   - Sentence mode
     - CHN: Random chinese short sentences
     - ENG: Random English short sentences
-    - Support three Sentences Count Setting: 5, 10, 15
+    - Support three sentences count setting: 5, 10, 15
   - Stats:
     - WPM
     - KPM
     - Accuracy
     - Error analysis (correct/error/missing/extra chars count)
   - Pacing Style (word pulse/ character caret):
-    - Pulse mode: the active word will have an underlien pulse, which helps improve the speed typing habit.
+    - Pulse mode: the active word will have an underline pulse, which helps improve the speed typing habit.
     - Caret mode: a pacing caret, advancing character by character, which aligns normal typing habit.
 
 #### 2. Words Card (for English learners)
@@ -80,6 +80,7 @@ Discord: ![Discord](https://img.shields.io/discord/993567075589181621?style=for-
   - Araki Nobuyoshi
   - Hero
   - Budapest
+  - Cool Kid
 
 #### 7. LocalStorage persist for essential settings
 
