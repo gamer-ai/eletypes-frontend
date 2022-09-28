@@ -1,10 +1,6 @@
 {
   "name": "eletype",
-<<<<<<< HEAD
   "version": "0.4.1",
-=======
-  "version": "0.3.2",
->>>>>>> main
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.9.0",
