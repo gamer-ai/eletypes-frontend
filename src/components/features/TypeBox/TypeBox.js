@@ -79,6 +79,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
       setOpenRestart(false);
       reset(countDownConstant, difficulty, language);
     } else {
+      e.preventDefault();
       setOpenRestart(false);
     }
   };
@@ -253,8 +254,14 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
               currCharMissingCount +
               currCharIncorrectCount;
 
+            // When total inputs char count is 0,
+            // that is to say, both currCharCorrectCount and currCharAdvancedCount are 0,
+            // accuracy turns out to be 0 but NaN.
             const accuracy =
-              (currCharCorrectCount / currCharAdvancedCount) * 100;
+              currCharCorrectCount === 0
+                ? 0
+                : (currCharCorrectCount / currCharAdvancedCount) * 100;
+
             setStatsCharCount([
               accuracy,
               currCharCorrectCount,
@@ -328,10 +335,12 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
       return;
     }
 
-    // update stats when typing
-    const currWpm =
-      (wpmKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0;
-    setWpm(currWpm);
+    // update stats when typing unless there is no effective wpm
+    if (wpmKeyStrokes !== 0) {
+      const currWpm =
+        (wpmKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0;
+      setWpm(currWpm);
+    }
 
     // start the game by typing any thing
     if (status !== "started" && status !== "finished") {
