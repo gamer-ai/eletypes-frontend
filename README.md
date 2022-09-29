@@ -91,8 +91,16 @@ Discord: ![Discord](https://img.shields.io/discord/993567075589181621?style=for-
   - move header to footer. 
   - hide the setting menu. leave only timer, wpm stats. 
   - If music enabled, a compact spotify will be put in footer.
+ 
+#### 9. Typing Sound Effect 
+
+  - default: cherry blue switch
+  - optional: keyboard (hard)
+  - optional: typewriter (soft)
   
-#### 9. [Tab] key to Fast reset
+  <img width="120" alt="Screen Shot 2022-09-29 at 2 01 51 AM" src="https://user-images.githubusercontent.com/39578778/192989337-637e1154-fbca-420b-babb-22846d5dbdb1.png">
+  
+#### 10. [Tab] key to Fast reset
 
   - [Tab] + [Enter] / [Tab] + [Tab] for quickly reset
   - [Tab] + [Any Key] to exit the dialog
