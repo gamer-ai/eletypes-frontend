@@ -3,12 +3,16 @@ import { useRef, useEffect, useState } from "react";
 import { Box } from "@mui/system";
 import IconButton from "../../utils/IconButton";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import useSound from "use-sound";
+import { SOUND_MAP } from "../sound/sound";
 
-const DefaultKeyboard = () => {
+const DefaultKeyboard = ({soundType, soundMode}) => {
   const keyboardRef = useRef();
   const [inputChar, setInputChar] = useState("");
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
+  const [play] = useSound(SOUND_MAP[soundType], {volume: 0.5});
+
   const accuracy =
     correctCount + incorrectCount === 0
       ? 0
@@ -26,6 +30,9 @@ const DefaultKeyboard = () => {
     keyboardRef.current && keyboardRef.current.focus();
   };
   const handleKeyDown = (event) => {
+    if (soundMode){
+      play();
+    }
     setInputChar(event.key);
     event.preventDefault();
     return;

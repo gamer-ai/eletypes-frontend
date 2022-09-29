@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import useSound from 'use-sound';
 import {
   wordsGenerator,
   chineseWordsGenerator,
@@ -36,8 +37,12 @@ import {
   PACING_CARET_TOOLTIP,
   PACING_PULSE_TOOLTIP,
 } from "../../../constants/Constants";
+import { SOUND_MAP } from "../sound/sound";
 
-const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
+const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInputFocus }) => {
+
+  const [play] = useSound(SOUND_MAP[soundType], {volume: 0.5});
+
   // local persist timer
   const [countDownConstant, setCountDownConstant] = useLocalPersistState(
     DEFAULT_COUNT_DOWN,
@@ -294,6 +299,9 @@ const TypeBox = ({ textInputRef, isFocusedMode, handleInputFocus }) => {
   };
 
   const handleKeyDown = (e) => {
+    if (status !== "finished" && soundMode){
+      play();
+    }
     const key = e.key;
     const keyCode = e.keyCode;
     setCapsLocked(e.getModifierState("CapsLock"));

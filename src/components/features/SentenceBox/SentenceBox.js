@@ -23,8 +23,13 @@ import { Tooltip } from "@mui/material";
 import { Dialog } from "@mui/material";
 import { DialogTitle } from "@mui/material";
 import SentenceBoxStats from "./SentenceBoxStats";
+import { SOUND_MAP } from "../sound/sound";
+import useSound from "use-sound";
 
-const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
+const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundMode, soundType }) => {
+
+  const [play] = useSound(SOUND_MAP[soundType], {volume: 0.5});
+
   // local persist timer
   const [sentencesCountConstant, setSentencesCountConstant] =
     useLocalPersistState(DEFAULT_SENTENCES_COUNT, "sentences-constant");
@@ -169,6 +174,9 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode }) => {
   };
 
   const handleKeyDown = (e) => {
+    if (status !== "finished" && soundMode){
+      play();
+    }
     const keyCode = e.keyCode;
     // disable tab key
     if (keyCode === 9) {
