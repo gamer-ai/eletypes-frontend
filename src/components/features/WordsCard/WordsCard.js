@@ -18,10 +18,14 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
+import useSound from "use-sound";
+import { SOUND_MAP } from "../sound/sound";
 
-const WordsCard = () => {
+const WordsCard = ({soundType, soundMode}) => {
   // set up game loop status state
   const [status, setStatus] = useState("waiting");
+
+  const [play] = useSound(SOUND_MAP[soundType], {volume: 0.5});
 
   const [showCatalog, setShowCatalog] = useState(false);
 
@@ -262,6 +266,9 @@ const WordsCard = () => {
   };
 
   const handleKeyDown = (e) => {
+    if (soundMode){
+      play();
+    }
     const keyCode = e.keyCode;
     // disable tab key
     if (keyCode === 9) {
@@ -369,7 +376,7 @@ const WordsCard = () => {
           ref={hiddenInputRef}
           onBlur={handleInputBlur}
           onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
+          onKeyDown={(e) => handleKeyDown(e)}
         ></input>
         <div className="wordcard-meaning-display-field">{currMeaning}</div>
         <div className="wordcard-word-display-field">

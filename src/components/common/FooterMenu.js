@@ -4,6 +4,7 @@ import { Box } from "@mui/system";
 import { Tooltip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import Select from "../utils/Select";
 import {
   FOCUS_MODE,
@@ -31,10 +32,16 @@ import { ReactComponent as DiscordIcon } from "../../assets/Icons/discord.svg";
 import { SvgIcon } from "@mui/material";
 import KeyboardAltOutlinedIcon from '@mui/icons-material/KeyboardAltOutlined';
 import SchoolIcon from '@mui/icons-material/School';
+import { SOUND_MODE_TOOLTIP } from "../features/sound/sound";
 
 const FooterMenu = ({
   themesOptions,
   theme,
+  soundMode,
+  toggleSoundMode,
+  soundOptions,
+  soundType,
+  handleSoundTypeChange,
   handleThemeChange,
   toggleFocusedMode,
   toggleMusicMode,
@@ -88,6 +95,22 @@ const FooterMenu = ({
               </span>
             </Tooltip>
           </IconButton>
+          <IconButton onClick={toggleSoundMode}>
+            <Tooltip title={SOUND_MODE_TOOLTIP}>
+              <span className={getModeButtonClassName(soundMode)}>
+                <VolumeUpIcon fontSize="medium"></VolumeUpIcon>
+              </span>
+            </Tooltip>
+          </IconButton>
+          {soundMode && (<Select
+            classNamePrefix="Select"
+            value={soundOptions.find((e) => e.label === soundType)}
+            options={soundOptions}
+            isSearchable={false}
+            isSelected={false}
+            onChange={handleSoundTypeChange}
+            menuPlacement="top"
+          ></Select>)}
           <IconButton onClick={toggleWordsCardMode}>
             <Tooltip
               title={

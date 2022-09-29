@@ -16,6 +16,12 @@ import {
 import useLocalPersistState from "./hooks/useLocalPersistState";
 import DefaultKeyboard from "./components/features/Keyboard/DefaultKeyboard";
 import WordsCard from "./components/features/WordsCard/WordsCard";
+import {
+  SOUND_MODE,
+  soundOptions,
+  DEFAULT_SOUND_TYPE,
+  DEFAULT_SOUND_TYPE_KEY,
+} from "./components/features/sound/sound";
 
 function App() {
   // localStorage persist theme setting
@@ -32,6 +38,14 @@ function App() {
     }
     return defaultTheme;
   });
+
+  // local persist game mode setting
+  const [soundMode, setSoundMode] = useLocalPersistState(false, SOUND_MODE);
+
+  const [soundType, setSoundType] = useLocalPersistState(
+    DEFAULT_SOUND_TYPE,
+    DEFAULT_SOUND_TYPE_KEY
+  );
 
   // local persist game mode setting
   const [gameMode, setGameMode] = useLocalPersistState(
@@ -58,18 +72,37 @@ function App() {
   const [isTrainerMode, setIsTrainerMode] = useState(false);
 
   // words card mode
-  const [isWordsCardMode, setIsWordsCardMode] = useLocalPersistState(false, "IsInWordsCardMode");
+  const [isWordsCardMode, setIsWordsCardMode] = useLocalPersistState(
+    false,
+    "IsInWordsCardMode"
+  );
 
-  const isWordGameMode = gameMode === GAME_MODE_DEFAULT && !isCoffeeMode && !isTrainerMode && !isWordsCardMode;
-  const isSentenceGameMode = gameMode === GAME_MODE_SENTENCE && !isCoffeeMode && !isTrainerMode && !isWordsCardMode;
+  const isWordGameMode =
+    gameMode === GAME_MODE_DEFAULT &&
+    !isCoffeeMode &&
+    !isTrainerMode &&
+    !isWordsCardMode;
+  const isSentenceGameMode =
+    gameMode === GAME_MODE_SENTENCE &&
+    !isCoffeeMode &&
+    !isTrainerMode &&
+    !isWordsCardMode;
 
   const handleThemeChange = (e) => {
     window.localStorage.setItem("theme", JSON.stringify(e.value));
     setTheme(e.value);
   };
 
+  const handleSoundTypeChange = (e) => {
+    setSoundType(e.label);
+  };
+
   const toggleFocusedMode = () => {
     setIsFocusedMode(!isFocusedMode);
+  };
+
+  const toggleSoundMode = () => {
+    setSoundMode(!soundMode);
   };
 
   const toggleMusicMode = () => {
@@ -134,6 +167,8 @@ function App() {
     isCoffeeMode,
     isWordGameMode,
     isSentenceGameMode,
+    soundMode,
+    soundType,
   ]);
 
   return (
@@ -146,6 +181,8 @@ function App() {
             <TypeBox
               textInputRef={textInputRef}
               isFocusedMode={isFocusedMode}
+              soundMode={soundMode}
+              soundType={soundType}
               key="type-box"
               handleInputFocus={() => focusTextInput()}
             ></TypeBox>
@@ -154,16 +191,36 @@ function App() {
             <SentenceBox
               sentenceInputRef={sentenceInputRef}
               isFocusedMode={isFocusedMode}
+              soundMode={soundMode}
+              soundType={soundType}
               key="sentence-box"
               handleInputFocus={() => focusSentenceInput()}
             ></SentenceBox>
           )}
-          {isCoffeeMode && (!isTrainerMode && !isWordsCardMode) && <FreeTypingBox textAreaRef={textAreaRef} />}
-          {isTrainerMode && (!isCoffeeMode && !isWordsCardMode) && <DefaultKeyboard></DefaultKeyboard>}
-          {isWordsCardMode && (!isCoffeeMode && !isTrainerMode) && <WordsCard></WordsCard>}
+          {isCoffeeMode && !isTrainerMode && !isWordsCardMode && (
+            <FreeTypingBox
+              textAreaRef={textAreaRef}
+              soundMode={soundMode}
+              soundType={soundType}
+            />
+          )}
+          {isTrainerMode && !isCoffeeMode && !isWordsCardMode && (
+            <DefaultKeyboard
+              soundMode={soundMode}
+              soundType={soundType}
+            ></DefaultKeyboard>
+          )}
+          {isWordsCardMode && !isCoffeeMode && !isTrainerMode && (
+            <WordsCard soundMode={soundMode} soundType={soundType}></WordsCard>
+          )}
           <FooterMenu
             themesOptions={themesOptions}
             theme={theme}
+            soundMode={soundMode}
+            toggleSoundMode={toggleSoundMode}
+            soundOptions={soundOptions}
+            soundType={soundType}
+            handleSoundTypeChange={handleSoundTypeChange}
             handleThemeChange={handleThemeChange}
             toggleFocusedMode={toggleFocusedMode}
             toggleMusicMode={toggleMusicMode}

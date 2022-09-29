@@ -1,6 +1,6 @@
 {
   "name": "eletype",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.9.0",
@@ -16,6 +16,7 @@
     "react-scripts": "5.0.1",
     "react-select": "^5.3.0",
     "styled-components": "^5.3.5",
+    "use-sound": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
+import useSound from "use-sound";
+import { SOUND_MAP } from "./sound/sound";
 
-const FreeTypingBox = ({ spaces = 4, textAreaRef }) => {
+const FreeTypingBox = ({ spaces = 4, textAreaRef, soundMode, soundType }) => {
   const [text, setText] = useState({ value: "", caret: -1, target: null });
+
+  const [play] = useSound(SOUND_MAP[soundType], { volume: 0.5 });
 
   useEffect(() => {
     if (text.caret >= 0) {
@@ -25,12 +29,15 @@ const FreeTypingBox = ({ spaces = 4, textAreaRef }) => {
     }
   };
 
-  const handleText = (e) =>
+  const handleText = (e) => {
+    if (soundMode) {
+      play();
+    }
     setText({ value: e.target.value, caret: -1, target: e.target });
+  };
 
   return (
     <div className="novelty-container">
-    
       <textarea
         onChange={handleText}
         onKeyDown={handleTab}
