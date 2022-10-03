@@ -19,7 +19,9 @@ https://github.com/gamer-ai/eletype-frontend/issues
 
 ## Community Channel:
 
-Discord: ![Discord](https://img.shields.io/discord/993567075589181621?style=for-the-badge)
+![Discord](https://img.shields.io/discord/993567075589181621?style=for-the-badge)
+
+To join the community, please go to the website and hit "discord" icon.
 
 ## Currernt Features:
 
@@ -81,6 +83,7 @@ Discord: ![Discord](https://img.shields.io/discord/993567075589181621?style=for-
   - Hero
   - Budapest
   - Cool Kid
+  - EdgeRunner (cyberpunk 2077 edgerunners episodes inspired)
 
 #### 7. LocalStorage persist for essential settings
 
@@ -130,9 +133,6 @@ Regular Mode and Recite Mode
 
 
 
-
-
-
 ### `npm start`
 
 Runs the app in the development mode.\
@@ -145,9 +145,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 Builds the app for production to the `build` folder.\
 
 
+## Sponsors
+
 ### Buy Me A Coffee:
 
 https://www.buymeacoffee.com/daguozi
+
 
 
 
