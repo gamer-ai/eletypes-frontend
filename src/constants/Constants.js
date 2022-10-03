@@ -7,7 +7,8 @@ const DEFAULT_COUNT_DOWN = COUNT_DOWN_60;
 
 const DEFAULT_DIFFICULTY = "normal";
 const HARD_DIFFICULTY = "hard";
-const RESTART_BUTTON_TOOLTIP_TITLE = "[Tab] + [Enter] to quick restart";
+const RESTART_BUTTON_TOOLTIP_TITLE = "[Tab] + [Enter] to quickly restart";
+const REDO_BUTTON_TOOLTIP_TITLE = "[Tab] + [Space] to quickly redo";
 const RESTART_BUTTON_TOOLTIP_TITLE_WORDSCARD = "[Tab] + [Enter] to quick restart the chapter";
 const SELECT_ONE_OR_MORE_CHAPTERS = "Open to select one or more chapters. Pick the chapters in the typing area."
 const RECITE_MODE_TITLE = "hide the word (默写模式)";
@@ -84,6 +85,7 @@ export {
   ENGLISH_MODE,
   CHINESE_MODE,
   RESTART_BUTTON_TOOLTIP_TITLE,
+  REDO_BUTTON_TOOLTIP_TITLE,
   ENGLISH_MODE_TOOLTIP_TITLE,
   CHINESE_MODE_TOOLTIP_TITLE,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
