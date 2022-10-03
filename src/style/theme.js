@@ -145,6 +145,18 @@ const coolKidTheme = {
   textShadow: "0px -1px 0px rgba(0,0,0,0.3)"
 };
 
+const edgeRunnerTheme = {
+  label: "Edgerunner",
+  background: "#FCEE09",
+  text: "#FE00FE",
+  gradient: "linear-gradient(to top,  #59F13F, #FE00FE)",
+  title: "#FE00FE",
+  textTypeBox: "#D1C5C0",
+  stats: "#FE00FE",
+  fontFamily: "Tomorrow",
+  textShadow: "0 0 2vw #E7E7E3"
+};
+
 const defaultTheme = darkTheme;
 
 const themesOptions = [
@@ -154,6 +166,7 @@ const themesOptions = [
   { value: terminalTheme, label: "Terminal" },
   { value: nintendoTheme, label: "Nintendo" },
   { value: cyberTheme, label: "Cyber" },
+  { value: edgeRunnerTheme, label: "Edgerunner" },
   { value: eva01Theme, label: "EVA-01" },
   { value: steamTheme, label: "Steam" },
   { value: arakiNobuyoshiTheme, label: "Araki Nobuyoshi" },
@@ -178,5 +191,6 @@ export {
   aluminiumTheme,
   pianoTheme,
   defaultTheme,
-  themesOptions
+  themesOptions,
+  edgeRunnerTheme
 };
