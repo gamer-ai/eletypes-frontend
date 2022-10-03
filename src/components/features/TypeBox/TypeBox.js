@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useMemo } from "react";
-import useSound from 'use-sound';
+import useSound from "use-sound";
 import {
   wordsGenerator,
   chineseWordsGenerator,
 } from "../../../scripts/wordsGenerator";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import UndoIcon from "@mui/icons-material/Undo";
 import IconButton from "../../utils/IconButton";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -32,6 +33,7 @@ import {
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
   HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
   RESTART_BUTTON_TOOLTIP_TITLE,
+  REDO_BUTTON_TOOLTIP_TITLE,
   PACING_CARET,
   PACING_PULSE,
   PACING_CARET_TOOLTIP,
@@ -39,9 +41,14 @@ import {
 } from "../../../constants/Constants";
 import { SOUND_MAP } from "../sound/sound";
 
-const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInputFocus }) => {
-
-  const [play] = useSound(SOUND_MAP[soundType], {volume: 0.5});
+const TypeBox = ({
+  textInputRef,
+  isFocusedMode,
+  soundMode,
+  soundType,
+  handleInputFocus,
+}) => {
+  const [play] = useSound(SOUND_MAP[soundType], { volume: 0.5 });
 
   // local persist timer
   const [countDownConstant, setCountDownConstant] = useLocalPersistState(
@@ -78,7 +85,12 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
     if (e.keyCode === 13 || e.keyCode === 9) {
       e.preventDefault();
       setOpenRestart(false);
-      reset(countDownConstant, difficulty, language);
+      reset(countDownConstant, difficulty, language, false);
+    } // press space to redo
+    else if (e.keyCode === 32) {
+      e.preventDefault();
+      setOpenRestart(false);
+      reset(countDownConstant, difficulty, language, true);
     } else {
       e.preventDefault();
       setOpenRestart(false);
@@ -177,13 +189,15 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
     }
   }, [currWordIndex, wordSpanRefs, difficulty, language]);
 
-  const reset = (newCountDown, difficulty, language) => {
+  const reset = (newCountDown, difficulty, language, isRedo) => {
     setStatus("waiting");
-    if (language === CHINESE_MODE) {
-      setWordsDict(chineseWordsGenerator(difficulty, language));
-    }
-    if (language === ENGLISH_MODE) {
-      setWordsDict(wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, language));
+    if (!isRedo) {
+      if (language === CHINESE_MODE) {
+        setWordsDict(chineseWordsGenerator(difficulty, language));
+      }
+      if (language === ENGLISH_MODE) {
+        setWordsDict(wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, language));
+      }
     }
     setCountDownConstant(newCountDown);
     setCountDown(newCountDown);
@@ -299,7 +313,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
   };
 
   const handleKeyDown = (e) => {
-    if (status !== "finished" && soundMode){
+    if (status !== "finished" && soundMode) {
       play();
     }
     const key = e.key;
@@ -679,11 +693,23 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
           <Grid container justifyContent="center" alignItems="center">
             <Box display="flex" flexDirection="row">
               <IconButton
+                aria-label="redo"
+                color="secondary"
+                size="medium"
+                onClick={() => {
+                  reset(countDownConstant, difficulty, language, true);
+                }}
+              >
+                <Tooltip title={REDO_BUTTON_TOOLTIP_TITLE}>
+                  <UndoIcon />
+                </Tooltip>
+              </IconButton>
+              <IconButton
                 aria-label="restart"
                 color="secondary"
                 size="medium"
                 onClick={() => {
-                  reset(countDownConstant, difficulty, language);
+                  reset(countDownConstant, difficulty, language, false);
                 }}
               >
                 <Tooltip title={RESTART_BUTTON_TOOLTIP_TITLE}>
@@ -694,7 +720,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
                 <>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_90, difficulty, language);
+                      reset(COUNT_DOWN_90, difficulty, language, false);
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_90)}>
@@ -703,7 +729,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_60, difficulty, language);
+                      reset(COUNT_DOWN_60, difficulty, language, false);
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_60)}>
@@ -712,7 +738,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_30, difficulty, language);
+                      reset(COUNT_DOWN_30, difficulty, language, false);
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_30)}>
@@ -721,7 +747,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_15, difficulty, language);
+                      reset(COUNT_DOWN_15, difficulty, language, false);
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_15)}>
@@ -735,7 +761,12 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
               <Box display="flex" flexDirection="row">
                 <IconButton
                   onClick={() => {
-                    reset(countDownConstant, DEFAULT_DIFFICULTY, language);
+                    reset(
+                      countDownConstant,
+                      DEFAULT_DIFFICULTY,
+                      language,
+                      false
+                    );
                   }}
                 >
                   <Tooltip
@@ -756,7 +787,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    reset(countDownConstant, HARD_DIFFICULTY, language);
+                    reset(countDownConstant, HARD_DIFFICULTY, language, false);
                   }}
                 >
                   <Tooltip
@@ -779,7 +810,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    reset(countDownConstant, difficulty, ENGLISH_MODE);
+                    reset(countDownConstant, difficulty, ENGLISH_MODE, false);
                   }}
                 >
                   <Tooltip title={ENGLISH_MODE_TOOLTIP_TITLE}>
@@ -790,7 +821,7 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    reset(countDownConstant, difficulty, CHINESE_MODE);
+                    reset(countDownConstant, difficulty, CHINESE_MODE, false);
                   }}
                 >
                   <Tooltip title={CHINESE_MODE_TOOLTIP_TITLE}>
@@ -855,6 +886,11 @@ const TypeBox = ({ textInputRef, isFocusedMode, soundMode, soundType, handleInpu
         onKeyDown={EnterkeyPressReset}
       >
         <DialogTitle>
+          <div>
+            <span className="key-note"> press </span>
+            <span className="key-type">Space</span>{" "}
+            <span className="key-note">to redo</span>
+          </div>
           <div>
             <span className="key-note"> press </span>
             <span className="key-type">Tab</span>{" "}

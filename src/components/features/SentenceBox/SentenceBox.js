@@ -6,11 +6,13 @@ import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
 import IconButton from "../../utils/IconButton";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import UndoIcon from "@mui/icons-material/Undo";
 import {
   DEFAULT_SENTENCES_COUNT,
   TEN_SENTENCES_COUNT,
   FIFTEEN_SENTENCES_COUNT,
-  RESTART_BUTTON_TOOLTIP_TITLE
+  RESTART_BUTTON_TOOLTIP_TITLE,
+  REDO_BUTTON_TOOLTIP_TITLE,
 } from "../../../constants/Constants";
 import useLocalPersistState from "../../../hooks/useLocalPersistState";
 import {
@@ -26,9 +28,14 @@ import SentenceBoxStats from "./SentenceBoxStats";
 import { SOUND_MAP } from "../sound/sound";
 import useSound from "use-sound";
 
-const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundMode, soundType }) => {
-
-  const [play] = useSound(SOUND_MAP[soundType], {volume: 0.5});
+const SentenceBox = ({
+  sentenceInputRef,
+  handleInputFocus,
+  isFocusedMode,
+  soundMode,
+  soundType,
+}) => {
+  const [play] = useSound(SOUND_MAP[soundType], { volume: 0.5 });
 
   // local persist timer
   const [sentencesCountConstant, setSentencesCountConstant] =
@@ -47,7 +54,11 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundM
     if (e.keyCode === 13 || e.keyCode === 9) {
       e.preventDefault();
       setOpenRestart(false);
-      reset(sentencesCountConstant, language);
+      reset(sentencesCountConstant, language, false);
+    } else if (e.keyCode === 32) {
+      e.preventDefault();
+      setOpenRestart(false);
+      reset(sentencesCountConstant, language, true);
     } else {
       e.preventDefault();
       setOpenRestart(false);
@@ -118,13 +129,15 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundM
 
   const wpm = time < 1 ? 0 : ((rawKeyStroke / time) * 60) / 5;
 
-  const reset = (newSentencesCountConstant, newLanguage) => {
+  const reset = (newSentencesCountConstant, newLanguage, isRedo) => {
     setStatus("watiting");
     setSentencesCountConstant(newSentencesCountConstant);
     setLanguage(newLanguage);
-    setSentencesDict(
-      sentencesGenerator(newSentencesCountConstant, newLanguage)
-    );
+    if (!isRedo) {
+      setSentencesDict(
+        sentencesGenerator(newSentencesCountConstant, newLanguage)
+      );
+    }
     setTimeRunning(false);
     setTime(0);
     setCurrSentenceIndex(0);
@@ -141,7 +154,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundM
 
   const start = () => {
     if (status === "finished") {
-      reset(sentencesCountConstant, language);
+      reset(sentencesCountConstant, language, false);
     }
     if (status !== "started") {
       setStatus("started");
@@ -174,7 +187,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundM
   };
 
   const handleKeyDown = (e) => {
-    if (status !== "finished" && soundMode){
+    if (status !== "finished" && soundMode) {
       play();
     }
     const keyCode = e.keyCode;
@@ -307,11 +320,23 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundM
           <Grid container justifyContent="center" alignItems="center">
             <Box display="flex" flexDirection="row">
               <IconButton
+                aria-label="redo"
+                color="secondary"
+                size="medium"
+                onClick={() => {
+                  reset(sentencesCountConstant, language, true);
+                }}
+              >
+                <Tooltip title={REDO_BUTTON_TOOLTIP_TITLE}>
+                  <UndoIcon />
+                </Tooltip>
+              </IconButton>
+              <IconButton
                 aria-label="restart"
                 color="secondary"
                 size="medium"
                 onClick={() => {
-                  reset(sentencesCountConstant, language);
+                  reset(sentencesCountConstant, language, false);
                 }}
               >
                 <Tooltip title={RESTART_BUTTON_TOOLTIP_TITLE}>
@@ -322,7 +347,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundM
                 <>
                   <IconButton
                     onClick={() => {
-                      reset(DEFAULT_SENTENCES_COUNT, language);
+                      reset(DEFAULT_SENTENCES_COUNT, language, false);
                     }}
                   >
                     <span
@@ -335,7 +360,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundM
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(TEN_SENTENCES_COUNT, language);
+                      reset(TEN_SENTENCES_COUNT, language, false);
                     }}
                   >
                     <span
@@ -348,7 +373,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundM
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(FIFTEEN_SENTENCES_COUNT, language);
+                      reset(FIFTEEN_SENTENCES_COUNT, language, false);
                     }}
                   >
                     <span
@@ -365,7 +390,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundM
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(sentencesCountConstant, ENGLISH_MODE);
+                      reset(sentencesCountConstant, ENGLISH_MODE, false);
                     }}
                   >
                     <Tooltip title={ENGLISH_SENTENCE_MODE_TOOLTIP_TITLE}>
@@ -378,7 +403,7 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundM
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(sentencesCountConstant, CHINESE_MODE);
+                      reset(sentencesCountConstant, CHINESE_MODE, false);
                     }}
                   >
                     <Tooltip title={CHINESE_SENTENCE_MODE_TOOLTIP_TITLE}>
@@ -406,6 +431,11 @@ const SentenceBox = ({ sentenceInputRef, handleInputFocus, isFocusedMode, soundM
         onKeyDown={EnterkeyPressReset}
       >
         <DialogTitle>
+          <div>
+            <span className="key-note"> press </span>
+            <span className="key-type">Space</span>{" "}
+            <span className="key-note">to redo</span>
+          </div>
           <div>
             <span className="key-note"> press </span>
             <span className="key-type">Tab</span>{" "}

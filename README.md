@@ -103,8 +103,9 @@ To join the community, please go to the website and hit "discord" icon.
   
   <img width="120" alt="Screen Shot 2022-09-29 at 2 01 51 AM" src="https://user-images.githubusercontent.com/39578778/192989337-637e1154-fbca-420b-babb-22846d5dbdb1.png">
   
-#### 10. [Tab] key to Fast reset
+#### 10. [Tab] key to Fast redo/reset
 
+  - [Tab] + [Space] for quickly redo
   - [Tab] + [Enter] / [Tab] + [Tab] for quickly reset
   - [Tab] + [Any Key] to exit the dialog
 
