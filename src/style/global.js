@@ -308,6 +308,9 @@ export const GlobalStyles = createGlobalStyle`
       100%	 {color: #F48FB1;}
     }
   }
+  .collect-me{
+    color : ${({ theme }) => theme.text};
+  }
   .support-me-image{
     height: 75%;
     width: 75%;
