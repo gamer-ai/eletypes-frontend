@@ -33,6 +33,7 @@ import { SvgIcon } from "@mui/material";
 import KeyboardAltOutlinedIcon from '@mui/icons-material/KeyboardAltOutlined';
 import SchoolIcon from '@mui/icons-material/School';
 import { SOUND_MODE_TOOLTIP } from "../features/sound/sound";
+import footerStyles from "./footer.module.css";
 
 const FooterMenu = ({
   themesOptions,
@@ -54,7 +55,9 @@ const FooterMenu = ({
   isTrainerMode,
   toggleTrainerMode,
   isWordsCardMode,
-  toggleWordsCardMode
+  toggleWordsCardMode,
+  toggleRankingMode,
+  isRankingMode
 }) => {
   const isSiteInfoDisabled = isMusicMode || isFocusedMode;
   const isBottomLogoEnabled = isFocusedMode && !isMusicMode;
@@ -177,6 +180,15 @@ const FooterMenu = ({
                   {SENTENCE_MODE_LABEL}
                 </span>
               </IconButton>
+            </>
+          )}
+          {isTypeTestEnabled && (
+            <>
+             <IconButton onClick={toggleRankingMode}>
+              <span className={getModeButtonClassName(isRankingMode)}>
+                <img src="\12f6e70b31e890cf9ed042c5ab686990--charts-bar.jpg" alt="leaderboard" className={footerStyles.icon}/>
+              </span>
+          </IconButton>
             </>
           )}
         </Box>

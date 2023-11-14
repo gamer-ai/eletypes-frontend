@@ -67,6 +67,9 @@ function App() {
 
   // coffeeMode setting
   const [isCoffeeMode, setIsCoffeeMode] = useState(false);
+  
+  // rankingMode setting
+  const [isRankingMode, setIsRankingMode] = useState(false);
 
   // trainer mode setting
   const [isTrainerMode, setIsTrainerMode] = useState(false);
@@ -113,15 +116,25 @@ function App() {
     setIsCoffeeMode(!isCoffeeMode);
     setIsTrainerMode(false);
     setIsWordsCardMode(false);
+    setIsRankingMode(false);
+  };
+  
+  const toggleRankingMode = () => {
+    setIsRankingMode(!isRankingMode);
+    setIsCoffeeMode(false);
+    setIsTrainerMode(false);
+    setIsWordsCardMode(false);
   };
 
   const toggleTrainerMode = () => {
+    setIsRankingMode(false);
     setIsTrainerMode(!isTrainerMode);
     setIsCoffeeMode(false);
     setIsWordsCardMode(false);
   };
 
   const toggleWordsCardMode = () => {
+    setIsRankingMode(false);
     setIsTrainerMode(false);
     setIsCoffeeMode(false);
     setIsWordsCardMode(!isWordsCardMode);
@@ -234,6 +247,8 @@ function App() {
             toggleTrainerMode={toggleTrainerMode}
             isWordsCardMode={isWordsCardMode}
             toggleWordsCardMode={toggleWordsCardMode}
+            toggleRankingMode={toggleRankingMode}
+            isRankingMode={isRankingMode}
           ></FooterMenu>
           <MusicPlayerSnackbar
             isMusicMode={isMusicMode}
