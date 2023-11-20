@@ -36,6 +36,12 @@ body {
   display: grid;
 }
 
+.form-input div .error-msg {
+  font-size: 12px;
+  color: red;
+  margin-top: 5px;
+}
+
 .form-input div input {
   height: 35px;
   padding: 5px;

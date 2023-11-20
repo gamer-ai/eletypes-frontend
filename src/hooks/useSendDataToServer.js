@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -8,7 +8,21 @@ function useSendDataToServer(endpoint) {
     email: "",
     password: "",
   });
+  const [errors, setErrors] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    handleErrorDispay();
+  }, [formData]);
+
+  const handleErrorDispay = async () => {
+    const res = await axios.post(endpoint, formData);
+    if (!res.data.success) {
+      setErrors(res.data.errors);
+    } else {
+      setErrors([]);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,18 +33,25 @@ function useSendDataToServer(endpoint) {
     e.preventDefault();
 
     try {
-      console.log(endpoint)
+      console.log(endpoint);
       const res = await axios.post(endpoint, formData);
 
       console.log("Sended data to server successfully!");
-      console.log(res.data.success)
-      if(res.data.success) return navigate("/");
+
+      if (res.data.success) {
+        setErrors([]);
+        navigate("/");
+      } else {
+        setErrors(res.data.errors);
+        console.log(res.data.errors);
+        return navigate("/login");
+      }
     } catch (err) {
       console.log("Error send data to server!");
     }
   };
 
-  return [formData, handleInputChange, handleSubmit];
+  return [formData, handleInputChange, handleSubmit, errors];
 }
 
 export default useSendDataToServer;
