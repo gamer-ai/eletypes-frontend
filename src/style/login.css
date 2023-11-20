@@ -38,15 +38,20 @@ body {
 
 .form-input div input {
   height: 35px;
+  padding: 5px;
+  color: #555;
 }
 
 .form-input div label {
   margin-bottom: 10px;
+  color: #555;
+  font-weight: bold;
 }
 
 .login-container section {
   display: grid;
   justify-items: center;
+  margin-top: 20px;
 }
 
 .login-container button {
