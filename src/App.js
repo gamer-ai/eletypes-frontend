@@ -24,6 +24,7 @@ import {
 } from "./components/features/sound/sound";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
+import SignUp from "./components/SignUp";
 
 function App() {
   // localStorage persist theme setting
@@ -272,6 +273,7 @@ function App() {
             }
           />
           <Route path="/login" exact element={<Login />} />
+          <Route path="/sign-up" exact element={<SignUp />} />
         </Routes>
       </>
     </ThemeProvider>

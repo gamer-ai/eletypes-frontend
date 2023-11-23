@@ -1,17 +1,34 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import "../style/login.css";
 import useSendDataToServer from "../hooks/useSendDataToServer";
 
-function Login() {
-  const [formData, handleInputChange, handleSubmit, errors, saveAccount, loginSubmit] =
-    useSendDataToServer("http://localhost:8000/api/login");
+function SignUp() {
+  const [formData, handleInputChange, handleSubmit, errors, saveAccount] =
+    useSendDataToServer("http://localhost:8000/api/sign-up");
 
   const formRef = useRef();
-
   return (
     <div className="login-container">
-      <h1 className="title">Login</h1>
+      <h1 className="title">Sign Up</h1>
       <form onSubmit={handleSubmit} className="form-input" ref={formRef}>
+        <div>
+          <label htmlFor="username">Username</label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            className="username"
+            placeholder="Enter your username!"
+            value={formData.username}
+            onChange={handleInputChange}
+            maxLength="30"
+          />
+          {errors.length !== 0 &&
+            errors.map(
+              ({ path, msg }) =>
+                path === "username" && <p className="error-msg">{msg}</p>
+            )}
+        </div>
         <div>
           <label htmlFor="email">Email</label>
           <input
@@ -46,9 +63,9 @@ function Login() {
             )}
         </div>
         <section>
-          <button onClick={loginSubmit}>Login</button>
+          <button onClick={saveAccount}>Sign Up</button>
           <p>
-            Dont have an account ? <a href="/sign-up">Sign up</a>
+            Already have an account ? <a href="/login">Login</a>
           </p>
         </section>
       </form>
@@ -56,4 +73,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SignUp;

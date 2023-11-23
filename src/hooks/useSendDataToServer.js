@@ -4,16 +4,42 @@ import { useNavigate } from "react-router-dom";
 
 function useSendDataToServer(endpoint) {
   const [formData, setFormData] = useState({
-    userName: "",
+    username: "",
     email: "",
     password: "",
+    submit: false,
   });
   const [errors, setErrors] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // update display errors
     handleErrorDispay();
   }, [formData]);
+
+  const saveAccount = async () => {
+    setFormData({ ...formData, submit: true });
+
+    const res = await axios.post(endpoint, formData);
+
+    if (!res.data.success) return setErrors(res.data.errors);
+
+    setErrors([]);
+
+    navigate("/login");
+  };
+
+  const loginSubmit = async () => {
+    setFormData({ ...formData, submit: true });
+
+    const res = await axios.post(endpoint, formData);
+
+    if (!res.data.success) return setErrors(res.data.errors);
+     
+    setErrors([]);
+
+    navigate('/')
+  };
 
   const handleErrorDispay = async () => {
     const res = await axios.post(endpoint, formData);
@@ -40,18 +66,23 @@ function useSendDataToServer(endpoint) {
 
       if (res.data.success) {
         setErrors([]);
-        navigate("/");
       } else {
         setErrors(res.data.errors);
-        console.log(res.data.errors);
-        return navigate("/login");
+        return navigate(res.data.url);
       }
     } catch (err) {
       console.log("Error send data to server!");
     }
   };
 
-  return [formData, handleInputChange, handleSubmit, errors];
+  return [
+    formData,
+    handleInputChange,
+    handleSubmit,
+    errors,
+    saveAccount,
+    loginSubmit,
+  ];
 }
 
 export default useSendDataToServer;
