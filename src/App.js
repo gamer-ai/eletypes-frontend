@@ -22,9 +22,10 @@ import {
   DEFAULT_SOUND_TYPE,
   DEFAULT_SOUND_TYPE_KEY,
 } from "./components/features/sound/sound";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate} from "react-router-dom";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
+import axios from "axios";
 
 function App() {
   // localStorage persist theme setting
@@ -186,6 +187,24 @@ function App() {
     soundMode,
     soundType,
   ]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getData = async () => {
+      const res = await axios.get("http://localhost:8000");
+
+      console.log(res.data.authenticatedUser);
+
+      if (!res.data.authenticatedUser) {
+        return navigate("/login");
+      }
+
+      navigate("/");
+    };
+
+    getData();
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
