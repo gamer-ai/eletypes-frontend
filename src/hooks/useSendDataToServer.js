@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 function useSendDataToServer(endpoint) {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ function useSendDataToServer(endpoint) {
   });
   const [errors, setErrors] = useState([]);
   const navigate = useNavigate();
+  const [cookies, setCookie] = useCookies(["token"]);
 
   useEffect(() => {
     // update display errors
@@ -35,10 +37,16 @@ function useSendDataToServer(endpoint) {
     const res = await axios.post(endpoint, formData);
 
     if (!res.data.success) return setErrors(res.data.errors);
-     
+
     setErrors([]);
 
-    navigate('/')
+    console.log(res.data)
+
+    setCookie("token", res.data.token, {
+      path: "/"
+    });
+
+    navigate("/");
   };
 
   const handleErrorDispay = async () => {

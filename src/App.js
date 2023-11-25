@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useCookies } from "react-cookie";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme, themesOptions } from "./style/theme";
 import { GlobalStyles } from "./style/global";
@@ -22,7 +23,7 @@ import {
   DEFAULT_SOUND_TYPE,
   DEFAULT_SOUND_TYPE_KEY,
 } from "./components/features/sound/sound";
-import { Routes, Route, useNavigate} from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import axios from "axios";
@@ -56,6 +57,8 @@ function App() {
     GAME_MODE_DEFAULT,
     GAME_MODE
   );
+
+  const [user, setUser] = useState(false);
 
   const handleGameModeChange = (currGameMode) => {
     setGameMode(currGameMode);
@@ -188,23 +191,25 @@ function App() {
     soundType,
   ]);
 
-  const navigate = useNavigate();
+  const [cookies, setCookie] = useCookies();
 
   useEffect(() => {
-    const getData = async () => {
-      const res = await axios.get("http://localhost:8000");
+    const token = cookies.token;
 
-      console.log(res.data.authenticatedUser);
-
-      if (!res.data.authenticatedUser) {
-        return navigate("/login");
-      }
-
-      navigate("/");
-    };
-
-    getData();
-  }, []);
+    console.log("Token", token)
+    console.log(user)
+    
+    axios.get('http://localhost:8000/isAuthorized', { headers: {
+      "authorization": token
+    } })
+    .then(res => {
+      setUser(true);
+    })
+    .catch(err => {
+      setUser(false);
+      console.log("Error feching data!")
+    })
+  }, [cookies]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -213,7 +218,7 @@ function App() {
           <Route
             path="/"
             exact
-            element={
+            element={ user ?
               <div className="canvas">
                 <GlobalStyles />
                 <Logo
@@ -289,10 +294,10 @@ function App() {
                   onMouseLeave={() => focusTextInput()}
                 ></MusicPlayerSnackbar>
               </div>
-            }
+            : <Navigate to="/login"/>}
           />
-          <Route path="/login" exact element={<Login />} />
-          <Route path="/sign-up" exact element={<SignUp />} />
+          <Route path="/login" exact element={!user ? <Login /> : <Navigate to="/"/>} />
+          <Route path="/sign-up" exact element={!user ? <SignUp /> : <Navigate to="/"/>} />
         </Routes>
       </>
     </ThemeProvider>
