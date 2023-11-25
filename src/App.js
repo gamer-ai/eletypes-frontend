@@ -5,6 +5,7 @@ import { defaultTheme, themesOptions } from "./style/theme";
 import { GlobalStyles } from "./style/global";
 import TypeBox from "./components/features/TypeBox/TypeBox";
 import SentenceBox from "./components/features/SentenceBox/SentenceBox";
+import RankingBox from "./components/features/RankingBox/RankingBox";
 import Logo from "./components/common/Logo";
 import MusicPlayerSnackbar from "./components/features/MusicPlayer/MusicPlayerSnackbar";
 import FooterMenu from "./components/common/FooterMenu";
@@ -13,6 +14,7 @@ import {
   GAME_MODE,
   GAME_MODE_DEFAULT,
   GAME_MODE_SENTENCE,
+  GAME_MODE_RANKING
 } from "./constants/Constants";
 import useLocalPersistState from "./hooks/useLocalPersistState";
 import DefaultKeyboard from "./components/features/Keyboard/DefaultKeyboard";
@@ -94,6 +96,11 @@ function App() {
     !isWordsCardMode;
   const isSentenceGameMode =
     gameMode === GAME_MODE_SENTENCE &&
+    !isCoffeeMode &&
+    !isTrainerMode &&
+    !isWordsCardMode;
+  const isRankingGameMode =
+    gameMode === GAME_MODE_RANKING &&
     !isCoffeeMode &&
     !isTrainerMode &&
     !isWordsCardMode;
@@ -244,6 +251,16 @@ function App() {
                     key="sentence-box"
                     handleInputFocus={() => focusSentenceInput()}
                   ></SentenceBox>
+                )}
+                {isRankingGameMode && (
+                  <RankingBox
+                    sentenceInputRef={sentenceInputRef}
+                    isFocusedMode={isFocusedMode}
+                    soundMode={soundMode}
+                    soundType={soundType}
+                    key="sentence-box"
+                    handleInputFocus={() => focusSentenceInput()}
+                  ></RankingBox>
                 )}
                 {isCoffeeMode && !isTrainerMode && !isWordsCardMode && (
                   <FreeTypingBox
