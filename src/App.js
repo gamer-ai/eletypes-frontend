@@ -206,7 +206,7 @@ function App() {
     console.log("Token", token)
     console.log(user)
     
-    axios.get('http://localhost:8000/isAuthorized', { headers: {
+    axios.get('https://quaint-fish-tweed-jacket.cyclic.app/isAuthorized', { headers: {
       "authorization": token
     } })
     .then(res => {

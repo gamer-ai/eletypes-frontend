@@ -4,7 +4,7 @@ import useSendDataToServer from "../hooks/useSendDataToServer";
 
 function SignUp() {
   const [formData, handleInputChange, handleSubmit, errors, saveAccount] =
-    useSendDataToServer("http://localhost:8000/api/sign-up");
+    useSendDataToServer("https://quaint-fish-tweed-jacket.cyclic.app/api/sign-up");
 
   const formRef = useRef();
   return (
