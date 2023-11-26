@@ -660,4 +660,34 @@ export const GlobalStyles = createGlobalStyle`
   .select-chapter-title{
     font-size: 16px;
   }
+
+  /* RANKING MODE STYLE */
+  .RankingBox {
+    display: grid;
+    justify-content: center;
+    overflow: auto;
+    max-height: 351px;
+  }
+
+  select {
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background};
+    border: 0;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  caption {
+    text-align: left;
+    padding: 10px 0;
+    margin-top: 10px;
+  }
+
+  tr, td, th {
+    border: 1px solid ${({ theme }) => theme.text};
+    padding: 10px;
+    text-align: center;
+  }
 `;
