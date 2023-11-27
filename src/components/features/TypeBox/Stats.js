@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box } from "@mui/system";
 import { Tooltip } from "@mui/material";
 import { CHAR_TOOLTIP_TITLE } from "../../../constants/Constants";
+import useLocalPersistState from "../../../hooks/useLocalPersistState";
+import axios from "axios";
+import { useCookies } from "react-cookie";
 
 const Stats = ({
   status,
@@ -11,6 +14,36 @@ const Stats = ({
   statsCharCount,
   rawKeyStrokes,
 }) => {
+  const [cookies, setCookie] = useCookies();
+  const token = cookies.token;
+
+  useEffect(() => {
+    const sendWpmToServer = async () => {
+      try {
+        const res = await axios.post(
+          `${process.env.REACT_APP_SERVER_URL}/ranking`,
+          {
+            time: countDownConstant,
+            wpm,
+          },
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        );
+
+        console.log("Successfull post WPM to server!");
+      } catch (err) {
+        console.log("Error sending data to server!");
+      }
+    };
+
+    if (countDown == 0) {
+      sendWpmToServer();
+    }
+  }, [countDown]);
+
   return (
     <>
       <h3>{countDown} s </h3>

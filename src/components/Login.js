@@ -4,7 +4,7 @@ import useSendDataToServer from "../hooks/useSendDataToServer";
 
 function Login() {
   const [formData, handleInputChange, handleSubmit, errors, saveAccount, loginSubmit] =
-    useSendDataToServer("https://quaint-fish-tweed-jacket.cyclic.app/api/login");
+    useSendDataToServer(`${process.env.REACT_APP_SERVER_URL}/api/login`);
 
   const formRef = useRef();
 

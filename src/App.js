@@ -203,10 +203,7 @@ function App() {
   useEffect(() => {
     const token = cookies.token;
 
-    console.log("Token", token)
-    console.log(user)
-    
-    axios.get('https://quaint-fish-tweed-jacket.cyclic.app/isAuthorized', { headers: {
+    axios.get(`${process.env.REACT_APP_SERVER_URL}/isAuthorized`, { headers: {
       "authorization": token
     } })
     .then(res => {
