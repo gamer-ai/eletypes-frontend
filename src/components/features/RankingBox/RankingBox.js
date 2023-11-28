@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import useGetDataFromServer from "../../../hooks/useGetDataFromServer";
 
 function RankingBox() {
+  const users = useGetDataFromServer(
+    [],
+    `${process.env.REACT_APP_SERVER_URL}/ranking`
+  );
+  const [selectedCategory, setSelectedCategory] = useState("90-seconds");
+
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+
   return (
     <div className="RankingBox">
       <h2>Top Ranking</h2>
       <table>
         <caption>
-          Category <select name="category" id="category">
+          Category
+          <select name="category" id="category" onChange={handleCategoryChange}>
             <option value="90-seconds">90 S</option>
             <option value="60-seconds">60 S</option>
             <option value="30-seconds">30 S</option>
@@ -19,54 +31,18 @@ function RankingBox() {
           <th>Email</th>
           <th>Score</th>
         </tr>
-        <tr>
-          <td data-cell="No">1</td>
-          <td data-cell="Username">Rendi V.S</td>
-          <td data-cell="Email">hardleberg@gmail.com</td>
-          <td data-cell="Score">100 WPM</td>
-        </tr>
-        <tr>
-          <td data-cell="No">2</td>
-          <td data-cell="Username">Bintang</td>
-          <td data-cell="Email">bintang@gmail.com</td>
-          <td data-cell="Score">99 WPM</td>
-        </tr>
-        <tr>
-          <td data-cell="No">3</td>
-          <td data-cell="Username">Ahmad</td>
-          <td data-cell="Email">ahmad@gmail.com</td>
-          <td data-cell="Score">98 WPM</td>
-        </tr>
-        <tr>
-          <td data-cell="No">4</td>
-          <td data-cell="Username">Fajar</td>
-          <td data-cell="Email">fajar@gmail.com</td>
-          <td data-cell="Score">97 WPM</td>
-        </tr>
-        <tr>
-          <td data-cell="No">5</td>
-          <td data-cell="Username">Toni</td>
-          <td data-cell="Email">toni@gmail.com</td>
-          <td data-cell="Score">96 WPM</td>
-        </tr>
-        <tr>
-          <td data-cell="No">6</td>
-          <td data-cell="Username">Nobita</td>
-          <td data-cell="Email">nobita@gmail.com</td>
-          <td data-cell="Score">95 WPM</td>
-        </tr>
-        <tr>
-          <td data-cell="No">7</td>
-          <td data-cell="Username">James</td>
-          <td data-cell="Email">james@gmail.com</td>
-          <td data-cell="Score">94 WPM</td>
-        </tr>
-        <tr>
-          <td data-cell="No">8</td>
-          <td data-cell="Username">kroos</td>
-          <td data-cell="Email">kroos@gmail.com</td>
-          <td data-cell="Score">93 WPM</td>
-        </tr>
+        {selectedCategory === "90-seconds" &&
+           users
+            .sort((a, b) => b.ninetySeconds.wpm - a.ninetySeconds.wpm)
+
+            .map((user, index) => (
+              <tr>
+                <td data-cell="No">{index + 1}</td>
+                <td data-cell="Username">{user.username}</td>
+                <td data-cell="Email">{user.email}</td>
+                <td data-cell="Score">{user.ninetySeconds.wpm || 0} WPM</td>
+              </tr>
+            ))}
       </table>
     </div>
   );

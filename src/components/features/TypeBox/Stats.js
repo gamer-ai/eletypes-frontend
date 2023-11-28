@@ -25,6 +25,7 @@ const Stats = ({
           {
             time: countDownConstant,
             wpm,
+            token,
           },
           {
             headers: {
