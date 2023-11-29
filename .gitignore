@@ -111,3 +111,6 @@ dist
 
 # Local Netlify folder
 .netlify
+
+# DOTENV
+.env

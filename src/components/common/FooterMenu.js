@@ -12,6 +12,8 @@ import {
   MUSIC_MODE,
   WORD_MODE_LABEL,
   SENTENCE_MODE_LABEL,
+  RANKING_MODE_LABEL,
+  GAME_MODE_RANKING,
   GAME_MODE_DEFAULT,
   GAME_MODE_SENTENCE,
   TRAINER_MODE,
@@ -33,7 +35,6 @@ import { SvgIcon } from "@mui/material";
 import KeyboardAltOutlinedIcon from "@mui/icons-material/KeyboardAltOutlined";
 import SchoolIcon from "@mui/icons-material/School";
 import { SOUND_MODE_TOOLTIP } from "../features/sound/sound";
-import footerStyles from "./footer.module.css";
 
 const FooterMenu = ({
   themesOptions,
@@ -62,10 +63,8 @@ const FooterMenu = ({
   const isSiteInfoDisabled = isMusicMode || isFocusedMode;
   const isBottomLogoEnabled = isFocusedMode && !isMusicMode;
   const isTypeTestEnabled = !isCoffeeMode && !isTrainerMode && !isWordsCardMode;
-  
-  const viewRanking = () => {
 
-  }
+  const viewRanking = () => {};
 
   const getModeButtonClassName = (mode) => {
     if (mode) {
@@ -78,7 +77,7 @@ const FooterMenu = ({
     if (currMode === buttonMode) {
       return "active-game-mode-button";
     }
-    return "inactive-game-mode-button";  
+    return "inactive-game-mode-button";
   };
 
   return (
@@ -188,15 +187,19 @@ const FooterMenu = ({
                   {SENTENCE_MODE_LABEL}
                 </span>
               </IconButton>
-            </>
-          )}
-          {isTypeTestEnabled && (
-            <>
-              <IconButton onClick={toggleRankingMode}>
-                  <span className={getModeButtonClassName(isRankingMode)}>
-                  </span>
-                  <button className={footerStyles["ranking-btn"]}
-                          onClick={viewRanking}>Ranking</button>
+              <IconButton
+                onClick={() => {
+                  handleGameModeChange(GAME_MODE_RANKING);
+                }}
+              >
+                <span
+                  className={getGameModeButtonClassName(
+                    gameMode,
+                    GAME_MODE_RANKING
+                  )}
+                >
+                  {RANKING_MODE_LABEL}
+                </span>
               </IconButton>
             </>
           )}

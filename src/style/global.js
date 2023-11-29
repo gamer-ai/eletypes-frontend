@@ -34,14 +34,13 @@ export const GlobalStyles = createGlobalStyle`
   }
   .header {
     position: relative;
-    display: block;
+    display: grid;
     align-items: center;
-    justify-content: center;
+    grid-template-columns: 1fr 1fr;
     padding-bottom: 3%;
     top: 0;
     left:0;
     width: 100%;
-    text-align: center;
   }
   .footer {
     font-size: .75rem;
@@ -69,7 +68,7 @@ export const GlobalStyles = createGlobalStyle`
   h3{
     margin-right: 10px;
   }
-  h4{
+  h4{ 
     margin-right: 10px;
     opacity: 0.7;
   }
@@ -660,4 +659,216 @@ export const GlobalStyles = createGlobalStyle`
   .select-chapter-title{
     font-size: 16px;
   }
+
+  /* RANKING MODE STYLE */
+  .RankingBox {
+    display: grid;
+    justify-content: center;
+    overflow: auto;
+    max-height: 351px;
+  }
+
+  select {
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background};
+    border: 0;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  caption {
+    text-align: left;
+    padding: 10px 0;
+    margin-top: 10px;
+  }
+
+  tr, td, th {
+    border: 1px solid ${({ theme }) => theme.text};
+    padding: 10px;
+    text-align: center;
+  }
+  
+  /* Profile */
+  .profile {
+    margin-top: 10px;
+    grid-column: 2 / 3;
+    grid-row: 1 / -1;
+    text-align: right;
+    display: grid;
+    grid:
+      'username photo' auto
+      'email photo' 1fr
+      / 1fr auto;
+    column-gap: 25px;
+    row-gap: 5px;
+  }
+
+  .profile figcaption {
+    grid-area: username;
+    font-size: 14px;
+    color: ${({ theme }) => theme.text};
+  }
+
+  .profile span {
+    grid-area: email;
+    font-size: 12px;
+    color: ${({ theme }) => theme.textTypeBox};
+  }
+
+  .profile img {
+    grid-area: photo;
+    background: ${({ theme }) => theme.textTypeBox};
+    width: 40px;
+    padding: 5px;
+    border-radius: 50%;
+    height: 40px;
+  }
+
 `;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

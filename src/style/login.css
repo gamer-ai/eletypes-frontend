@@ -1,0 +1,80 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100svh;
+  width: 100svw;
+}
+
+.login-container {
+  display: grid;
+  gap: 40px;
+  width: clamp(300px, 35svw, 350px);
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 15px;
+}
+
+.login-container .title {
+  text-align: center;
+  font-size: 45px;
+}
+
+.form-input {
+  display: grid;
+  gap: 20px;
+}
+
+.form-input div {
+  display: grid;
+}
+
+.form-input div .error-msg {
+  font-size: 12px;
+  color: red;
+  margin-top: 5px;
+}
+
+.form-input div input {
+  height: 35px;
+  padding: 5px;
+  color: #555;
+}
+
+.form-input div label {
+  margin-bottom: 10px;
+  color: #555;
+  font-weight: bold;
+}
+
+.login-container section {
+  display: grid;
+  justify-items: center;
+  margin-top: 20px;
+}
+
+.login-container button {
+  margin-bottom: 10px;
+  background: #ffc107;
+  border: 0;
+  padding: 8px 35px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 15px;
+}
+
+.login-container section p, a {
+  font-size: 14px;
+}
+
+.login-container section p {
+  color: rgba(0,0,0,.35);
+  font-weight: 500;
+}
