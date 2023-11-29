@@ -63,7 +63,7 @@ function SignUp() {
             )}
         </div>
         <section>
-          <button onClick={saveAccount}>Sign Up</button>
+          <button>Sign Up</button>
           <p>
             Already have an account ? <a href="/login">Login</a>
           </p>

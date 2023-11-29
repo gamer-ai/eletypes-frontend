@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box } from "@mui/system";
 import { Tooltip } from "@mui/material";
 import { CHAR_TOOLTIP_TITLE } from "../../../constants/Constants";
-import useLocalPersistState from "../../../hooks/useLocalPersistState";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 
@@ -16,32 +15,33 @@ const Stats = ({
 }) => {
   const [cookies, setCookie] = useCookies();
   const token = cookies.token;
+  const scoreRef = useRef();
+
+  const sendScoreToServer = async (score) => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/ranking`,
+        {
+          time: countDownConstant,
+          score: parseInt(score),
+          token,
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+
+      console.log("Successfull post WPM to server!");
+    } catch (err) {
+      console.log("Error sending data to server!");
+    }
+  };
 
   useEffect(() => {
-    const sendWpmToServer = async () => {
-      try {
-        const res = await axios.post(
-          `${process.env.REACT_APP_SERVER_URL}/ranking`,
-          {
-            time: countDownConstant,
-            wpm,
-            token,
-          },
-          {
-            headers: {
-              authorization: token,
-            },
-          }
-        );
-
-        console.log("Successfull post WPM to server!");
-      } catch (err) {
-        console.log("Error sending data to server!");
-      }
-    };
-
-    if (countDown == 0) {
-      sendWpmToServer();
+    if (scoreRef.current) {
+      sendScoreToServer(scoreRef.current.innerText);
     }
   }, [countDown]);
 
@@ -63,9 +63,11 @@ const Stats = ({
           >
             <h4>
               Char:{" "}
-              <span className="correct-char-stats">{statsCharCount[1]}</span>/
-              <span className="incorrect-char-stats">{statsCharCount[2]}</span>/
-              <span className="missing-char-stats">{statsCharCount[3]}</span>/
+              <span className="correct-char-stats" ref={scoreRef}>
+                {statsCharCount[1]}
+              </span>
+              /<span className="incorrect-char-stats">{statsCharCount[2]}</span>
+              /<span className="missing-char-stats">{statsCharCount[3]}</span>/
               <span className="correct-char-stats">{statsCharCount[4]}</span>/
               <span className="incorrect-char-stats">{statsCharCount[5]}</span>
             </h4>

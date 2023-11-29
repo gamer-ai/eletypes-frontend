@@ -14,50 +14,6 @@ function useSendDataToServer(endpoint) {
   const navigate = useNavigate();
   const [cookies, setCookie] = useCookies(["token"]);
 
-  useEffect(() => {
-    // update display errors
-    handleErrorDispay();
-  }, [formData]);
-
-  const saveAccount = async () => {
-    setFormData({ ...formData, submit: true });
-
-    const res = await axios.post(endpoint, formData);
-
-    if (!res.data.success) return setErrors(res.data.errors);
-
-    setErrors([]);
-
-    navigate("/login");
-  };
-
-  const loginSubmit = async () => {
-    setFormData({ ...formData, submit: true });
-
-    const res = await axios.post(endpoint, formData);
-
-    if (!res.data.success) return setErrors(res.data.errors);
-
-    setErrors([]);
-
-    console.log(res.data)
-
-    setCookie("token", res.data.token, {
-      path: "/"
-    });
-
-    navigate("/");
-  };
-
-  const handleErrorDispay = async () => {
-    const res = await axios.post(endpoint, formData);
-    if (!res.data.success) {
-      setErrors(res.data.errors);
-    } else {
-      setErrors([]);
-    }
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -74,6 +30,13 @@ function useSendDataToServer(endpoint) {
 
       if (res.data.success) {
         setErrors([]);
+
+        res.data.action === "login" &&
+          setCookie("token", res.data.token, {
+            path: "/",
+          });
+
+        navigate(res.data.url);
       } else {
         setErrors(res.data.errors);
         return navigate(res.data.url);
@@ -83,14 +46,7 @@ function useSendDataToServer(endpoint) {
     }
   };
 
-  return [
-    formData,
-    handleInputChange,
-    handleSubmit,
-    errors,
-    saveAccount,
-    loginSubmit,
-  ];
+  return [formData, handleInputChange, handleSubmit, errors];
 }
 
 export default useSendDataToServer;

@@ -3,7 +3,7 @@ import "../style/login.css";
 import useSendDataToServer from "../hooks/useSendDataToServer";
 
 function Login() {
-  const [formData, handleInputChange, handleSubmit, errors, saveAccount, loginSubmit] =
+  const [formData, handleInputChange, handleSubmit, errors] =
     useSendDataToServer(`${process.env.REACT_APP_SERVER_URL}/api/login`);
 
   const formRef = useRef();
@@ -46,7 +46,7 @@ function Login() {
             )}
         </div>
         <section>
-          <button onClick={loginSubmit}>Login</button>
+          <button>Login</button>
           <p>
             Dont have an account ? <a href="/sign-up">Sign up</a>
           </p>

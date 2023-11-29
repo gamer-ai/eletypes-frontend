@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import useGetDataFromServer from "../../../hooks/useGetDataFromServer";
 
 function RankingBox() {
@@ -33,14 +33,50 @@ function RankingBox() {
         </tr>
         {selectedCategory === "90-seconds" &&
            users
-            .sort((a, b) => b.ninetySeconds.wpm - a.ninetySeconds.wpm)
+            .sort((a, b) => b.ninetySeconds.score - a.ninetySeconds.score)
 
             .map((user, index) => (
-              <tr>
+              <tr key={user._id}>
                 <td data-cell="No">{index + 1}</td>
                 <td data-cell="Username">{user.username}</td>
                 <td data-cell="Email">{user.email}</td>
-                <td data-cell="Score">{user.ninetySeconds.wpm || 0} WPM</td>
+                <td data-cell="Score">{user.ninetySeconds.score || 0}</td>
+              </tr>
+            ))}
+        {selectedCategory === "60-seconds" &&
+           users
+            .sort((a, b) => b.sixtySeconds.score - a.sixtySeconds.score)
+
+            .map((user, index) => (
+              <tr key={user._id}>
+                <td data-cell="No">{index + 1}</td>
+                <td data-cell="Username">{user.username}</td>
+                <td data-cell="Email">{user.email}</td>
+                <td data-cell="Score">{user.sixtySeconds.score || 0}</td>
+              </tr>
+            ))}
+        {selectedCategory === "30-seconds" &&
+           users
+            .sort((a, b) => b.thirtySeconds.score - a.thirtySeconds.score)
+
+            .map((user, index) => (
+              <tr key={user._id}>
+                <td data-cell="No">{index + 1}</td>
+                <td data-cell="Username">{user.username}</td>
+                <td data-cell="Email">{user.email}</td>
+                <td data-cell="Score">{user.thirtySeconds.score || 0}</td>
+              </tr>
+            ))}
+        {selectedCategory === "15-seconds" &&
+           users
+            .sort((a, b) => b.fifteenSeconds.score - a.fifteenSeconds.score)
+
+            .map((user, index) => (
+              <tr key={user._id}>
+                <td data-cell="No">{index + 1}</td>
+                <td data-cell="Username">{user.username}</td>
+                <td data-cell="Email">{user.email}</td>
+                <td data-cell="Score">{user.fifteenSeconds.score || 0}</td>
               </tr>
             ))}
       </table>
