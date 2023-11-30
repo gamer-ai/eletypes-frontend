@@ -13,7 +13,7 @@ function useGetDataFromServer(defaultValue, url) {
         headers: { authorization: token },
       });
 
-      setData(res.data.users);
+      setData(res.data.payload);
 
       console.log("Sucessfully got data from server!");
     } catch (err) {

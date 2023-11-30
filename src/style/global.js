@@ -36,7 +36,7 @@ export const GlobalStyles = createGlobalStyle`
     position: relative;
     display: grid;
     align-items: center;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto 1fr;
     padding-bottom: 3%;
     top: 0;
     left:0;
@@ -701,24 +701,54 @@ export const GlobalStyles = createGlobalStyle`
       'username photo' auto
       'email photo' 1fr
       / 1fr auto;
-    column-gap: 25px;
+    column-gap: 20px;
     row-gap: 5px;
   }
+  
+  .profile .links {
+    position: absolute;
+    right: 0;
+    bottom: -80px;
+    display: none;
+    gap: 5px;
+    background: ${({ theme }) => theme.text};
+    padding: 10px 15px;
+  }
 
+  .links button {
+    background: ${({ theme }) => theme.text};
+    border: 0;
+    color: ${({ theme }) => theme.background};
+  }
+
+  .links button:active {
+    text-decoration: underline;
+  }
+
+  .links .nav-link {
+    color: ${({ theme }) => theme.background};
+    text-decoration: none;
+  }
+  
+  .links .nav-link:active {
+    text-decoration: underline;
+  }
+  
   .profile figcaption {
     grid-area: username;
     font-size: 14px;
     color: ${({ theme }) => theme.text};
   }
-
+  
   .profile span {
     grid-area: email;
     font-size: 12px;
     color: ${({ theme }) => theme.textTypeBox};
   }
 
-  .profile img {
+  .profile .image {
     grid-area: photo;
+    position: relative;
     background: ${({ theme }) => theme.textTypeBox};
     width: 40px;
     padding: 5px;
@@ -726,149 +756,47 @@ export const GlobalStyles = createGlobalStyle`
     height: 40px;
   }
 
+  .image img {
+    width: 100%;
+  }
+
+  
+  /* Login and sign up btn */
+  .login-and-sign-up {
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+    grid-column: 2 / 3;
+    grid-row: 1 / -1;
+  }
+  
+  .login-and-sign-up button {
+    background: ${({ theme }) => theme.title};
+    border: 0;
+    height: 30px;
+    font-size: 14px;
+    width: 75px;
+    border-radius: 15px;
+    color: ${({ theme }) => theme.background};
+    transition: 300ms;
+  }
+  
+  .login-and-sign-up .sign-up-btn {
+    background: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.text};
+    border: 1px solid ${({ theme }) => theme.text};
+  }
+  
+  .login-and-sign-up button:active {
+    transform: scale(.95);
+  }
+  
+  .login-and-sign-up .login-btn:hover {
+    filter: brightness(85%);
+  }
+
+  .login-and-sign-up .sign-up-btn:hover {
+    color: ${({ theme }) => theme.title};
+  }
+  
 `;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

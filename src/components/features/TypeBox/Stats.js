@@ -19,19 +19,11 @@ const Stats = ({
 
   const sendScoreToServer = async (score) => {
     try {
-      await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/ranking`,
-        {
-          time: countDownConstant,
-          score: parseInt(score),
-          token,
-        },
-        {
-          headers: {
-            authorization: token,
-          },
-        }
-      );
+      await axios.post(`${process.env.REACT_APP_SERVER_URL}/ranking`, {
+        time: countDownConstant,
+        score: parseInt(score),
+        token,
+      });
 
       console.log("Successfull post WPM to server!");
     } catch (err) {
