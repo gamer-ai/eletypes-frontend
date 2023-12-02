@@ -2,16 +2,19 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 
-function useGetDataFromServer(defaultValue, url) {
+function useGetDataFromServer(defaultValue, url, category) {
   const [data, setData] = useState(defaultValue);
   const [cookies, setCookie] = useCookies();
   const token = cookies.token;
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(url, {
-        headers: { authorization: token },
-      });
+      const res =
+        (token && category !== "ranking")
+          ? await axios.get(url + `/${token}`, {
+              headers: { authorization: token },
+            })
+          : category !== "profile" && (await axios.get(url));
 
       setData(res.data.payload);
 
@@ -22,8 +25,8 @@ function useGetDataFromServer(defaultValue, url) {
   };
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, [token, category]);
 
   return data;
 }

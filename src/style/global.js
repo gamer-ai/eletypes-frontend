@@ -148,7 +148,7 @@ export const GlobalStyles = createGlobalStyle`
     overflow: hidden;
     margin-left: auto;
     margin-right: auto;
-    position: relative
+    position: relative;
     top: 10%;
     @media only screen 
     and (min-device-width: 375px) 
@@ -261,7 +261,7 @@ export const GlobalStyles = createGlobalStyle`
   .restart-button{
     margin-left: auto;
     margin-right: auto;
-    width: 8em
+    width: 8em;
   }
   .restart-button button:hover{
     transform:scale(1.18);
@@ -660,6 +660,97 @@ export const GlobalStyles = createGlobalStyle`
     font-size: 16px;
   }
 
+  /* Login */
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100svh;
+    width: 100svw;
+  }
+  
+  .form-container {
+    display: grid;
+    gap: 40px;
+    width: clamp(300px, 35svw, 350px);
+    background: ${({ theme }) => theme.title};
+    padding: 40px;
+    border-radius: 15px;
+  }
+  
+  .form-container .title {
+    text-align: center;
+    font-size: 45px;
+    color: ${({ theme }) => theme.background};
+  }
+  
+  .form-input {
+    display: grid;
+    gap: 20px;
+  }
+  
+  .form-input div {
+    display: grid;
+  }
+  
+  .form-input div .error-msg {
+    font-size: 12px;
+    color: red;
+    margin-top: 5px;
+  }
+  
+  .form-input div input {
+    height: 35px;
+    padding: 5px;
+    color: ${({ theme }) => theme.background};
+  }
+  
+  .form-input div label {
+    margin-bottom: 10px;
+    color: ${({ theme }) => theme.background};
+    font-weight: bold;
+  }
+  
+  .form-container section {
+    display: grid;
+    justify-items: center;
+    margin-top: 20px;
+  }
+  
+  .form-container button {
+    margin-bottom: 10px;
+    background: ${({ theme }) => theme.text};
+    border: 0;
+    padding: 8px 35px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 15px;
+  }
+  
+  .form-container section p, a {
+    font-size: 14px;
+  }
+
+  .form-container p:has(.login-link)::before {
+    content: "Don't have an account ? ";
+    font-size: 14px;
+    color: ${({ theme }) => theme.background};
+    font-weight: 600;
+    opacity: .6;
+  }
+  
+  .form-container p:has(.sign-up-link)::before {
+    content: "Already have an account ? ";
+    font-size: 14px;
+    color: ${({ theme }) => theme.background};
+    font-weight: 600;
+    opacity: .6;
+  }
+
+  .form-container section a {
+    color: ${({ theme }) => theme.text};
+  }
+
   /* RANKING MODE STYLE */
   .RankingBox {
     display: grid;
@@ -676,6 +767,7 @@ export const GlobalStyles = createGlobalStyle`
 
   table {
     border-collapse: collapse;
+
   }
 
   caption {
@@ -685,9 +777,8 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   tr, td, th {
-    border: 1px solid ${({ theme }) => theme.text};
-    padding: 10px;
-    text-align: center;
+    text-align: left;
+    padding: 10px 40px 10px 0;
   }
   
   /* Profile */
@@ -759,7 +850,6 @@ export const GlobalStyles = createGlobalStyle`
   .image img {
     width: 100%;
   }
-
   
   /* Login and sign up btn */
   .login-and-sign-up {
@@ -771,7 +861,7 @@ export const GlobalStyles = createGlobalStyle`
   }
   
   .login-and-sign-up button {
-    background: ${({ theme }) => theme.title};
+    background: ${({ theme }) => theme.text};
     border: 0;
     height: 30px;
     font-size: 14px;
@@ -794,9 +884,13 @@ export const GlobalStyles = createGlobalStyle`
   .login-and-sign-up .login-btn:hover {
     filter: brightness(85%);
   }
-
+  
   .login-and-sign-up .sign-up-btn:hover {
     color: ${({ theme }) => theme.title};
   }
   
+  /* Profile */
+  .personal-info h2 {
+    color: ${({ theme }) => theme.title};
+  }
 `;

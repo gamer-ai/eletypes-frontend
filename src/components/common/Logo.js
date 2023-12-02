@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import KeyboardAltIcon from "@mui/icons-material/KeyboardAlt";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
@@ -7,11 +7,13 @@ import useGetDataFromServer from "../../hooks/useGetDataFromServer";
 const Logo = ({ isFocusedMode, isMusicMode }) => {
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies();
-  const token = cookies.token;
+  const token = cookies.token || "";
   const [isDisplay, setDisplay] = useState(false);
+
   const user = useGetDataFromServer(
     {},
-    `${process.env.REACT_APP_SERVER_URL}/user-by-token/${token}`
+    `${process.env.REACT_APP_SERVER_URL}/user-by-token`,
+    "profile"
   );
 
   const handleLogout = () => {
@@ -21,6 +23,8 @@ const Logo = ({ isFocusedMode, isMusicMode }) => {
   const handleClick = () => {
     setDisplay(!isDisplay);
   };
+
+  useEffect(() => {}, []);
 
   return (
     <div

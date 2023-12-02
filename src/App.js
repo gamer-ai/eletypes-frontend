@@ -26,8 +26,9 @@ import {
   DEFAULT_SOUND_TYPE_KEY,
 } from "./components/features/sound/sound";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
-import Login from "./components/Login";
-import SignUp from "./components/SignUp";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
 import axios from "axios";
 
 function App() {
@@ -221,13 +222,13 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <>
+        <GlobalStyles />
         <Routes>
           <Route
             path="/"
             exact
             element={
               <div className="canvas">
-                <GlobalStyles />
                 <Logo
                   isFocusedMode={isFocusedMode}
                   isMusicMode={isMusicMode}
@@ -323,6 +324,7 @@ function App() {
             exact
             element={!user ? <SignUp /> : <Navigate to="/" />}
           />
+          <Route path="/profile" exact element={<Profile />} />
         </Routes>
       </>
     </ThemeProvider>
