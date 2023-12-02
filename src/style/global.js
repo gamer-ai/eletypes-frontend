@@ -38,6 +38,8 @@ export const GlobalStyles = createGlobalStyle`
     align-items: center;
     grid-template-columns: auto 1fr;
     padding-bottom: 3%;
+    padding-right: 0;
+    margin-right: 0;
     top: 0;
     left:0;
     width: 100%;
@@ -792,6 +794,8 @@ export const GlobalStyles = createGlobalStyle`
       'username photo' auto
       'email photo' 1fr
       / 1fr auto;
+    justify-self: end;
+    margin: 0;
     column-gap: 20px;
     row-gap: 5px;
   }
@@ -801,6 +805,7 @@ export const GlobalStyles = createGlobalStyle`
     right: 0;
     bottom: -80px;
     display: none;
+    text-align: center;
     gap: 5px;
     background: ${({ theme }) => theme.text};
     padding: 10px 15px;

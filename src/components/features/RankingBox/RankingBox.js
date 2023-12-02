@@ -41,7 +41,7 @@ function RankingBox() {
 
               .map((user, index) => (
                 <tr key={user._id}>
-                  <td data-cell="No">{index + 1}</td>
+                  <td data-cell="No">{index + 1}.</td>
                   <td data-cell="Username">{user.username}</td>
                   <td data-cell="Email">{user.email}</td>
                   <td data-cell="Score">{user.ninetySeconds.score || 0}</td>
@@ -53,7 +53,7 @@ function RankingBox() {
 
               .map((user, index) => (
                 <tr key={user._id}>
-                  <td data-cell="No">{index + 1}</td>
+                  <td data-cell="No">{index + 1}.</td>
                   <td data-cell="Username">{user.username}</td>
                   <td data-cell="Email">{user.email}</td>
                   <td data-cell="Score">{user.sixtySeconds.score || 0}</td>
@@ -65,7 +65,7 @@ function RankingBox() {
 
               .map((user, index) => (
                 <tr key={user._id}>
-                  <td data-cell="No">{index + 1}</td>
+                  <td data-cell="No">{index + 1}.</td>
                   <td data-cell="Username">{user.username}</td>
                   <td data-cell="Email">{user.email}</td>
                   <td data-cell="Score">{user.thirtySeconds.score || 0}</td>
@@ -77,7 +77,7 @@ function RankingBox() {
 
               .map((user, index) => (
                 <tr key={user._id}>
-                  <td data-cell="No">{index + 1}</td>
+                  <td data-cell="No">{index + 1}.</td>
                   <td data-cell="Username">{user.username}</td>
                   <td data-cell="Email">{user.email}</td>
                   <td data-cell="Score">{user.fifteenSeconds.score || 0}</td>
