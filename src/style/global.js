@@ -728,6 +728,14 @@ export const GlobalStyles = createGlobalStyle`
     font-weight: bold;
     border-radius: 15px;
   }
+
+  .form-container button:active {
+    transform: scale(.95);
+  }
+  
+  .form-container button:hover {
+    filter: brightness(85%);
+  }
   
   .form-container section p, a {
     font-size: 14px;
@@ -816,7 +824,8 @@ export const GlobalStyles = createGlobalStyle`
   .profile .links {
     position: absolute;
     right: 0;
-    bottom: -80px;
+    bottom: -100px;
+    width: fit-content;
     display: none;
     text-align: center;
     gap: 5px;
@@ -828,19 +837,20 @@ export const GlobalStyles = createGlobalStyle`
     background: ${({ theme }) => theme.text};
     border: 0;
     color: ${({ theme }) => theme.background};
+    cursor: pointer;
   }
-
-  .links button:active {
-    text-decoration: underline;
+  
+  .links button:hover {
+    color: ${({ theme }) => theme.title};
   }
-
+  
   .links .nav-link {
     color: ${({ theme }) => theme.background};
     text-decoration: none;
   }
   
-  .links .nav-link:active {
-    text-decoration: underline;
+  .links .nav-link:hover {
+    color: ${({ theme }) => theme.title};
   }
   
   .profile figcaption {

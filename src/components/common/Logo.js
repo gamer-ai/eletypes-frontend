@@ -1,14 +1,18 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import KeyboardAltIcon from "@mui/icons-material/KeyboardAlt";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import useGetDataFromServer from "../../hooks/useGetDataFromServer";
+import axios from "axios";
+import { SetUserContext } from "../../App";
 
 const Logo = ({ isFocusedMode, isMusicMode }) => {
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies();
   const token = cookies.token || "";
   const [isDisplay, setDisplay] = useState(false);
+  const profileRef = useRef();
+  const setUser = useContext(SetUserContext);
 
   const user = useGetDataFromServer(
     {},
@@ -20,15 +24,17 @@ const Logo = ({ isFocusedMode, isMusicMode }) => {
     removeCookie("token");
   };
 
-  const viewProfile = id => {
-    window.localStorage.setItem("selected-user-id", JSON.stringify(id))
-  }
+  const viewProfile = (id) => {
+    window.localStorage.setItem("selected-user-id", JSON.stringify(id));
+  };
 
   const handleClick = () => {
     setDisplay(!isDisplay);
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    !user.success && setUser(false)
+  }, [user]);
 
   return (
     <div
@@ -41,7 +47,7 @@ const Logo = ({ isFocusedMode, isMusicMode }) => {
       <span className="sub-header">
         an elegant typing experience, just start typing
       </span>
-      {!token ? (
+      {!token || !user.success ? (
         <div className="login-and-sign-up">
           <button className="login-btn" onClick={() => navigate("/login")}>
             Login
@@ -51,7 +57,7 @@ const Logo = ({ isFocusedMode, isMusicMode }) => {
           </button>
         </div>
       ) : (
-        <figure className="profile">
+        <figure className="profile" ref={profileRef}>
           <div className="image" onClick={handleClick}>
             <img
               src="https://cdn1.iconfinder.com/data/icons/instagram-ui-glyph/48/Sed-09-1024.png"
@@ -69,6 +75,14 @@ const Logo = ({ isFocusedMode, isMusicMode }) => {
                 to="/profile"
               >
                 Profile
+              </NavLink>
+              <NavLink
+                className="nav-link"
+                activeclassname="active-link"
+                exact="true"
+                to="/setting-profile"
+              >
+                Setting
               </NavLink>
               <button onClick={handleLogout}>Logout</button>
             </div>

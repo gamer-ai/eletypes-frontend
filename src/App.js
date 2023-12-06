@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, createContext } from "react";
 import { useCookies } from "react-cookie";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme, themesOptions } from "./style/theme";
@@ -30,6 +30,8 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import axios from "axios";
+
+export const SetUserContext = createContext();
 
 function App() {
   // localStorage persist theme setting
@@ -219,8 +221,10 @@ function App() {
       });
   }, [cookies]);
 
+
   return (
     <ThemeProvider theme={theme}>
+      <SetUserContext.Provider value={setUser}>
       <>
         <GlobalStyles />
         <Routes>
@@ -327,6 +331,7 @@ function App() {
           <Route path="/profile" exact element={<Profile />} />
         </Routes>
       </>
+      </SetUserContext.Provider>
     </ThemeProvider>
   );
 }
