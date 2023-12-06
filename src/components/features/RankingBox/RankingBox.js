@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import useGetDataFromServer from "../../../hooks/useGetDataFromServer";
+import useLocalPersistState from "../../../hooks/useLocalPersistState";
+import { useNavigate } from "react-router-dom";
 
 function RankingBox() {
   const users = useGetDataFromServer(
@@ -7,10 +9,33 @@ function RankingBox() {
     `${process.env.REACT_APP_SERVER_URL}/ranking`,
     "ranking"
   );
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("90-seconds");
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
+  };
+
+  const handleClick = (id) => {
+    window.localStorage.setItem(
+      "selected-user-id",
+      JSON.stringify(id)
+    );
+
+    navigate("/profile");
+  };
+
+  const renderRanking = (index, user, category) => {
+    return (
+      <tr key={user._id}>
+        <td data-cell="No">{index + 1}.</td>
+        <td data-cell="Username">{user.username}</td>
+        <td data-cell="Email"className="email" onClick={() => handleClick(user._id)}>
+          {user.email}
+        </td>
+        <td data-cell="Score">{user[category].score || 0}</td>
+      </tr>
+    );
   };
 
   return (
@@ -39,50 +64,22 @@ function RankingBox() {
             users
               .sort((a, b) => b.ninetySeconds.score - a.ninetySeconds.score)
 
-              .map((user, index) => (
-                <tr key={user._id}>
-                  <td data-cell="No">{index + 1}.</td>
-                  <td data-cell="Username">{user.username}</td>
-                  <td data-cell="Email">{user.email}</td>
-                  <td data-cell="Score">{user.ninetySeconds.score || 0}</td>
-                </tr>
-              ))}
+              .map((user, index) => renderRanking(index, user, "ninetySeconds"))}
           {selectedCategory === "60-seconds" &&
             users
               .sort((a, b) => b.sixtySeconds.score - a.sixtySeconds.score)
 
-              .map((user, index) => (
-                <tr key={user._id}>
-                  <td data-cell="No">{index + 1}.</td>
-                  <td data-cell="Username">{user.username}</td>
-                  <td data-cell="Email">{user.email}</td>
-                  <td data-cell="Score">{user.sixtySeconds.score || 0}</td>
-                </tr>
-              ))}
+              .map((user, index) => renderRanking(index, user, "sixtySeconds"))}
           {selectedCategory === "30-seconds" &&
             users
               .sort((a, b) => b.thirtySeconds.score - a.thirtySeconds.score)
 
-              .map((user, index) => (
-                <tr key={user._id}>
-                  <td data-cell="No">{index + 1}.</td>
-                  <td data-cell="Username">{user.username}</td>
-                  <td data-cell="Email">{user.email}</td>
-                  <td data-cell="Score">{user.thirtySeconds.score || 0}</td>
-                </tr>
-              ))}
+              .map((user, index) => renderRanking(index, user, "thirtySeconds"))}
           {selectedCategory === "15-seconds" &&
             users
               .sort((a, b) => b.fifteenSeconds.score - a.fifteenSeconds.score)
 
-              .map((user, index) => (
-                <tr key={user._id}>
-                  <td data-cell="No">{index + 1}.</td>
-                  <td data-cell="Username">{user.username}</td>
-                  <td data-cell="Email">{user.email}</td>
-                  <td data-cell="Score">{user.fifteenSeconds.score || 0}</td>
-                </tr>
-              ))}
+              .map((user, index) => renderRanking(index, user, "fifteenSeconds"))}
         </tbody>
       </table>
     </div>

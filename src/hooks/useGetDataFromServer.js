@@ -6,15 +6,22 @@ function useGetDataFromServer(defaultValue, url, category) {
   const [data, setData] = useState(defaultValue);
   const [cookies, setCookie] = useCookies();
   const token = cookies.token;
+  const selectedUserId = JSON.parse(
+    window.localStorage.getItem("selected-user-id")
+  );
 
   const fetchData = async () => {
     try {
       const res =
-        (token && category !== "ranking")
-          ? await axios.get(url + `/${token}`, {
+        category === "ranking"
+          ? await axios.get(url)
+          : category === "user-profile-detail"
+          ? await axios.get(url + `/${selectedUserId}`)
+          : token &&
+            category === "profile" &&
+            (await axios.get(url + `/${token}`, {
               headers: { authorization: token },
-            })
-          : category !== "profile" && (await axios.get(url));
+            }));
 
       setData(res.data.payload);
 

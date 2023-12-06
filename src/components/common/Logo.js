@@ -20,6 +20,10 @@ const Logo = ({ isFocusedMode, isMusicMode }) => {
     removeCookie("token");
   };
 
+  const viewProfile = id => {
+    window.localStorage.setItem("selected-user-id", JSON.stringify(id))
+  }
+
   const handleClick = () => {
     setDisplay(!isDisplay);
   };
@@ -59,8 +63,9 @@ const Logo = ({ isFocusedMode, isMusicMode }) => {
             >
               <NavLink
                 className="nav-link"
-                activeClassName="active-link"
-                exact
+                activeclassname="active-link"
+                onClick={() => viewProfile(user._id)}
+                exact="true"
                 to="/profile"
               >
                 Profile

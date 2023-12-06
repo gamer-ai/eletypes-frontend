@@ -761,6 +761,10 @@ export const GlobalStyles = createGlobalStyle`
     max-height: 351px;
   }
 
+  .RankingBox h2 {
+    margin-bottom: 10px;
+  }
+
   select {
     color: ${({ theme }) => theme.text};
     background: ${({ theme }) => theme.background};
@@ -781,6 +785,15 @@ export const GlobalStyles = createGlobalStyle`
   tr, td, th {
     text-align: left;
     padding: 10px 40px 10px 0;
+  }
+
+  table .email {
+    cursor: pointer;
+    transition: 300ms;
+  }
+
+  table .email:hover {
+    text-decoration: underline;
   }
   
   /* Profile */
@@ -894,8 +907,80 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.title};
   }
   
-  /* Profile */
+  /* Profile Detail*/
+   .canvas.user-profile {
+    display: grid;
+    justify-content: center;
+   }
+
+   .profile-container {
+     height: 100svh;
+     display: grid;
+     align-content: center;
+   }
+
+   .personal-info {
+    display: grid;
+    grid: 
+      "image info" 1fr
+      / 75px 1fr;
+     gap: 30px;
+     justify-content: start; 
+   }
+
+   .personal-info figure {
+    grid-area: image;
+    width: 75px;
+    margin: 0;
+    height: 75px;
+    border-radius: 50%;
+    border: 1px solid ${({ theme }) => theme.textTypeBox};
+   }
+
+   .personal-info figure img {
+    width: 100%;
+   }
+
+   .personal-info .info {
+     grid-area: info;
+     align-self: center;
+     display: grid;
+     align-items: center;
+   }
+
   .personal-info h2 {
     color: ${({ theme }) => theme.title};
+    line-height: 1.1;
+    margin: 0;
+    margin-bottom: 7px;
+  }
+  
+  .personal-info h4 {
+    margin: 0;
+    color: ${({ theme }) => theme.textTypeBox};
+  }
+  
+  .scores {
+    margin-top: 10px;
+  }
+
+  .scores h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .scores table {
+    font-size: 14px;
+    margin-top: 0;
+  }
+
+  .scores tr, .scores td, .scores th {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid ${({ theme }) => theme.text};
+  }
+
+  .scores th {
+    font-weight: bold;
   }
 `;
