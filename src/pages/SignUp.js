@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import useSendDataToServer from "../hooks/useSendDataToServer";
 
 function SignUp() {
-  const [formData, handleInputChange, handleSubmit, errors, saveAccount] =
+  const [formData, handleInputChange, handleSubmit, errors] =
     useSendDataToServer(`${process.env.REACT_APP_SERVER_URL}/api/sign-up`);
 
   const formRef = useRef();

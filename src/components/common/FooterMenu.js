@@ -35,6 +35,7 @@ import { SvgIcon } from "@mui/material";
 import KeyboardAltOutlinedIcon from "@mui/icons-material/KeyboardAltOutlined";
 import SchoolIcon from "@mui/icons-material/School";
 import { SOUND_MODE_TOOLTIP } from "../features/sound/sound";
+import useGetBackendReady from "../../hooks/useGetBackendReady";
 
 const FooterMenu = ({
   themesOptions,
@@ -79,6 +80,8 @@ const FooterMenu = ({
     }
     return "inactive-game-mode-button";
   };
+
+  const backendReady = useGetBackendReady();
 
   return (
     <div className="footer">
@@ -187,20 +190,22 @@ const FooterMenu = ({
                   {SENTENCE_MODE_LABEL}
                 </span>
               </IconButton>
-              <IconButton
-                onClick={() => {
-                  handleGameModeChange(GAME_MODE_RANKING);
-                }}
-              >
-                <span
-                  className={getGameModeButtonClassName(
-                    gameMode,
-                    GAME_MODE_RANKING
-                  )}
+              {backendReady && (
+                <IconButton
+                  onClick={() => {
+                    handleGameModeChange(GAME_MODE_RANKING);
+                  }}
                 >
-                  {RANKING_MODE_LABEL}
-                </span>
-              </IconButton>
+                  <span
+                    className={getGameModeButtonClassName(
+                      gameMode,
+                      GAME_MODE_RANKING
+                    )}
+                  >
+                    {RANKING_MODE_LABEL}
+                  </span>
+                </IconButton>
+              )}
             </>
           )}
         </Box>
