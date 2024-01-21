@@ -23,7 +23,7 @@ https://github.com/gamer-ai/eletype-frontend/issues
 
 To join the community, please go to the website and hit "discord" icon.
 
-## Currernt Features:
+## Current Features:
 
 #### 1. Typing Test (words, sentence)
 
@@ -53,7 +53,7 @@ To join the community, please go to the website and hit "discord" icon.
     - TOEFL
     - CET6
     - CET4
-  - Mutli Chapters Selection
+  - Multi Chapters Selection
   - Words Card Navigation UI
   - Recite Mode (word visibility off while phrase shown)
   
