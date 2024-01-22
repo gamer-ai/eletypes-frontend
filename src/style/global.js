@@ -34,14 +34,15 @@ export const GlobalStyles = createGlobalStyle`
   }
   .header {
     position: relative;
-    display: block;
+    display: grid;
     align-items: center;
-    justify-content: center;
+    grid-template-columns: auto 1fr;
     padding-bottom: 3%;
+    padding-right: 0;
+    margin-right: 0;
     top: 0;
     left:0;
     width: 100%;
-    text-align: center;
   }
   .footer {
     font-size: .75rem;
@@ -69,7 +70,7 @@ export const GlobalStyles = createGlobalStyle`
   h3{
     margin-right: 10px;
   }
-  h4{
+  h4{ 
     margin-right: 10px;
     opacity: 0.7;
   }
@@ -149,7 +150,7 @@ export const GlobalStyles = createGlobalStyle`
     overflow: hidden;
     margin-left: auto;
     margin-right: auto;
-    position: relative
+    position: relative;
     top: 10%;
     @media only screen 
     and (min-device-width: 375px) 
@@ -262,7 +263,7 @@ export const GlobalStyles = createGlobalStyle`
   .restart-button{
     margin-left: auto;
     margin-right: auto;
-    width: 8em
+    width: 8em;
   }
   .restart-button button:hover{
     transform:scale(1.18);
@@ -659,5 +660,327 @@ export const GlobalStyles = createGlobalStyle`
   }
   .select-chapter-title{
     font-size: 16px;
+  }
+
+  /* Login */
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100svh;
+    width: 100svw;
+  }
+  
+  .form-container {
+    display: grid;
+    gap: 40px;
+    width: clamp(300px, 35svw, 350px);
+    background: ${({ theme }) => theme.title};
+    padding: 40px;
+    border-radius: 15px;
+  }
+  
+  .form-container .title {
+    text-align: center;
+    font-size: 45px;
+    color: ${({ theme }) => theme.background};
+  }
+  
+  .form-input {
+    display: grid;
+    gap: 20px;
+  }
+  
+  .form-input div {
+    display: grid;
+  }
+  
+  .form-input div .error-msg {
+    font-size: 12px;
+    color: red;
+    margin-top: 5px;
+  }
+  
+  .form-input div input {
+    height: 35px;
+    padding: 5px;
+    color: ${({ theme }) => theme.background};
+  }
+  
+  .form-input div label {
+    margin-bottom: 10px;
+    color: ${({ theme }) => theme.background};
+    font-weight: bold;
+  }
+  
+  .form-container section {
+    display: grid;
+    justify-items: center;
+    margin-top: 20px;
+  }
+  
+  .form-container button {
+    margin-bottom: 10px;
+    background: ${({ theme }) => theme.text};
+    border: 0;
+    padding: 8px 35px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 15px;
+  }
+  
+  .form-container section p, a {
+    font-size: 14px;
+  }
+
+  .form-container p:has(.login-link)::before {
+    content: "Don't have an account ? ";
+    font-size: 14px;
+    color: ${({ theme }) => theme.background};
+    font-weight: 600;
+    opacity: .6;
+  }
+  
+  .form-container p:has(.sign-up-link)::before {
+    content: "Already have an account ? ";
+    font-size: 14px;
+    color: ${({ theme }) => theme.background};
+    font-weight: 600;
+    opacity: .6;
+  }
+
+  .form-container section a {
+    color: ${({ theme }) => theme.text};
+  }
+
+  /* RANKING MODE STYLE */
+  .RankingBox {
+    display: grid;
+    justify-content: center;
+    overflow: auto;
+    max-height: 351px;
+  }
+
+  .RankingBox h2 {
+    margin-bottom: 10px;
+  }
+
+  select {
+    color: ${({ theme }) => theme.text};
+    background: ${({ theme }) => theme.background};
+    border: 0;
+  }
+
+  table {
+    border-collapse: collapse;
+
+  }
+
+  caption {
+    text-align: left;
+    padding: 10px 0;
+    margin-top: 10px;
+  }
+
+  tr, td, th {
+    text-align: left;
+    padding: 10px 40px 10px 0;
+  }
+
+  table .email {
+    cursor: pointer;
+    transition: 300ms;
+  }
+
+  table .email:hover {
+    text-decoration: underline;
+  }
+  
+  /* Profile */
+  .profile {
+    margin-top: 10px;
+    grid-column: 2 / 3;
+    grid-row: 1 / -1;
+    text-align: right;
+    display: grid;
+    grid:
+      'username photo' auto
+      'email photo' 1fr
+      / 1fr auto;
+    justify-self: end;
+    margin: 0;
+    column-gap: 20px;
+    row-gap: 5px;
+  }
+  
+  .profile .links {
+    position: absolute;
+    right: 0;
+    bottom: -80px;
+    display: none;
+    text-align: center;
+    gap: 5px;
+    background: ${({ theme }) => theme.text};
+    padding: 10px 15px;
+  }
+
+  .links button {
+    background: ${({ theme }) => theme.text};
+    border: 0;
+    color: ${({ theme }) => theme.background};
+  }
+
+  .links button:active {
+    text-decoration: underline;
+  }
+
+  .links .nav-link {
+    color: ${({ theme }) => theme.background};
+    text-decoration: none;
+  }
+  
+  .links .nav-link:active {
+    text-decoration: underline;
+  }
+  
+  .profile figcaption {
+    grid-area: username;
+    font-size: 14px;
+    color: ${({ theme }) => theme.text};
+  }
+  
+  .profile span {
+    grid-area: email;
+    font-size: 12px;
+    color: ${({ theme }) => theme.textTypeBox};
+  }
+
+  .profile .image {
+    grid-area: photo;
+    position: relative;
+    background: ${({ theme }) => theme.textTypeBox};
+    width: 40px;
+    padding: 5px;
+    border-radius: 50%;
+    height: 40px;
+  }
+
+  .image img {
+    width: 100%;
+  }
+  
+  /* Login and sign up btn */
+  .login-and-sign-up {
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+    grid-column: 2 / 3;
+    grid-row: 1 / -1;
+  }
+  
+  .login-and-sign-up button {
+    background: ${({ theme }) => theme.text};
+    border: 0;
+    height: 30px;
+    font-size: 14px;
+    width: 75px;
+    border-radius: 15px;
+    color: ${({ theme }) => theme.background};
+    transition: 300ms;
+  }
+  
+  .login-and-sign-up .sign-up-btn {
+    background: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.text};
+    border: 1px solid ${({ theme }) => theme.text};
+  }
+  
+  .login-and-sign-up button:active {
+    transform: scale(.95);
+  }
+  
+  .login-and-sign-up .login-btn:hover {
+    filter: brightness(85%);
+  }
+  
+  .login-and-sign-up .sign-up-btn:hover {
+    color: ${({ theme }) => theme.title};
+  }
+  
+  /* Profile Detail*/
+   .canvas.user-profile {
+    display: grid;
+    justify-content: center;
+   }
+
+   .profile-container {
+     height: 100svh;
+     display: grid;
+     align-content: center;
+   }
+
+   .personal-info {
+    display: grid;
+    grid: 
+      "image info" 1fr
+      / 75px 1fr;
+     gap: 30px;
+     justify-content: start; 
+   }
+
+   .personal-info figure {
+    grid-area: image;
+    width: 75px;
+    margin: 0;
+    height: 75px;
+    border-radius: 50%;
+    border: 1px solid ${({ theme }) => theme.textTypeBox};
+   }
+
+   .personal-info figure img {
+    width: 100%;
+   }
+
+   .personal-info .info {
+     grid-area: info;
+     align-self: center;
+     display: grid;
+     align-items: center;
+   }
+
+  .personal-info h2 {
+    color: ${({ theme }) => theme.title};
+    line-height: 1.1;
+    margin: 0;
+    margin-bottom: 7px;
+  }
+  
+  .personal-info h4 {
+    margin: 0;
+    color: ${({ theme }) => theme.textTypeBox};
+  }
+  
+  .scores {
+    margin-top: 10px;
+  }
+
+  .scores h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .scores table {
+    font-size: 14px;
+    margin-top: 0;
+  }
+
+  .scores tr, .scores td, .scores th {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid ${({ theme }) => theme.text};
+  }
+
+  .scores th {
+    font-weight: bold;
   }
 `;
