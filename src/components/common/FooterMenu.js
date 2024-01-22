@@ -33,6 +33,7 @@ import { SvgIcon } from "@mui/material";
 import KeyboardAltOutlinedIcon from '@mui/icons-material/KeyboardAltOutlined';
 import SchoolIcon from '@mui/icons-material/School';
 import { SOUND_MODE_TOOLTIP } from "../features/sound/sound";
+import CollectMe from "../features/CollectMe";
 
 const FooterMenu = ({
   themesOptions,
@@ -183,6 +184,7 @@ const FooterMenu = ({
         {!isSiteInfoDisabled && (
           <Box display="block" flexDirection="row">
             <SupportMe></SupportMe>
+            <CollectMe></CollectMe>
             <Tooltip
               title={
                 <span style={{ whiteSpace: "pre-line", fontSize:"12px" }}>
