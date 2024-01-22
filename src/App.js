@@ -1,9 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, createContext } from "react";
+import { useCookies } from "react-cookie";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme, themesOptions } from "./style/theme";
 import { GlobalStyles } from "./style/global";
 import TypeBox from "./components/features/TypeBox/TypeBox";
 import SentenceBox from "./components/features/SentenceBox/SentenceBox";
+import RankingBox from "./components/features/RankingBox/RankingBox";
 import Logo from "./components/common/Logo";
 import MusicPlayerSnackbar from "./components/features/MusicPlayer/MusicPlayerSnackbar";
 import FooterMenu from "./components/common/FooterMenu";
@@ -12,6 +14,7 @@ import {
   GAME_MODE,
   GAME_MODE_DEFAULT,
   GAME_MODE_SENTENCE,
+  GAME_MODE_RANKING,
 } from "./constants/Constants";
 import useLocalPersistState from "./hooks/useLocalPersistState";
 import DefaultKeyboard from "./components/features/Keyboard/DefaultKeyboard";
@@ -22,6 +25,14 @@ import {
   DEFAULT_SOUND_TYPE,
   DEFAULT_SOUND_TYPE_KEY,
 } from "./components/features/sound/sound";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
+import axios from "axios";
+import useGetBackendReady from "./hooks/useGetBackendReady";
+
+export const SetUserContext = createContext();
 
 function App() {
   // localStorage persist theme setting
@@ -53,6 +64,8 @@ function App() {
     GAME_MODE
   );
 
+  const [user, setUser] = useState(false);
+
   const handleGameModeChange = (currGameMode) => {
     setGameMode(currGameMode);
   };
@@ -67,6 +80,9 @@ function App() {
 
   // coffeeMode setting
   const [isCoffeeMode, setIsCoffeeMode] = useState(false);
+
+  // rankingMode setting
+  const [isRankingMode, setIsRankingMode] = useState(false);
 
   // trainer mode setting
   const [isTrainerMode, setIsTrainerMode] = useState(false);
@@ -84,6 +100,11 @@ function App() {
     !isWordsCardMode;
   const isSentenceGameMode =
     gameMode === GAME_MODE_SENTENCE &&
+    !isCoffeeMode &&
+    !isTrainerMode &&
+    !isWordsCardMode;
+  const isRankingGameMode =
+    gameMode === GAME_MODE_RANKING &&
     !isCoffeeMode &&
     !isTrainerMode &&
     !isWordsCardMode;
@@ -113,15 +134,25 @@ function App() {
     setIsCoffeeMode(!isCoffeeMode);
     setIsTrainerMode(false);
     setIsWordsCardMode(false);
+    setIsRankingMode(false);
+  };
+
+  const toggleRankingMode = () => {
+    setIsRankingMode(!isRankingMode);
+    setIsCoffeeMode(false);
+    setIsTrainerMode(false);
+    setIsWordsCardMode(false);
   };
 
   const toggleTrainerMode = () => {
+    setIsRankingMode(false);
     setIsTrainerMode(!isTrainerMode);
     setIsCoffeeMode(false);
     setIsWordsCardMode(false);
   };
 
   const toggleWordsCardMode = () => {
+    setIsRankingMode(false);
     setIsTrainerMode(false);
     setIsCoffeeMode(false);
     setIsWordsCardMode(!isWordsCardMode);
@@ -171,77 +202,137 @@ function App() {
     soundType,
   ]);
 
+  const [cookies, setCookie] = useCookies();
+  const backendReady = useGetBackendReady();
+
+  useEffect(() => {
+    const token = cookies.token;
+
+    axios
+      .get(`${process.env.REACT_APP_SERVER_URL}/isAuthorized`, {
+        headers: {
+          authorization: token,
+        },
+      })
+      .then((res) => {
+        setUser(true);
+      })
+      .catch((err) => {
+        setUser(false);
+        console.log("Error feching data!");
+      });
+  }, [cookies])
+
   return (
     <ThemeProvider theme={theme}>
-      <>
-        <div className="canvas">
+      <SetUserContext.Provider value={setUser}>
+        <>
           <GlobalStyles />
-          <Logo isFocusedMode={isFocusedMode} isMusicMode={isMusicMode}></Logo>
-          {isWordGameMode && (
-            <TypeBox
-              textInputRef={textInputRef}
-              isFocusedMode={isFocusedMode}
-              soundMode={soundMode}
-              soundType={soundType}
-              key="type-box"
-              handleInputFocus={() => focusTextInput()}
-            ></TypeBox>
-          )}
-          {isSentenceGameMode && (
-            <SentenceBox
-              sentenceInputRef={sentenceInputRef}
-              isFocusedMode={isFocusedMode}
-              soundMode={soundMode}
-              soundType={soundType}
-              key="sentence-box"
-              handleInputFocus={() => focusSentenceInput()}
-            ></SentenceBox>
-          )}
-          {isCoffeeMode && !isTrainerMode && !isWordsCardMode && (
-            <FreeTypingBox
-              textAreaRef={textAreaRef}
-              soundMode={soundMode}
-              soundType={soundType}
+          <Routes>
+            <Route
+              path="/"
+              exact
+              element={
+                <div className="canvas">
+                  <Logo
+                    isFocusedMode={isFocusedMode}
+                    isMusicMode={isMusicMode}
+                  ></Logo>
+                  {isWordGameMode && (
+                    <TypeBox
+                      textInputRef={textInputRef}
+                      isFocusedMode={isFocusedMode}
+                      soundMode={soundMode}
+                      soundType={soundType}
+                      key="type-box"
+                      handleInputFocus={() => focusTextInput()}
+                    ></TypeBox>
+                  )}
+                  {isSentenceGameMode && (
+                    <SentenceBox
+                      sentenceInputRef={sentenceInputRef}
+                      isFocusedMode={isFocusedMode}
+                      soundMode={soundMode}
+                      soundType={soundType}
+                      key="sentence-box"
+                      handleInputFocus={() => focusSentenceInput()}
+                    ></SentenceBox>
+                  )}
+                  {isRankingGameMode && (
+                    <RankingBox
+                      sentenceInputRef={sentenceInputRef}
+                      isFocusedMode={isFocusedMode}
+                      soundMode={soundMode}
+                      soundType={soundType}
+                      key="sentence-box"
+                      handleInputFocus={() => focusSentenceInput()}
+                    ></RankingBox>
+                  )}
+                  {isCoffeeMode && !isTrainerMode && !isWordsCardMode && (
+                    <FreeTypingBox
+                      textAreaRef={textAreaRef}
+                      soundMode={soundMode}
+                      soundType={soundType}
+                    />
+                  )}
+                  {isTrainerMode && !isCoffeeMode && !isWordsCardMode && (
+                    <DefaultKeyboard
+                      soundMode={soundMode}
+                      soundType={soundType}
+                    ></DefaultKeyboard>
+                  )}
+                  {isWordsCardMode && !isCoffeeMode && !isTrainerMode && (
+                    <WordsCard
+                      soundMode={soundMode}
+                      soundType={soundType}
+                    ></WordsCard>
+                  )}
+                  <FooterMenu
+                    themesOptions={themesOptions}
+                    theme={theme}
+                    soundMode={soundMode}
+                    toggleSoundMode={toggleSoundMode}
+                    soundOptions={soundOptions}
+                    soundType={soundType}
+                    handleSoundTypeChange={handleSoundTypeChange}
+                    handleThemeChange={handleThemeChange}
+                    toggleFocusedMode={toggleFocusedMode}
+                    toggleMusicMode={toggleMusicMode}
+                    toggleCoffeeMode={toggleCoffeeMode}
+                    isCoffeeMode={isCoffeeMode}
+                    isMusicMode={isMusicMode}
+                    isFocusedMode={isFocusedMode}
+                    gameMode={gameMode}
+                    handleGameModeChange={handleGameModeChange}
+                    isTrainerMode={isTrainerMode}
+                    toggleTrainerMode={toggleTrainerMode}
+                    isWordsCardMode={isWordsCardMode}
+                    toggleWordsCardMode={toggleWordsCardMode}
+                    toggleRankingMode={toggleRankingMode}
+                    isRankingMode={isRankingMode}
+                  ></FooterMenu>
+                  <MusicPlayerSnackbar
+                    isMusicMode={isMusicMode}
+                    isFocusedMode={isFocusedMode}
+                    onMouseLeave={() => focusTextInput()}
+                  ></MusicPlayerSnackbar>
+                </div>
+              }
             />
-          )}
-          {isTrainerMode && !isCoffeeMode && !isWordsCardMode && (
-            <DefaultKeyboard
-              soundMode={soundMode}
-              soundType={soundType}
-            ></DefaultKeyboard>
-          )}
-          {isWordsCardMode && !isCoffeeMode && !isTrainerMode && (
-            <WordsCard soundMode={soundMode} soundType={soundType}></WordsCard>
-          )}
-          <FooterMenu
-            themesOptions={themesOptions}
-            theme={theme}
-            soundMode={soundMode}
-            toggleSoundMode={toggleSoundMode}
-            soundOptions={soundOptions}
-            soundType={soundType}
-            handleSoundTypeChange={handleSoundTypeChange}
-            handleThemeChange={handleThemeChange}
-            toggleFocusedMode={toggleFocusedMode}
-            toggleMusicMode={toggleMusicMode}
-            toggleCoffeeMode={toggleCoffeeMode}
-            isCoffeeMode={isCoffeeMode}
-            isMusicMode={isMusicMode}
-            isFocusedMode={isFocusedMode}
-            gameMode={gameMode}
-            handleGameModeChange={handleGameModeChange}
-            isTrainerMode={isTrainerMode}
-            toggleTrainerMode={toggleTrainerMode}
-            isWordsCardMode={isWordsCardMode}
-            toggleWordsCardMode={toggleWordsCardMode}
-          ></FooterMenu>
-          <MusicPlayerSnackbar
-            isMusicMode={isMusicMode}
-            isFocusedMode={isFocusedMode}
-            onMouseLeave={() => focusTextInput()}
-          ></MusicPlayerSnackbar>
-        </div>
-      </>
+            <Route
+              path="/login"
+              exact
+              element={backendReady && !user ? <Login /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/sign-up"
+              exact
+              element={backendReady && !user ? <SignUp /> : <Navigate to="/" />}
+            />
+            <Route path="/profile" exact element={<Profile />} />
+          </Routes>
+        </>
+      </SetUserContext.Provider>
     </ThemeProvider>
   );
 }
