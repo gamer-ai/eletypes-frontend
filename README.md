@@ -133,17 +133,20 @@ Regular Mode and Recite Mode
 <img width="800" alt="Screen Shot 2022-08-23 at 12 52 17 AM" src="https://user-images.githubusercontent.com/39578778/186102830-4c664e9a-adfa-48dc-ba8c-e03df4e22ade.png">
 
 
+## For Devs
 
 ### `npm start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-
 ### `npm run build`
 
-
 Builds the app for production to the `build` folder.\
+
+### Pull Requests
+
+Create a branch with proper name example 'feat/your-cool-feature', create the pull request and add authors for reviews. Please include description with details.
 
 
 ## Sponsors
