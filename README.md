@@ -33,6 +33,8 @@ To join the community, please go to the website and hit "discord" icon.
     - CHN Pinyin Hard: Chinese top 1500 idioms
     - CHN Pinyin Normal: Chinese top 5000 words/char
     - support four tests duration 90s, 60s, 30s, 15s
+    - + Numbers: add random numbers from 0-99 at the end of the regenerated word
+    - + Symbols: add random symbols at the end of the regenerated words
   - Sentence mode
     - CHN: Random chinese short sentences
     - ENG: Random English short sentences
