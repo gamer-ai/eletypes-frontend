@@ -10,7 +10,7 @@ const SupportMe = () => {
     <Tooltip
       title={
         <div>
-          <span style={{ whiteSpace: "pre-line", fontSize:"12px"}}>
+          <span style={{ whiteSpace: "pre-line", fontSize: "12px" }}>
             {SUPPORT_TOOLTIP_TITLE}
           </span>
           <img

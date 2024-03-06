@@ -9,7 +9,7 @@ export default styled(Select)`
     border-radius: 4px;
     cursor: pointer;
     color: ${({ theme }) => theme.text};
-    background: ${({ theme }) => theme.background}
+    background: transparent;
   }
   .Select__single-value {
     font-size: 12px;

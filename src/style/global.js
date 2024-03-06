@@ -43,13 +43,6 @@ export const GlobalStyles = createGlobalStyle`
     width: 100%;
     text-align: center;
   }
-  .footer {
-    font-size: .75rem;
-    line-height: 1rem;
-    padding: 0;
-    position: relative;
-    text-align: center;
-  }
   .bottom-info {
     color: ${({ theme }) => theme.title};
     margin: 4px;
