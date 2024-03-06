@@ -24,14 +24,20 @@ import {
   DEFAULT_WORDS_COUNT,
   DEFAULT_DIFFICULTY,
   HARD_DIFFICULTY,
+  NUMBER_DIFFICULTY,
+  SYMBOL_DIFFICULTY,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE,
   HARD_DIFFICULTY_TOOLTIP_TITLE,
+  NUMBER_DIFFICULTY_TOOLTIP_TITLE,
+  SYMBOL_DIFFICULTY_TOOLTIP_TITLE,
   ENGLISH_MODE,
   CHINESE_MODE,
   ENGLISH_MODE_TOOLTIP_TITLE,
   CHINESE_MODE_TOOLTIP_TITLE,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
   HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
+  NUMBER_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
+  SYMBOL_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
   RESTART_BUTTON_TOOLTIP_TITLE,
   REDO_BUTTON_TOOLTIP_TITLE,
   PACING_CARET,
@@ -181,7 +187,7 @@ const TypeBox = ({
     if (
       currWordIndex !== 0 &&
       wordSpanRefs[currWordIndex].current.offsetLeft <
-        wordSpanRefs[currWordIndex - 1].current.offsetLeft
+      wordSpanRefs[currWordIndex - 1].current.offsetLeft
     ) {
       wordSpanRefs[currWordIndex - 1].current.scrollIntoView();
     } else {
@@ -801,6 +807,58 @@ const TypeBox = ({
                       className={getDifficultyButtonClassName(HARD_DIFFICULTY)}
                     >
                       {HARD_DIFFICULTY}
+                    </span>
+                  </Tooltip>
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    reset(
+                      countDownConstant,
+                      NUMBER_DIFFICULTY,
+                      language,
+                      false
+                    );
+                  }}
+                >
+                  <Tooltip
+                    title={
+                      language === ENGLISH_MODE
+                        ? NUMBER_DIFFICULTY_TOOLTIP_TITLE
+                        : NUMBER_DIFFICULTY_TOOLTIP_TITLE_CHINESE
+                    }
+                  >
+                    <span
+                      className={getDifficultyButtonClassName(
+                        NUMBER_DIFFICULTY
+                      )}
+                    >
+                      {NUMBER_DIFFICULTY}
+                    </span>
+                  </Tooltip>
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    reset(
+                      countDownConstant,
+                      SYMBOL_DIFFICULTY,
+                      language,
+                      false
+                    );
+                  }}
+                >
+                  <Tooltip
+                    title={
+                      language === ENGLISH_MODE
+                        ? SYMBOL_DIFFICULTY_TOOLTIP_TITLE
+                        : SYMBOL_DIFFICULTY_TOOLTIP_TITLE_CHINESE
+                    }
+                  >
+                    <span
+                      className={getDifficultyButtonClassName(
+                        SYMBOL_DIFFICULTY
+                      )}
+                    >
+                      {SYMBOL_DIFFICULTY}
                     </span>
                   </Tooltip>
                 </IconButton>

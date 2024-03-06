@@ -7,6 +7,8 @@ const DEFAULT_COUNT_DOWN = COUNT_DOWN_60;
 
 const DEFAULT_DIFFICULTY = "normal";
 const HARD_DIFFICULTY = "hard";
+const NUMBER_DIFFICULTY = "number";
+const SYMBOL_DIFFICULTY = "symbol";
 const RESTART_BUTTON_TOOLTIP_TITLE = "[Tab] + [Enter] to quickly restart";
 const REDO_BUTTON_TOOLTIP_TITLE = "[Tab] + [Space] to quickly redo";
 const RESTART_BUTTON_TOOLTIP_TITLE_WORDSCARD = "[Tab] + [Enter] to quick restart the chapter";
@@ -16,6 +18,10 @@ const DEFAULT_DIFFICULTY_TOOLTIP_TITLE =
   "normal mode generates random words from top 1000 most frequently used words in English dataset.";
 const HARD_DIFFICULTY_TOOLTIP_TITLE =
   "hard mode generates random words from blog posts words data, so you may encounter longer and less frequently used word.";
+const NUMBER_DIFFICULTY_TOOLTIP_TITLE =
+  "number mode generates word which contains random number";
+const SYMBOL_DIFFICULTY_TOOLTIP_TITLE =
+  "number mode generates word which contains random symbol";
 const CHAR_TOOLTIP_TITLE =
   "correct/incorrect/missing/extra\n extras are recorded even if deleted.";
 const SENTENCE_CHAR_TOOLTIP_TITLE = "correct/incorrect/extra\n";
@@ -25,6 +31,10 @@ const DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE =
   "normal mode generates random words from top 5000 most frequently used words in Chinese dataset.";
 const HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE =
   "hard mode generates random words from top 1500 most used Chinese idioms.";
+const NUMBER_DIFFICULTY_TOOLTIP_TITLE_CHINESE =
+  "number mode generates word which contains random number";
+const SYMBOL_DIFFICULTY_TOOLTIP_TITLE_CHINESE =
+  "number mode generates word which contains random symbol";
 
 const GITHUB_TOOLTIP_TITLE =
   "Dear visitors: \n For feature requests or bug reports, please submit an issue to the github repo. \n Welcome contributing with a fork. \n If you like my works, please star the project. \n Thanks! \n";
@@ -74,8 +84,12 @@ export {
   COUNT_DOWN_90,
   DEFAULT_DIFFICULTY,
   HARD_DIFFICULTY,
+  NUMBER_DIFFICULTY,
+  SYMBOL_DIFFICULTY,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE,
   HARD_DIFFICULTY_TOOLTIP_TITLE,
+  NUMBER_DIFFICULTY_TOOLTIP_TITLE,
+  SYMBOL_DIFFICULTY_TOOLTIP_TITLE,
   CHAR_TOOLTIP_TITLE,
   SENTENCE_CHAR_TOOLTIP_TITLE,
   GITHUB_TOOLTIP_TITLE,
@@ -90,6 +104,8 @@ export {
   CHINESE_MODE_TOOLTIP_TITLE,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
   HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
+  NUMBER_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
+  SYMBOL_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
   FREE_MODE,
   GAME_MODE,
   GAME_MODE_DEFAULT,
