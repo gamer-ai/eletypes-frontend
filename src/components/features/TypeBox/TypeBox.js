@@ -121,10 +121,10 @@ const TypeBox = ({
   // set up words state
   const [wordsDict, setWordsDict] = useState(() => {
     if (language === ENGLISH_MODE) {
-      return wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, ENGLISH_MODE);
+      return wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, ENGLISH_MODE, numberAddOn, symbolAddOn);
     }
     if (language === CHINESE_MODE) {
-      return chineseWordsGenerator(difficulty, CHINESE_MODE);
+      return chineseWordsGenerator(difficulty, CHINESE_MODE, numberAddOn, symbolAddOn);
     }
   });
 
@@ -184,14 +184,18 @@ const TypeBox = ({
         const generatedEng = wordsGenerator(
           DEFAULT_WORDS_COUNT,
           difficulty,
-          ENGLISH_MODE
+          ENGLISH_MODE,
+          numberAddOn,
+          symbolAddOn
         );
         setWordsDict((currentArray) => [...currentArray, ...generatedEng]);
       }
       if (language === CHINESE_MODE) {
         const generatedChinese = chineseWordsGenerator(
           difficulty,
-          CHINESE_MODE
+          CHINESE_MODE,
+          numberAddOn,
+          symbolAddOn
         );
         setWordsDict((currentArray) => [...currentArray, ...generatedChinese]);
       }
@@ -205,7 +209,7 @@ const TypeBox = ({
     } else {
       return;
     }
-  }, [currWordIndex, wordSpanRefs, difficulty, language]);
+  }, [currWordIndex, wordSpanRefs, difficulty, language, numberAddOn, symbolAddOn]);
 
   const reset = (newCountDown, difficulty, language, newNumberAddOn, newSymbolAddOn, isRedo) => {
     setStatus("waiting");
