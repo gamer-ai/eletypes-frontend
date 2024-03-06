@@ -1,10 +1,10 @@
 import React from "react";
-import { Grid } from "@mui/material";
+import { Grid, AppBar } from "@mui/material";
 import { Box } from "@mui/system";
 import { Tooltip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import Select from "../utils/Select";
 import {
   FOCUS_MODE,
@@ -15,7 +15,7 @@ import {
   GAME_MODE_DEFAULT,
   GAME_MODE_SENTENCE,
   TRAINER_MODE,
-  WORDS_CARD_MODE
+  WORDS_CARD_MODE,
 } from "../../constants/Constants";
 import { Link } from "@mui/material";
 import SupportMe from "../features/SupportMe";
@@ -30,8 +30,8 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import EmojiFoodBeverageIcon from "@mui/icons-material/EmojiFoodBeverage";
 import { ReactComponent as DiscordIcon } from "../../assets/Icons/discord.svg";
 import { SvgIcon } from "@mui/material";
-import KeyboardAltOutlinedIcon from '@mui/icons-material/KeyboardAltOutlined';
-import SchoolIcon from '@mui/icons-material/School';
+import KeyboardAltOutlinedIcon from "@mui/icons-material/KeyboardAltOutlined";
+import SchoolIcon from "@mui/icons-material/School";
 import { SOUND_MODE_TOOLTIP } from "../features/sound/sound";
 
 const FooterMenu = ({
@@ -54,7 +54,7 @@ const FooterMenu = ({
   isTrainerMode,
   toggleTrainerMode,
   isWordsCardMode,
-  toggleWordsCardMode
+  toggleWordsCardMode,
 }) => {
   const isSiteInfoDisabled = isMusicMode || isFocusedMode;
   const isBottomLogoEnabled = isFocusedMode && !isMusicMode;
@@ -75,7 +75,7 @@ const FooterMenu = ({
   };
 
   return (
-    <div className="footer">
+    <AppBar position="static" color="transparent">
       <Grid container justifyContent="space-between" alignItems="center">
         <Box display="flex" flexDirection="row">
           <Select
@@ -102,19 +102,23 @@ const FooterMenu = ({
               </span>
             </Tooltip>
           </IconButton>
-          {soundMode && (<Select
-            classNamePrefix="Select"
-            value={soundOptions.find((e) => e.label === soundType)}
-            options={soundOptions}
-            isSearchable={false}
-            isSelected={false}
-            onChange={handleSoundTypeChange}
-            menuPlacement="top"
-          ></Select>)}
+          {soundMode && (
+            <Select
+              classNamePrefix="Select"
+              value={soundOptions.find((e) => e.label === soundType)}
+              options={soundOptions}
+              isSearchable={false}
+              isSelected={false}
+              onChange={handleSoundTypeChange}
+              menuPlacement="top"
+            ></Select>
+          )}
           <IconButton onClick={toggleWordsCardMode}>
             <Tooltip
               title={
-                <span style={{ whiteSpace: "pre-line" }}>{WORDS_CARD_MODE}</span>
+                <span style={{ whiteSpace: "pre-line" }}>
+                  {WORDS_CARD_MODE}
+                </span>
               }
             >
               <span className={getModeButtonClassName(isWordsCardMode)}>
@@ -185,20 +189,17 @@ const FooterMenu = ({
             <SupportMe></SupportMe>
             <Tooltip
               title={
-                <span style={{ whiteSpace: "pre-line", fontSize:"12px" }}>
+                <span style={{ whiteSpace: "pre-line", fontSize: "12px" }}>
                   {GITHUB_TOOLTIP_TITLE}
-                    <Link
-                      margin="inherit"
-                      href="https://muyangguo.xyz"
-                    >
-                      {AUTHOR}
-                    </Link>
-                    <Link
-                      margin="inherit"
-                      href="https://github.com/gamer-ai/eletype-frontend/"
-                    >
-                      {GITHUB_REPO_LINK}
-                    </Link>
+                  <Link margin="inherit" href="https://muyangguo.xyz">
+                    {AUTHOR}
+                  </Link>
+                  <Link
+                    margin="inherit"
+                    href="https://github.com/gamer-ai/eletype-frontend/"
+                  >
+                    {GITHUB_REPO_LINK}
+                  </Link>
                 </span>
               }
               placement="top-start"
@@ -214,7 +215,7 @@ const FooterMenu = ({
               title={
                 <span style={{ whiteSpace: "pre-line" }}>
                   <iframe
-                  title="discord-widget"
+                    title="discord-widget"
                     src="https://discord.com/widget?id=993567075589181621&theme=dark"
                     width="100%"
                     height="300"
@@ -247,7 +248,7 @@ const FooterMenu = ({
           </Box>
         )}
       </Grid>
-    </div>
+    </AppBar>
   );
 };
 

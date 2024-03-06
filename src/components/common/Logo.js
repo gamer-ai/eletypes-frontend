@@ -1,7 +1,8 @@
 import React from "react";
 import KeyboardAltIcon from "@mui/icons-material/KeyboardAlt";
 
-const Logo = ({ isFocusedMode, isMusicMode }) => {
+const Logo = ({ isFocusedMode }) => {
+
   return (
     <div className="header" style={{visibility: isFocusedMode ? 'hidden' : 'visible' }}>
       <h1>
