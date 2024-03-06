@@ -24,26 +24,26 @@ import {
   DEFAULT_WORDS_COUNT,
   DEFAULT_DIFFICULTY,
   HARD_DIFFICULTY,
-  NUMBER_DIFFICULTY,
-  SYMBOL_DIFFICULTY,
+  NUMBER_ADDON,
+  SYMBOL_ADDON,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE,
   HARD_DIFFICULTY_TOOLTIP_TITLE,
-  NUMBER_DIFFICULTY_TOOLTIP_TITLE,
-  SYMBOL_DIFFICULTY_TOOLTIP_TITLE,
+  NUMBER_ADDON_TOOLTIP_TITLE,
+  SYMBOL_ADDON_TOOLTIP_TITLE,
   ENGLISH_MODE,
   CHINESE_MODE,
   ENGLISH_MODE_TOOLTIP_TITLE,
   CHINESE_MODE_TOOLTIP_TITLE,
   DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
   HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
-  NUMBER_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
-  SYMBOL_DIFFICULTY_TOOLTIP_TITLE_CHINESE,
   RESTART_BUTTON_TOOLTIP_TITLE,
   REDO_BUTTON_TOOLTIP_TITLE,
   PACING_CARET,
   PACING_PULSE,
   PACING_CARET_TOOLTIP,
   PACING_PULSE_TOOLTIP,
+  NUMBER_ADDON_KEY,
+  SYMBOL_ADDON_KEY,
 } from "../../../constants/Constants";
 import { SOUND_MAP } from "../sound/sound";
 
@@ -80,6 +80,18 @@ const TypeBox = ({
     "language"
   );
 
+  // local persist words add on for number
+  const [numberAddOn, setNumberAddOn] = useLocalPersistState(
+    false,
+    NUMBER_ADDON_KEY
+  )
+
+  // local persist words add on for symbol
+  const [symbolAddOn, setSymbolAddOn] = useLocalPersistState(
+    false,
+    SYMBOL_ADDON_KEY
+  )
+  
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
 
@@ -195,16 +207,18 @@ const TypeBox = ({
     }
   }, [currWordIndex, wordSpanRefs, difficulty, language]);
 
-  const reset = (newCountDown, difficulty, language, isRedo) => {
+  const reset = (newCountDown, difficulty, language, newNumberAddOn, newSymbolAddOn, isRedo) => {
     setStatus("waiting");
     if (!isRedo) {
       if (language === CHINESE_MODE) {
-        setWordsDict(chineseWordsGenerator(difficulty, language));
+        setWordsDict(chineseWordsGenerator(difficulty, language, newNumberAddOn, newSymbolAddOn));
       }
       if (language === ENGLISH_MODE) {
-        setWordsDict(wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, language));
+        setWordsDict(wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, language, newNumberAddOn, newSymbolAddOn));
       }
     }
+    setNumberAddOn(newNumberAddOn);
+    setSymbolAddOn(newSymbolAddOn);
     setCountDownConstant(newCountDown);
     setCountDown(newCountDown);
     setDifficulty(difficulty);
@@ -610,6 +624,13 @@ const TypeBox = ({
     return "inactive-button";
   };
 
+  const getAddOnButtonClassName = (addon) => {
+    if (addon) {
+      return "active-button";
+    }
+    return "inactive-button";
+  };
+
   const getPacingStyleButtonClassName = (buttonPacingStyle) => {
     if (pacingStyle === buttonPacingStyle) {
       return "active-button";
@@ -703,7 +724,7 @@ const TypeBox = ({
                 color="secondary"
                 size="medium"
                 onClick={() => {
-                  reset(countDownConstant, difficulty, language, true);
+                  reset(countDownConstant, difficulty, language, numberAddOn, symbolAddOn, true);
                 }}
               >
                 <Tooltip title={REDO_BUTTON_TOOLTIP_TITLE}>
@@ -715,7 +736,7 @@ const TypeBox = ({
                 color="secondary"
                 size="medium"
                 onClick={() => {
-                  reset(countDownConstant, difficulty, language, false);
+                  reset(countDownConstant, difficulty, language,numberAddOn, symbolAddOn, false);
                 }}
               >
                 <Tooltip title={RESTART_BUTTON_TOOLTIP_TITLE}>
@@ -726,7 +747,7 @@ const TypeBox = ({
                 <>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_90, difficulty, language, false);
+                      reset(COUNT_DOWN_90, difficulty, language,numberAddOn, symbolAddOn, false);
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_90)}>
@@ -735,7 +756,7 @@ const TypeBox = ({
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_60, difficulty, language, false);
+                      reset(COUNT_DOWN_60, difficulty, language, numberAddOn, symbolAddOn,false);
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_60)}>
@@ -744,7 +765,7 @@ const TypeBox = ({
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_30, difficulty, language, false);
+                      reset(COUNT_DOWN_30, difficulty, language,numberAddOn, symbolAddOn, false);
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_30)}>
@@ -753,7 +774,7 @@ const TypeBox = ({
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_15, difficulty, language, false);
+                      reset(COUNT_DOWN_15, difficulty, language,numberAddOn, symbolAddOn, false);
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_15)}>
@@ -771,6 +792,7 @@ const TypeBox = ({
                       countDownConstant,
                       DEFAULT_DIFFICULTY,
                       language,
+                      numberAddOn, symbolAddOn,
                       false
                     );
                   }}
@@ -793,7 +815,7 @@ const TypeBox = ({
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    reset(countDownConstant, HARD_DIFFICULTY, language, false);
+                    reset(countDownConstant, HARD_DIFFICULTY, language, numberAddOn, symbolAddOn,false);
                   }}
                 >
                   <Tooltip
@@ -814,25 +836,25 @@ const TypeBox = ({
                   onClick={() => {
                     reset(
                       countDownConstant,
-                      NUMBER_DIFFICULTY,
+                      difficulty,
                       language,
+                      !numberAddOn,
+                      symbolAddOn,
                       false
                     );
                   }}
                 >
                   <Tooltip
                     title={
-                      language === ENGLISH_MODE
-                        ? NUMBER_DIFFICULTY_TOOLTIP_TITLE
-                        : NUMBER_DIFFICULTY_TOOLTIP_TITLE_CHINESE
+                      NUMBER_ADDON_TOOLTIP_TITLE
                     }
                   >
                     <span
-                      className={getDifficultyButtonClassName(
-                        NUMBER_DIFFICULTY
+                      className={getAddOnButtonClassName(
+                        numberAddOn
                       )}
                     >
-                      {NUMBER_DIFFICULTY}
+                      {NUMBER_ADDON}
                     </span>
                   </Tooltip>
                 </IconButton>
@@ -840,25 +862,25 @@ const TypeBox = ({
                   onClick={() => {
                     reset(
                       countDownConstant,
-                      SYMBOL_DIFFICULTY,
+                      difficulty,
                       language,
+                      numberAddOn,
+                      !symbolAddOn,
                       false
                     );
                   }}
                 >
                   <Tooltip
                     title={
-                      language === ENGLISH_MODE
-                        ? SYMBOL_DIFFICULTY_TOOLTIP_TITLE
-                        : SYMBOL_DIFFICULTY_TOOLTIP_TITLE_CHINESE
+                      SYMBOL_ADDON_TOOLTIP_TITLE
                     }
                   >
                     <span
-                      className={getDifficultyButtonClassName(
-                        SYMBOL_DIFFICULTY
+                      className={getAddOnButtonClassName(
+                        symbolAddOn
                       )}
                     >
-                      {SYMBOL_DIFFICULTY}
+                      {SYMBOL_ADDON}
                     </span>
                   </Tooltip>
                 </IconButton>
@@ -868,7 +890,7 @@ const TypeBox = ({
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    reset(countDownConstant, difficulty, ENGLISH_MODE, false);
+                    reset(countDownConstant, difficulty, ENGLISH_MODE, numberAddOn, symbolAddOn,false);
                   }}
                 >
                   <Tooltip title={ENGLISH_MODE_TOOLTIP_TITLE}>
@@ -879,7 +901,7 @@ const TypeBox = ({
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    reset(countDownConstant, difficulty, CHINESE_MODE, false);
+                    reset(countDownConstant, difficulty, CHINESE_MODE,numberAddOn, symbolAddOn, false);
                   }}
                 >
                   <Tooltip title={CHINESE_MODE_TOOLTIP_TITLE}>
