@@ -103,12 +103,12 @@ const TypeBox = ({
     if (e.keyCode === 13 || e.keyCode === 9) {
       e.preventDefault();
       setOpenRestart(false);
-      reset(countDownConstant, difficulty, language, false);
+      reset(countDownConstant, difficulty, language, numberAddOn, symbolAddOn, false);
     } // press space to redo
     else if (e.keyCode === 32) {
       e.preventDefault();
       setOpenRestart(false);
-      reset(countDownConstant, difficulty, language, true);
+      reset(countDownConstant, difficulty, language, numberAddOn, symbolAddOn, true);
     } else {
       e.preventDefault();
       setOpenRestart(false);
