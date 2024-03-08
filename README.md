@@ -89,7 +89,7 @@ Static Themes
   - Cool Kid
   - EdgeRunner (cyberpunk 2077 edgerunners episodes inspired)
 
-Dynamic Themes (WebGL based, may impact performance. experimental feature. Acknowledged [UV canvas](https://uvcanvas.com/))
+Dynamic Themes (WebGL based, may impact performance. experimental feature. Component Library used from [UV canvas](https://uvcanvas.com/))
 
   - Tranquiluxe,
   - Lumiflex,
