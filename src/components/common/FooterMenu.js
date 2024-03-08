@@ -75,7 +75,8 @@ const FooterMenu = ({
   };
 
   return (
-    <AppBar position="static" color="transparent">
+    <AppBar position="static"
+    color="transparent" className="bottomBar">
       <Grid container justifyContent="space-between" alignItems="center">
         <Box display="flex" flexDirection="row">
           <Select

@@ -27,17 +27,25 @@ export const GlobalStyles = createGlobalStyle`
       gap: 0.5rem;
       grid-auto-flow: row;
       grid-template-rows: auto 1fr auto;
-      min-height: 100vh;
+      height: 100vh;
       padding: 1rem;
       transition: padding-top .125s;
       width: 100vw;
+      z-index: 1;
+  }
+  .dynamicBackground {
+    heigh: 100%;
+    width: 100%;
+    z-index: -999;
+    position: fixed;
+    filter: grayscale(30%);
   }
   .header {
     position: relative;
     display: block;
     align-items: center;
     justify-content: center;
-    padding-bottom: 3%;
+    padding-bottom: 2%;
     top: 0;
     left:0;
     width: 100%;
@@ -79,14 +87,14 @@ export const GlobalStyles = createGlobalStyle`
   .wordscard-UI{
     display: block;
     max-width: 1000px;
-    margin-top: 200px;
+    margin-top: 150px;
     margin-bottom: 20px;
     margin-left: auto;
     margin-right: auto;
     bottom: 10%;
   }
   .wordscard-UI-info{
-    margin-top: 50px;
+    margin-top: 30px;
     margin-bottom: 20px;
     margin-left: auto;
     margin-right: auto;
@@ -125,7 +133,7 @@ export const GlobalStyles = createGlobalStyle`
     overflow: hidden;
     margin-left: auto;
     margin-right: auto;
-    position: relative
+    position: relative;
     top: 10%;
     @media only screen 
     and (min-device-width: 375px) 
@@ -370,8 +378,8 @@ export const GlobalStyles = createGlobalStyle`
     font-family: ${({ theme }) => theme.fontFamily};
     overflow: auto;
     resize: none;
-    width: 100%;
-    height: 80%;
+    width: 100vw;
+    height: 70vh;
     margin-left: auto;
     margin-right: auto;
     position: relative;

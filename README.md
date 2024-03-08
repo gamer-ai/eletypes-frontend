@@ -73,6 +73,8 @@ To join the community, please go to the website and hit "discord" icon.
  
 #### 6. Themes Collection
 
+Static Themes
+
   - Dark
   - Piano
   - Aluminum
@@ -86,6 +88,14 @@ To join the community, please go to the website and hit "discord" icon.
   - Budapest
   - Cool Kid
   - EdgeRunner (cyberpunk 2077 edgerunners episodes inspired)
+
+Dynamic Themes (WebGL based, may impact performance. experimental feature. Acknowledged [UV canvas](https://uvcanvas.com/))
+
+  - Tranquiluxe,
+  - Lumiflex,
+  - Opulento,
+  - Velustro
+  
 
 #### 7. LocalStorage persist for essential settings
 

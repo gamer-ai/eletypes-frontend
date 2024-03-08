@@ -157,6 +157,54 @@ const edgeRunnerTheme = {
   textShadow: "0 0 2vw #E7E7E3"
 };
 
+const tranquiluxeTheme = {
+  label: "Tranquiluxe",
+  background: "linear-gradient(to left top, rgba(0, 0, 0, 0.25),  #888B8D)",
+  text: "#353535",
+  gradient: "linear-gradient(90deg, #888B8D 0%, #FAF9F6 100%)",
+  title: "#2f2f2f",
+  textTypeBox: "#FAF9F6",
+  stats: "#1b2021",
+  fontFamily: "Rufina",
+  textShadow: "0px 1px 1px #000000"
+};
+
+const lumiflexTheme = {
+  label: "Lumiflex",
+  background: "linear-gradient(to left top, rgba(0, 0, 0, 0.25),  #888B8D)",
+  text: "#FAF9F6",
+  gradient: "linear-gradient(90deg, #888B8D 0%, #FAF9F6 100%)",
+  title: "#2f2f2f",
+  textTypeBox: "#2f2f2f",
+  stats: "#20F0A0",
+  fontFamily: "Rufina",
+  textShadow: "2px 0px 2px #888B8D"
+};
+
+const opulentoTheme = {
+  label: "Opulento",
+  background: "linear-gradient(to left top, rgba(0, 0, 0, 0.25),  #888B8D)",
+  text: "#20F0A0",
+  gradient: "linear-gradient(90deg, #888B8D 0%, #FAF9F6 100%)",
+  title: "#EBC49F",
+  textTypeBox: "#B67352",
+  stats: "#20F0A0",
+  fontFamily: "Rufina",
+  textShadow: "4px 4px 2px #000000"
+};
+
+const velustroTheme = {
+  label: "Velustro",
+  background: "linear-gradient(to bottom,  #000, #222)",
+  text: "#FAF9F6",
+  gradient: "linear-gradient(90deg, #000 0%, #222 100%)",
+  title: "#f5f2e7",
+  textTypeBox: "#3E3232",
+  stats: "#FAF9F6",
+  fontFamily: "Rufina",
+  textShadow: "1px 0px 0px #000000"
+};
+
 const defaultTheme = darkTheme;
 
 const themesOptions = [
@@ -173,7 +221,11 @@ const themesOptions = [
   { value: heroTheme, label: "Hero" },
   { value: coolKidTheme, label: "Cool Kid" },
   { value: budapestTheme, label: "Budapest" },
-  { value: lightTheme, label: "Light" }
+  { value: lightTheme, label: "Light" },
+  { value: tranquiluxeTheme, label: "Tranquiluxe" },
+  { value: lumiflexTheme, label: "Lumiflex" },
+  { value: opulentoTheme, label: "Opulento"},
+  { value: velustroTheme, label: "Velustro"}
 ];
 
 export {
@@ -192,5 +244,8 @@ export {
   pianoTheme,
   defaultTheme,
   themesOptions,
-  edgeRunnerTheme
+  edgeRunnerTheme,
+  tranquiluxeTheme,
+  lumiflexTheme,
+  opulentoTheme
 };

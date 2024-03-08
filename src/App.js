@@ -22,6 +22,7 @@ import {
   DEFAULT_SOUND_TYPE,
   DEFAULT_SOUND_TYPE_KEY,
 } from "./components/features/sound/sound";
+import DynamicBackground from "./components/common/DynamicBackground";
 
 function App() {
   // localStorage persist theme setting
@@ -174,8 +175,10 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <>
+        <DynamicBackground theme={theme}></DynamicBackground>
         <div className="canvas">
           <GlobalStyles />
+          <div></div>
           <Logo isFocusedMode={isFocusedMode} isMusicMode={isMusicMode}></Logo>
           {isWordGameMode && (
             <TypeBox
@@ -213,28 +216,30 @@ function App() {
           {isWordsCardMode && !isCoffeeMode && !isTrainerMode && (
             <WordsCard soundMode={soundMode} soundType={soundType}></WordsCard>
           )}
-          <FooterMenu
-            themesOptions={themesOptions}
-            theme={theme}
-            soundMode={soundMode}
-            toggleSoundMode={toggleSoundMode}
-            soundOptions={soundOptions}
-            soundType={soundType}
-            handleSoundTypeChange={handleSoundTypeChange}
-            handleThemeChange={handleThemeChange}
-            toggleFocusedMode={toggleFocusedMode}
-            toggleMusicMode={toggleMusicMode}
-            toggleCoffeeMode={toggleCoffeeMode}
-            isCoffeeMode={isCoffeeMode}
-            isMusicMode={isMusicMode}
-            isFocusedMode={isFocusedMode}
-            gameMode={gameMode}
-            handleGameModeChange={handleGameModeChange}
-            isTrainerMode={isTrainerMode}
-            toggleTrainerMode={toggleTrainerMode}
-            isWordsCardMode={isWordsCardMode}
-            toggleWordsCardMode={toggleWordsCardMode}
-          ></FooterMenu>
+          <div className="bottomBar">
+            <FooterMenu
+              themesOptions={themesOptions}
+              theme={theme}
+              soundMode={soundMode}
+              toggleSoundMode={toggleSoundMode}
+              soundOptions={soundOptions}
+              soundType={soundType}
+              handleSoundTypeChange={handleSoundTypeChange}
+              handleThemeChange={handleThemeChange}
+              toggleFocusedMode={toggleFocusedMode}
+              toggleMusicMode={toggleMusicMode}
+              toggleCoffeeMode={toggleCoffeeMode}
+              isCoffeeMode={isCoffeeMode}
+              isMusicMode={isMusicMode}
+              isFocusedMode={isFocusedMode}
+              gameMode={gameMode}
+              handleGameModeChange={handleGameModeChange}
+              isTrainerMode={isTrainerMode}
+              toggleTrainerMode={toggleTrainerMode}
+              isWordsCardMode={isWordsCardMode}
+              toggleWordsCardMode={toggleWordsCardMode}
+            ></FooterMenu>
+          </div>
           <MusicPlayerSnackbar
             isMusicMode={isMusicMode}
             isFocusedMode={isFocusedMode}

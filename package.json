@@ -18,6 +18,7 @@
     "react-toastify": "^10.0.4",
     "styled-components": "^5.3.5",
     "use-sound": "^4.0.1",
+    "uvcanvas": "^0.2.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
