@@ -73,7 +73,7 @@ To join the community, please go to the website and hit "discord" icon.
  
 #### 6. Themes Collection
 
-Static Themes
+- Static Themes
 
   - Dark
   - Piano
@@ -89,14 +89,16 @@ Static Themes
   - Cool Kid
   - EdgeRunner (cyberpunk 2077 edgerunners episodes inspired)
 
-Dynamic Themes (WebGL based, may impact performance. experimental feature. Component Library used from [UV canvas](https://uvcanvas.com/))
+- Dynamic Themes (WebGL based, may degrade performance. experimental feature. Component Library used from [UV canvas](https://uvcanvas.com/))
 
   - Tranquiluxe,
   - Lumiflex,
   - Opulento,
   - Velustro
-  
 
+![dynamicThemesDemo](https://github.com/gamer-ai/eletypes-frontend/assets/39578778/d716a287-6f59-4568-8276-1ee6b5f5850a)
+
+  
 #### 7. LocalStorage persist for essential settings
 
   - Browser refresh will bring back to the localStorage stored settings
