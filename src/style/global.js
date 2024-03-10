@@ -24,14 +24,14 @@ export const GlobalStyles = createGlobalStyle`
   .canvas {
       align-items: center;
       display: grid;
-      gap: 0.5rem;
+      gap: 1rem;
       grid-auto-flow: row;
       grid-template-rows: auto 1fr auto;
-      height: 100vh;
-      padding: 1rem;
-      transition: padding-top .125s;
+      min-height: 100vh;
       width: 100vw;
       z-index: 1;
+      padding: 1rem;
+      transition: padding-top .125s;
   }
   .dynamicBackground {
     heigh: 100%;
