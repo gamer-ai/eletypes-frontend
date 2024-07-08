@@ -6,12 +6,12 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import useSound from "use-sound";
 import { SOUND_MAP } from "../sound/sound";
 
-const DefaultKeyboard = ({soundType, soundMode}) => {
+const DefaultKeyboard = ({ soundType, soundMode }) => {
   const keyboardRef = useRef();
   const [inputChar, setInputChar] = useState("");
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
-  const [play] = useSound(SOUND_MAP[soundType], {volume: 0.5});
+  const [play] = useSound(SOUND_MAP[soundType], { volume: 0.5 });
 
   const accuracy =
     correctCount + incorrectCount === 0
@@ -30,7 +30,7 @@ const DefaultKeyboard = ({soundType, soundMode}) => {
     keyboardRef.current && keyboardRef.current.focus();
   };
   const handleKeyDown = (event) => {
-    if (soundMode){
+    if (soundMode) {
       play();
     }
     setInputChar(event.key);
@@ -92,6 +92,43 @@ const DefaultKeyboard = ({soundType, soundMode}) => {
     return "SPACEKEY VIBRATE";
   };
 
+  const lettersRow1 = [
+    "Q",
+    "W",
+    "E",
+    "R",
+    "T",
+    "Y",
+    "U",
+    "I",
+    "O",
+    "P",
+    "[",
+    "]",
+  ];
+
+  const row1Elements = lettersRow1.map((letter, index) => (
+    <div className={getClassName(letter.toLowerCase())} key={index} id={letter}>
+      {letter}
+    </div>
+  ));
+
+  const lettersRow2 = ["A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'"];
+
+  const row2Elements = lettersRow2.map((letter, index) => (
+    <div className={getClassName(letter.toLowerCase())} key={index} id={letter}>
+      {letter}
+    </div>
+  ));
+
+  const lettersRow3 = ["Z", "X", "C", "V", "B", "N", "M", ",", ".", "/"];
+
+  const row3Elements = lettersRow3.map((letter, index) => (
+    <div className={getClassName(letter.toLowerCase())} key={index} id={letter}>
+      {letter}
+    </div>
+  ));
+
   return (
     <div>
       <div className="keyboard">
@@ -102,97 +139,9 @@ const DefaultKeyboard = ({soundType, soundMode}) => {
           onKeyUp={handleKeyUp}
           ref={keyboardRef}
         ></input>
-        <ul className="row row-1">
-          <div className={getClassName("q")} id="Q">
-            Q
-          </div>
-          <div className={getClassName("w")} id="W">
-            W
-          </div>
-          <div className={getClassName("e")} id="E">
-            E
-          </div>
-          <div className={getClassName("r")} id="R">
-            R
-          </div>
-          <div className={getClassName("t")} id="T">
-            T
-          </div>
-          <div className={getClassName("y")} id="Y">
-            Y
-          </div>
-          <div className={getClassName("u")} id="U">
-            U
-          </div>
-          <div className={getClassName("i")} id="I">
-            I
-          </div>
-          <div className={getClassName("o")} id="O">
-            O
-          </div>
-          <div className={getClassName("p")} id="P">
-            P
-          </div>
-          <div className={getClassName("[")}>[</div>
-          <div className={getClassName("]")}>]</div>
-        </ul>
-        <ul className="row row-2">
-          <div className={getClassName("a")} id="A">
-            A
-          </div>
-          <div className={getClassName("s")} id="S">
-            S
-          </div>
-          <div className={getClassName("d")} id="D">
-            D
-          </div>
-          <div className={getClassName("f")} id="F">
-            F
-          </div>
-          <div className={getClassName("g")} id="G">
-            G
-          </div>
-          <div className={getClassName("h")} id="H">
-            H
-          </div>
-          <div className={getClassName("j")} id="J">
-            J
-          </div>
-          <div className={getClassName("k")} id="K">
-            K
-          </div>
-          <div className={getClassName("l")} id="L">
-            L
-          </div>
-          <div className={getClassName(";")}>;</div>
-          <div className={getClassName("'")}>'</div>
-        </ul>
-        <ul className="row row-3">
-          <div className={getClassName("z")} id="Z">
-            Z
-          </div>
-          <div className={getClassName("x")} id="X">
-            X
-          </div>
-          <div className={getClassName("c")} id="C">
-            C
-          </div>
-          <div className={getClassName("v")} id="V">
-            V
-          </div>
-          <div className={getClassName("b")} id="B">
-            B
-          </div>
-          <div className={getClassName("n")} id="N">
-            N
-          </div>
-          <div className={getClassName("m")} id="M">
-            M
-          </div>
-          <div className={getClassName(",")}>,</div>
-          <div className={getClassName(".")}>.</div>
-          <div className={getClassName("/")}>/</div>
-        </ul>
+        <ul className="row row-1">{row1Elements}</ul>
+        <ul className="row row-2">{row2Elements}</ul>
+        <ul className="row row-3">{row3Elements}</ul>
         <ul className="row row-4">
           <div className={getSpaceKeyClassName()} id="SPACE">
             SPACE
