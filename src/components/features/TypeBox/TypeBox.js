@@ -618,6 +618,17 @@ const TypeBox = ({
     }
   };
 
+  useEffect(() => {
+    // Check if currCharIndex exceeds the length of the current word
+    if (currCharIndex === words[currWordIndex].length - 1) {
+      setCurrChar("");
+      setCurrCharIndex(-1);
+      setCurrWordIndex(currWordIndex + 1);
+
+      simulateSpacePress();
+    }
+  }, [currChar, currCharIndex, currWordIndex]);
+
   // Function to simulate spacebar press
   function simulateSpacePress() {
     // Create a new keyboard event for keydown
@@ -651,6 +662,7 @@ const TypeBox = ({
 
   const getCharClassName = (wordIdx, charIdx, char, word) => {
     const keyString = wordIdx + "." + charIdx;
+
     if (
       pacingStyle === PACING_CARET &&
       wordIdx === currWordIndex &&
@@ -658,14 +670,6 @@ const TypeBox = ({
       status !== "finished"
     ) {
       return "caret-char-left";
-    }
-
-    // Auto press space bar when user input chars > current word length
-    if (history[keyString] === true || history[keyString] === false) {
-      if (currCharIndex > word.length - 1) {
-        // Simulate pressing the spacebar
-        simulateSpacePress();
-      }
     }
 
     if (history[keyString] === true) {
