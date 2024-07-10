@@ -84,14 +84,14 @@ const TypeBox = ({
   const [numberAddOn, setNumberAddOn] = useLocalPersistState(
     false,
     NUMBER_ADDON_KEY
-  )
+  );
 
   // local persist words add on for symbol
   const [symbolAddOn, setSymbolAddOn] = useLocalPersistState(
     false,
     SYMBOL_ADDON_KEY
-  )
-  
+  );
+
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
 
@@ -103,12 +103,26 @@ const TypeBox = ({
     if (e.keyCode === 13 || e.keyCode === 9) {
       e.preventDefault();
       setOpenRestart(false);
-      reset(countDownConstant, difficulty, language, numberAddOn, symbolAddOn, false);
+      reset(
+        countDownConstant,
+        difficulty,
+        language,
+        numberAddOn,
+        symbolAddOn,
+        false
+      );
     } // press space to redo
     else if (e.keyCode === 32) {
       e.preventDefault();
       setOpenRestart(false);
-      reset(countDownConstant, difficulty, language, numberAddOn, symbolAddOn, true);
+      reset(
+        countDownConstant,
+        difficulty,
+        language,
+        numberAddOn,
+        symbolAddOn,
+        true
+      );
     } else {
       e.preventDefault();
       setOpenRestart(false);
@@ -121,10 +135,21 @@ const TypeBox = ({
   // set up words state
   const [wordsDict, setWordsDict] = useState(() => {
     if (language === ENGLISH_MODE) {
-      return wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, ENGLISH_MODE, numberAddOn, symbolAddOn);
+      return wordsGenerator(
+        DEFAULT_WORDS_COUNT,
+        difficulty,
+        ENGLISH_MODE,
+        numberAddOn,
+        symbolAddOn
+      );
     }
     if (language === CHINESE_MODE) {
-      return chineseWordsGenerator(difficulty, CHINESE_MODE, numberAddOn, symbolAddOn);
+      return chineseWordsGenerator(
+        difficulty,
+        CHINESE_MODE,
+        numberAddOn,
+        symbolAddOn
+      );
     }
   });
 
@@ -203,22 +228,51 @@ const TypeBox = ({
     if (
       currWordIndex !== 0 &&
       wordSpanRefs[currWordIndex].current.offsetLeft <
-      wordSpanRefs[currWordIndex - 1].current.offsetLeft
+        wordSpanRefs[currWordIndex - 1].current.offsetLeft
     ) {
       wordSpanRefs[currWordIndex - 1].current.scrollIntoView();
     } else {
       return;
     }
-  }, [currWordIndex, wordSpanRefs, difficulty, language, numberAddOn, symbolAddOn]);
+  }, [
+    currWordIndex,
+    wordSpanRefs,
+    difficulty,
+    language,
+    numberAddOn,
+    symbolAddOn,
+  ]);
 
-  const reset = (newCountDown, difficulty, language, newNumberAddOn, newSymbolAddOn, isRedo) => {
+  const reset = (
+    newCountDown,
+    difficulty,
+    language,
+    newNumberAddOn,
+    newSymbolAddOn,
+    isRedo
+  ) => {
     setStatus("waiting");
     if (!isRedo) {
       if (language === CHINESE_MODE) {
-        setWordsDict(chineseWordsGenerator(difficulty, language, newNumberAddOn, newSymbolAddOn));
+        setWordsDict(
+          chineseWordsGenerator(
+            difficulty,
+            language,
+            newNumberAddOn,
+            newSymbolAddOn
+          )
+        );
       }
       if (language === ENGLISH_MODE) {
-        setWordsDict(wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, language, newNumberAddOn, newSymbolAddOn));
+        setWordsDict(
+          wordsGenerator(
+            DEFAULT_WORDS_COUNT,
+            difficulty,
+            language,
+            newNumberAddOn,
+            newSymbolAddOn
+          )
+        );
       }
     }
     setNumberAddOn(newNumberAddOn);
@@ -564,6 +618,37 @@ const TypeBox = ({
     }
   };
 
+  // Function to simulate spacebar press
+  function simulateSpacePress() {
+    // Create a new keyboard event for keydown
+    let keydownEvent = new KeyboardEvent("keydown", {
+      key: " ",
+      keyCode: 32, // keyCode for spacebar
+      code: "Space",
+      which: 32,
+      bubbles: true,
+      cancelable: true,
+    });
+
+    // Create a new keyboard event for keyup
+    let keyupEvent = new KeyboardEvent("keyup", {
+      key: " ",
+      keyCode: 32, // keyCode for spacebar
+      code: "Space",
+      which: 32,
+      bubbles: true,
+      cancelable: true,
+    });
+
+    // Dispatch the events on the target element (e.g., an input field)
+    let targetElement = document.activeElement; // or document.querySelector('input') if you want a specific input field
+
+    if (targetElement) {
+      targetElement.dispatchEvent(keydownEvent);
+      targetElement.dispatchEvent(keyupEvent);
+    }
+  }
+
   const getCharClassName = (wordIdx, charIdx, char, word) => {
     const keyString = wordIdx + "." + charIdx;
     if (
@@ -574,6 +659,15 @@ const TypeBox = ({
     ) {
       return "caret-char-left";
     }
+
+    // Auto press space bar when user input chars > current word length
+    if (history[keyString] === true || history[keyString] === false) {
+      if (currCharIndex > word.length - 1) {
+        // Simulate pressing the spacebar
+        simulateSpacePress();
+      }
+    }
+
     if (history[keyString] === true) {
       if (
         pacingStyle === PACING_CARET &&
@@ -584,6 +678,7 @@ const TypeBox = ({
       ) {
         return "caret-char-right-correct";
       }
+
       return "correct-char";
     }
     if (history[keyString] === false) {
@@ -596,6 +691,7 @@ const TypeBox = ({
       ) {
         return "caret-char-right-error";
       }
+
       return "error-char";
     }
     if (
@@ -606,9 +702,11 @@ const TypeBox = ({
     ) {
       if (char === currChar) {
         history[keyString] = true;
+
         return "correct-char";
       } else {
         history[keyString] = false;
+
         return "error-char";
       }
     } else {
@@ -728,7 +826,14 @@ const TypeBox = ({
                 color="secondary"
                 size="medium"
                 onClick={() => {
-                  reset(countDownConstant, difficulty, language, numberAddOn, symbolAddOn, true);
+                  reset(
+                    countDownConstant,
+                    difficulty,
+                    language,
+                    numberAddOn,
+                    symbolAddOn,
+                    true
+                  );
                 }}
               >
                 <Tooltip title={REDO_BUTTON_TOOLTIP_TITLE}>
@@ -740,7 +845,14 @@ const TypeBox = ({
                 color="secondary"
                 size="medium"
                 onClick={() => {
-                  reset(countDownConstant, difficulty, language,numberAddOn, symbolAddOn, false);
+                  reset(
+                    countDownConstant,
+                    difficulty,
+                    language,
+                    numberAddOn,
+                    symbolAddOn,
+                    false
+                  );
                 }}
               >
                 <Tooltip title={RESTART_BUTTON_TOOLTIP_TITLE}>
@@ -751,7 +863,14 @@ const TypeBox = ({
                 <>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_90, difficulty, language,numberAddOn, symbolAddOn, false);
+                      reset(
+                        COUNT_DOWN_90,
+                        difficulty,
+                        language,
+                        numberAddOn,
+                        symbolAddOn,
+                        false
+                      );
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_90)}>
@@ -760,7 +879,14 @@ const TypeBox = ({
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_60, difficulty, language, numberAddOn, symbolAddOn,false);
+                      reset(
+                        COUNT_DOWN_60,
+                        difficulty,
+                        language,
+                        numberAddOn,
+                        symbolAddOn,
+                        false
+                      );
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_60)}>
@@ -769,7 +895,14 @@ const TypeBox = ({
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_30, difficulty, language,numberAddOn, symbolAddOn, false);
+                      reset(
+                        COUNT_DOWN_30,
+                        difficulty,
+                        language,
+                        numberAddOn,
+                        symbolAddOn,
+                        false
+                      );
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_30)}>
@@ -778,7 +911,14 @@ const TypeBox = ({
                   </IconButton>
                   <IconButton
                     onClick={() => {
-                      reset(COUNT_DOWN_15, difficulty, language,numberAddOn, symbolAddOn, false);
+                      reset(
+                        COUNT_DOWN_15,
+                        difficulty,
+                        language,
+                        numberAddOn,
+                        symbolAddOn,
+                        false
+                      );
                     }}
                   >
                     <span className={getTimerButtonClassName(COUNT_DOWN_15)}>
@@ -796,7 +936,8 @@ const TypeBox = ({
                       countDownConstant,
                       DEFAULT_DIFFICULTY,
                       language,
-                      numberAddOn, symbolAddOn,
+                      numberAddOn,
+                      symbolAddOn,
                       false
                     );
                   }}
@@ -819,7 +960,14 @@ const TypeBox = ({
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    reset(countDownConstant, HARD_DIFFICULTY, language, numberAddOn, symbolAddOn,false);
+                    reset(
+                      countDownConstant,
+                      HARD_DIFFICULTY,
+                      language,
+                      numberAddOn,
+                      symbolAddOn,
+                      false
+                    );
                   }}
                 >
                   <Tooltip
@@ -848,16 +996,8 @@ const TypeBox = ({
                     );
                   }}
                 >
-                  <Tooltip
-                    title={
-                      NUMBER_ADDON_TOOLTIP_TITLE
-                    }
-                  >
-                    <span
-                      className={getAddOnButtonClassName(
-                        numberAddOn
-                      )}
-                    >
+                  <Tooltip title={NUMBER_ADDON_TOOLTIP_TITLE}>
+                    <span className={getAddOnButtonClassName(numberAddOn)}>
                       {NUMBER_ADDON}
                     </span>
                   </Tooltip>
@@ -874,16 +1014,8 @@ const TypeBox = ({
                     );
                   }}
                 >
-                  <Tooltip
-                    title={
-                      SYMBOL_ADDON_TOOLTIP_TITLE
-                    }
-                  >
-                    <span
-                      className={getAddOnButtonClassName(
-                        symbolAddOn
-                      )}
-                    >
+                  <Tooltip title={SYMBOL_ADDON_TOOLTIP_TITLE}>
+                    <span className={getAddOnButtonClassName(symbolAddOn)}>
                       {SYMBOL_ADDON}
                     </span>
                   </Tooltip>
@@ -894,7 +1026,14 @@ const TypeBox = ({
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    reset(countDownConstant, difficulty, ENGLISH_MODE, numberAddOn, symbolAddOn,false);
+                    reset(
+                      countDownConstant,
+                      difficulty,
+                      ENGLISH_MODE,
+                      numberAddOn,
+                      symbolAddOn,
+                      false
+                    );
                   }}
                 >
                   <Tooltip title={ENGLISH_MODE_TOOLTIP_TITLE}>
@@ -905,7 +1044,14 @@ const TypeBox = ({
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    reset(countDownConstant, difficulty, CHINESE_MODE,numberAddOn, symbolAddOn, false);
+                    reset(
+                      countDownConstant,
+                      difficulty,
+                      CHINESE_MODE,
+                      numberAddOn,
+                      symbolAddOn,
+                      false
+                    );
                   }}
                 >
                   <Tooltip title={CHINESE_MODE_TOOLTIP_TITLE}>
