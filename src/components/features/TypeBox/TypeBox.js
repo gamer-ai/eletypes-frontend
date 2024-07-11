@@ -381,7 +381,8 @@ const TypeBox = ({
     if (status === "finished") {
       return;
     }
-    setCurrInput(e.target.value);
+    console.log(e.target.value);
+    setCurrInput(e.target.value.trim());
     inputWordsHistory[currWordIndex] = e.target.value.trim();
     setInputWordsHistory(inputWordsHistory);
   };
@@ -621,13 +622,9 @@ const TypeBox = ({
   useEffect(() => {
     // Check if currCharIndex exceeds the length of the current word
     if (currCharIndex === words[currWordIndex].length - 1) {
-      setCurrChar("");
-      setCurrCharIndex(-1);
-      setCurrWordIndex(currWordIndex + 1);
-
       simulateSpacePress();
     }
-  }, [currChar, currCharIndex, currWordIndex]);
+  }, [currInput]);
 
   // Function to simulate spacebar press
   function simulateSpacePress() {
