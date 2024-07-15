@@ -50,6 +50,7 @@ export const GlobalStyles = createGlobalStyle`
     left:0;
     width: 100%;
     text-align: center;
+   z-index: 999;
   }
   .bottom-info {
     color: ${({ theme }) => theme.title};
@@ -74,6 +75,28 @@ export const GlobalStyles = createGlobalStyle`
     margin-right: 10px;
     opacity: 0.7;
   }
+
+  .stats-overlay {
+    position: fixed;
+    background: ${({ theme }) => theme.background};
+    inset: 0;
+  }
+
+  .stats-chart {
+    position: absolute;
+    background: ${({ theme }) => theme.background};
+    top: 44%;
+    width: 100%;
+max-width: 1000px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+  }
+
+  .stats-text {
+min-width: max-content;
+}
+
   .stats {
     display: block;
     max-width: 1000px;
