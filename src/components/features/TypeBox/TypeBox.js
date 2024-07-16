@@ -53,6 +53,7 @@ const TypeBox = ({
   soundMode,
   soundType,
   handleInputFocus,
+  theme,
 }) => {
   const [play] = useSound(SOUND_MAP[soundType], { volume: 0.5 });
 
@@ -769,6 +770,7 @@ const TypeBox = ({
         <Stats
           status={status}
           wpm={wpm}
+          theme={theme}
           countDown={countDown}
           countDownConstant={countDownConstant}
           statsCharCount={statsCharCount}

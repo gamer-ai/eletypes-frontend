@@ -75,27 +75,53 @@ export const GlobalStyles = createGlobalStyle`
     margin-right: 10px;
     opacity: 0.7;
   }
+  
+.bottomBar {
+z-index: 999;
+}
 
   .stats-overlay {
     position: fixed;
     background: ${({ theme }) => theme.background};
     inset: 0;
+    z-index: 99;
   }
 
   .stats-chart {
     position: absolute;
-    background: ${({ theme }) => theme.background};
-    top: 44%;
+    background: transparent;
+    top: 50%;
     width: 100%;
-max-width: 1000px;
+    max-width: 1000px;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: flex;
+   display: flex;
+   flex-direction: column;
+  gap: 16px;
   }
 
-  .stats-text {
-min-width: max-content;
+.custom-tooltip {
+position: relative;
 }
+
+.custom-tooltip::before {
+content: "";
+position: absolute;
+width: 100%;
+height: 100%;
+inset: 0;
+background: ${({ theme }) => theme.background};
+z-index: -1;
+border: 1px solid ${({ theme }) => theme.text};
+opacity: .8;
+}
+
+  .stats-header {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+   }
 
   .stats {
     display: block;
@@ -107,6 +133,20 @@ min-width: max-content;
     color: ${({ theme }) => theme.stats};
     bottom: 10%;
   }
+
+.stats-footer {
+  display: flex;
+justify-content: space-between;
+}
+
+
+
+
+
+
+
+
+
   .wordscard-UI{
     display: block;
     max-width: 1000px;
