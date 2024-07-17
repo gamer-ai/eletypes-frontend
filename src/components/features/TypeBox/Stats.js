@@ -28,17 +28,62 @@ const Stats = ({
   statsCharCount,
   rawKeyStrokes,
   theme,
+  currCharIncorrectCount,
 }) => {
-  const [wpmHistory, setWpmHistory] = useState([0]);
+  const initialTypingTestHistory = [
+    {
+      error: 0,
+      wpm: 0,
+      raw: 0,
+    },
+  ];
+
+  const [typingTestHistory, setTypingTestHistory] = useState(
+    initialTypingTestHistory
+  );
+
   const language = localStorage.getItem("language");
 
-  const data = wpmHistory.map((history, index) => {
+  const accuracy = Math.round(statsCharCount[0]);
+  const roundedRawKpm = Math.round((rawKeyStrokes / countDownConstant) * 60.0);
+  const roundedWpm = Math.round(wpm);
+
+  const data = typingTestHistory.map((history, index) => {
     return {
-      wpm: history,
-      time: index,
+      error: history.error,
+      wpm: history.wpm,
+      raw: history.raw,
+      time: index + 1,
     };
   });
-  data.shift();
+
+  useEffect(() => {
+    // Reset history when user starts playing again
+    if (status === "started") {
+      setTypingTestHistory(initialTypingTestHistory);
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (status === "started" && countDown < countDownConstant - 1) {
+      // const validWpm = isFinite(roundedWpm) ? roundedWpm : 0; // Check if wpm is finite, otherwise use 0
+      // setErrorsHistory((prevErrorsHistory) => [
+      //   ...prevErrorsHistory,
+      //   statsCharCount[2],
+      // ]);
+      // setWpmHistory((prevWpmHistory) => [...prevWpmHistory, validWpm]);
+      // setRawHistory((prevRawHistory) => [...prevRawHistory, roundedRawKpm]);
+
+      setTypingTestHistory((prevTypingTestHistory) => [
+        ...prevTypingTestHistory,
+        {
+          error: currCharIncorrectCount,
+          wpm: roundedWpm,
+          raw: roundedRawKpm,
+        },
+      ]);
+    }
+  }, [countDown]);
 
   const primaryStatsTitleStyles = {
     color: theme.textTypeBox,
@@ -70,20 +115,6 @@ const Stats = ({
     lineHeight: "6px",
   };
 
-  useEffect(() => {
-    if (status === "started") {
-      setWpmHistory([0]); // Reset history when user starts playing again
-    }
-  }, [status]);
-
-  useEffect(() => {
-    if (status === "started") {
-      const roundedWpm = Math.round(wpm);
-      const validWpm = isFinite(roundedWpm) ? roundedWpm : 0; // Check if wpm is finite, otherwise use 0
-      setWpmHistory((prevWpmHistory) => [...prevWpmHistory, validWpm]);
-    }
-  }, [countDown]);
-
   const renderCharStats = () => (
     <Tooltip
       title={
@@ -105,6 +136,8 @@ const Stats = ({
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
+      console.log(payload[0].payload.error);
+      const payloadData = payload[0].payload;
       return (
         <div
           className="custom-tooltip"
@@ -119,14 +152,15 @@ const Stats = ({
           <p
             className="desc"
             style={tooltipStyles}
-          >{`Errors: ${statsCharCount[2]}`}</p>
+          >{`Errors: ${payloadData.error}`}</p>
           <p
             className="desc"
             style={tooltipStyles}
-          >{`WPM: ${payload[0].value}`}</p>
-          <p className="desc" style={tooltipStyles}>{`Raw: ${Math.round(
-            (rawKeyStrokes / countDownConstant) * 60.0
-          )}`}</p>
+          >{`WPM: ${payloadData.wpm}`}</p>
+          <p
+            className="desc"
+            style={tooltipStyles}
+          >{`Raw: ${payloadData.raw}`}</p>
         </div>
       );
     }
@@ -137,20 +171,14 @@ const Stats = ({
   const renderAccuracy = () => (
     <div style={{ marginTop: "16px" }}>
       <h2 style={primaryStatsTitleStyles}>ACC</h2>
-      <h1 style={primaryStatsValueStyles}>
-        {" "}
-        {Math.round(statsCharCount[0])} %
-      </h1>
+      <h1 style={primaryStatsValueStyles}>{accuracy} %</h1>
     </div>
   );
 
   const renderRawKpm = () => (
     <div>
       <p style={statsTitleStyles}>Raw</p>
-      <h2 style={statsValueStyles}>
-        {" "}
-        {Math.round((rawKeyStrokes / countDownConstant) * 60.0)}
-      </h2>
+      <h2 style={statsValueStyles}>{roundedRawKpm}</h2>
     </div>
   );
 
@@ -171,7 +199,7 @@ const Stats = ({
   const renderWpm = () => (
     <div>
       <h2 style={primaryStatsTitleStyles}>WPM</h2>
-      <h1 style={primaryStatsValueStyles}>{Math.round(wpm)}</h1>
+      <h1 style={primaryStatsValueStyles}>{roundedWpm}</h1>
     </div>
   );
 

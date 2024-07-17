@@ -56,6 +56,7 @@ const TypeBox = ({
   theme,
 }) => {
   const [play] = useSound(SOUND_MAP[soundType], { volume: 0.5 });
+  const [incorrectCharsCount, setIncorrectCharsCount] = useState(0);
 
   // local persist timer
   const [countDownConstant, setCountDownConstant] = useLocalPersistState(
@@ -449,6 +450,12 @@ const TypeBox = ({
       const prevCorrectness = checkPrev();
       // advance to next regardless prev correct/not
       if (prevCorrectness === true || prevCorrectness === false) {
+        if (
+          words[currWordIndex].split("").length > currInput.split("").length
+        ) {
+          setIncorrectCharsCount((prev) => prev + 1);
+        }
+
         // reset currInput
         setCurrInput("");
         // advance to next
@@ -619,6 +626,19 @@ const TypeBox = ({
     }
   };
 
+  useEffect(() => {
+    if (status !== "started") return;
+    const word = words[currWordIndex];
+    const char = word.split("")[currCharIndex];
+
+    if (char !== currChar && char !== undefined)
+      return setIncorrectCharsCount((prev) => prev + 1);
+  }, [currChar, status, currCharIndex]);
+
+  useEffect(() => {
+    console.log("incorrectCharsCount:", incorrectCharsCount);
+  }, [incorrectCharsCount]);
+
   const getCharClassName = (wordIdx, charIdx, char, word) => {
     const keyString = wordIdx + "." + charIdx;
     if (
@@ -651,6 +671,7 @@ const TypeBox = ({
       ) {
         return "caret-char-right-error";
       }
+
       return "error-char";
     }
     if (
@@ -775,6 +796,9 @@ const TypeBox = ({
           countDownConstant={countDownConstant}
           statsCharCount={statsCharCount}
           rawKeyStrokes={rawKeyStrokes}
+          currCharIncorrectCount={
+            Object.values(history).filter((e) => e === false).length
+          }
         ></Stats>
         <div className="restart-button" key="restart-button">
           <Grid container justifyContent="center" alignItems="center">
