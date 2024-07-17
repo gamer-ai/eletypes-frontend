@@ -76,9 +76,9 @@ export const GlobalStyles = createGlobalStyle`
     opacity: 0.7;
   }
   
-.bottomBar {
-z-index: 999;
-}
+  .bottomBar {
+    z-index: 999;
+  }
 
   .stats-overlay {
     position: fixed;
@@ -95,33 +95,33 @@ z-index: 999;
     max-width: 1000px;
     left: 50%;
     transform: translate(-50%, -50%);
-   display: flex;
-   flex-direction: column;
-  gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 
-.custom-tooltip {
-position: relative;
-}
+  .custom-tooltip {
+    position: relative;
+  }
 
-.custom-tooltip::before {
-content: "";
-position: absolute;
-width: 100%;
-height: 100%;
-inset: 0;
-background: ${({ theme }) => theme.background};
-z-index: -1;
-border: 1px solid ${({ theme }) => theme.textTypeBox};
-opacity: .9;
-}
+  .custom-tooltip::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    background: ${({ theme }) => theme.background};
+    z-index: -1;
+    border: 1px solid ${({ theme }) => theme.textTypeBox};
+    opacity: .9;
+  }
 
   .stats-header {
     width: 100%;
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 16px;
-   }
+  }
 
   .stats {
     display: block;
@@ -134,183 +134,9 @@ opacity: .9;
     bottom: 10%;
   }
 
-.stats-footer {
-  display: flex;
-justify-content: space-between;
-}
-
-
-
-
-
-
-
-
-
-  .wordscard-UI{
-    display: block;
-    max-width: 1000px;
-    margin-top: 150px;
-    margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    bottom: 10%;
-  }
-  .wordscard-UI-info{
-    margin-top: 30px;
-    margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    color: ${({ theme }) => theme.textTypeBox};
-    bottom: 10%;
-  }
-  .keyboard-stats {
+  .stats-footer {
     display: flex;
-    max-width: 1000px;
-    margin-top: 50px;
-    margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    color: ${({ theme }) => theme.stats};
-    bottom: 10%;
-    justify-content: center;
-    text-align: center;
-  }
-  .sub-header {
-    color: ${({ theme }) => theme.textTypeBox};
-    opacity: 0.5;
-    border-right: 2px solid;
-    animation: blinkingCursor 2s infinite;;
-    @keyframes blinkingCursor{
-      0%		{ border-right-color: ${({ theme }) => theme.stats};}
-      25%		{ border-right-color: transparent;}
-      50%		{ border-right-color: ${({ theme }) => theme.stats};}
-      75%		{border-right-color: transparent;}
-      100%	{border-right-color: ${({ theme }) => theme.stats};}
-    }
-  }
-  .type-box {
-    display: block;
-    max-width: 1000px;
-    height: 140px;
-    overflow: hidden;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
-    top: 10%;
-    @media only screen 
-    and (min-device-width: 375px) 
-    and (max-device-width: 812px) 
-    and (-webkit-min-device-pixel-ratio: 3) { 
-      top:200px;
-      width: 60%;
-    }
-  }
-  .type-box-chinese {
-    display: block;
-    max-width: 1000px;
-    height: 240px;
-    overflow: hidden;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative
-    top: 10%;
-    @media only screen 
-    and (min-device-width: 375px) 
-    and (max-device-width: 812px) 
-    and (-webkit-min-device-pixel-ratio: 3) { 
-      top:200px;
-      width: 60%;
-    }
-  }
-  .words{
-    color: ${({ theme }) => theme.textTypeBox};
-    font-size: 28px;
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    align-content: center;
-    user-select: none;
-  }
-  .word{
-    margin: 5px 5px;
-    display: flex;
-    padding-right: 2px;
-    border-bottom: 1px solid transparent;
-    border-top: 1px solid transparent;
-    scroll-margin: 4px;
-  }
-  .active-word{
-    animation: blinkingBackground 2s infinite;
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid;
-    @keyframes blinkingBackground{
-      0%		{ border-bottom-color: ${({ theme }) => theme.stats};}
-      25%		{ border-bottom-color: ${({ theme }) => theme.textTypeBox};}
-      50%		{ border-bottom-color: ${({ theme }) => theme.stats};}
-      75%		{border-bottom-color: ${({ theme }) => theme.textTypeBox};}
-      100%	{border-bottom-color: ${({ theme }) => theme.stats};}
-    };
-    scroll-margin: 4px;
-  }
-  .active-word-no-pulse{
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
-    scroll-margin: 4px;
-  }
-  .error-word{
-    border-bottom: 1px solid red;
-    scroll-margin: 4px;
-  }
-  .char{
-    border-left: 1px solid transparent;
-    border-right: 1px solid transparent;
-  }
-  .correct-char{
-    border-left: 1px solid transparent;
-    border-right: 1px solid transparent;
-    color: ${({ theme }) => theme.text};
-  }
-  .error-char{
-    border-left: 1px solid transparent;
-    border-right: 1px solid transparent;
-    color: red;
-  }
-  .caret-char-left{
-    border-left: 1px solid ${({ theme }) => theme.stats};
-    border-right: 1px solid transparent;
-  }
-  .caret-char-left-start{
-    border-left: 1px solid;
-    border-right: 1px solid transparent;
-    animation: blinkingCaretLeft 2s infinite;
-    animation-timing-function: ease;
-    @keyframes blinkingCaretLeft{
-      0%		{ border-left-color: ${({ theme }) => theme.stats};}
-      25%		{ border-left-color: ${({ theme }) => theme.textTypeBox};}
-      50%		{ border-left-color: ${({ theme }) => theme.stats};}
-      75%		{ border-left-color: ${({ theme }) => theme.textTypeBox};}
-      100%	{ border-left-color: ${({ theme }) => theme.stats};}
-    }
-  }
-  .caret-char-right{
-    border-right: 1px solid ${({ theme }) => theme.stats};
-    border-left: 1x solid transparent;
-  }
-  .caret-char-right-correct{
-    color: ${({ theme }) => theme.text};
-    border-right: 1px solid ${({ theme }) => theme.stats};
-    border-left: 1px solid transparent;
-  }
-  .caret-char-right-error{
-    color: red;
-    border-right: 1px solid ${({ theme }) => theme.stats};
-    border-left: 1px solid transparent;
-  }
-  .caret-extra-char-right-error{
-    color: red;
-    border-right: 1px solid ${({ theme }) => theme.stats};
-    border-left: 1px solid transparent;
+    justify-content: space-between;
   }
 
   .hidden-input{
