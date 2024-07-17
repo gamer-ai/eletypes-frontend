@@ -11,15 +11,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-// 120s
-// Increment by 4
-// 60s
-// Increment by 2
-// 30s
-// Increment by 1
-// 15s
-// Increment by 1
-
 const Stats = ({
   status,
   wpm,
@@ -28,13 +19,14 @@ const Stats = ({
   statsCharCount,
   rawKeyStrokes,
   theme,
+  renderResetButton,
   currCharIncorrectCount,
 }) => {
   const initialTypingTestHistory = [
     {
-      error: 0,
       wpm: 0,
       raw: 0,
+      time: 1, // Start time from 1
     },
   ];
 
@@ -48,12 +40,11 @@ const Stats = ({
   const roundedRawKpm = Math.round((rawKeyStrokes / countDownConstant) * 60.0);
   const roundedWpm = Math.round(wpm);
 
-  const data = typingTestHistory.map((history, index) => {
+  const data = typingTestHistory.map((history) => {
     return {
-      error: history.error,
       wpm: history.wpm,
       raw: history.raw,
-      time: index + 1,
+      time: history.time, // Use the time property from history
     };
   });
 
@@ -66,22 +57,40 @@ const Stats = ({
 
   useEffect(() => {
     if (status === "started" && countDown < countDownConstant - 1) {
-      // const validWpm = isFinite(roundedWpm) ? roundedWpm : 0; // Check if wpm is finite, otherwise use 0
-      // setErrorsHistory((prevErrorsHistory) => [
-      //   ...prevErrorsHistory,
-      //   statsCharCount[2],
-      // ]);
-      // setWpmHistory((prevWpmHistory) => [...prevWpmHistory, validWpm]);
-      // setRawHistory((prevRawHistory) => [...prevRawHistory, roundedRawKpm]);
+      let shouldRecord = false;
+      let increment = 1;
 
-      setTypingTestHistory((prevTypingTestHistory) => [
-        ...prevTypingTestHistory,
-        {
-          error: currCharIncorrectCount,
-          wpm: roundedWpm,
-          raw: roundedRawKpm,
-        },
-      ]);
+      switch (countDownConstant) {
+        case 90:
+          shouldRecord = countDown % 4 === 3;
+          increment = 4;
+          break;
+        case 60:
+          shouldRecord = countDown % 2 === 1;
+          increment = 2;
+          break;
+        case 30:
+        case 15:
+          shouldRecord = true;
+          increment = 1;
+          break;
+        default:
+          shouldRecord = true;
+          increment = 1;
+      }
+
+      if (shouldRecord) {
+        const newTime = 1 + typingTestHistory.length * increment;
+
+        setTypingTestHistory((prevTypingTestHistory) => [
+          ...prevTypingTestHistory,
+          {
+            wpm: roundedWpm,
+            raw: roundedRawKpm,
+            time: newTime,
+          },
+        ]);
+      }
     }
   }, [countDown]);
 
@@ -111,8 +120,11 @@ const Stats = ({
   };
 
   const tooltipStyles = {
-    fontSize: "12px",
+    fontSize: "14px",
     lineHeight: "6px",
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
   };
 
   const renderCharStats = () => (
@@ -134,6 +146,14 @@ const Stats = ({
     </Tooltip>
   );
 
+  const renderIndicator = (color) => {
+    return (
+      <div
+        style={{ backgroundColor: color, height: "12px", width: "24px" }}
+      ></div>
+    );
+  };
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       console.log(payload[0].payload.error);
@@ -146,21 +166,17 @@ const Stats = ({
             paddingBlock: "2px",
           }}
         >
-          <p className="label" style={{ fontSize: "14px", fontWeight: "bold" }}>
+          <p className="label" style={{ fontSize: "12px", fontWeight: "bold" }}>
             {label}
           </p>
-          <p
-            className="desc"
-            style={tooltipStyles}
-          >{`Errors: ${payloadData.error}`}</p>
-          <p
-            className="desc"
-            style={tooltipStyles}
-          >{`WPM: ${payloadData.wpm}`}</p>
-          <p
-            className="desc"
-            style={tooltipStyles}
-          >{`Raw: ${payloadData.raw}`}</p>
+          <p className="desc" style={tooltipStyles}>
+            {renderIndicator(theme.text)}
+            {`WPM: ${payloadData.wpm}`}
+          </p>
+          <p className="desc" style={tooltipStyles}>
+            {renderIndicator(theme.textTypeBox)}
+            {`Raw: ${payloadData.raw}`}
+          </p>
         </div>
       );
     }
@@ -215,21 +231,37 @@ const Stats = ({
         height="100%"
         data={data}
         margin={{
-          top: 5,
-          right: 0,
+          top: 12,
+          right: 12,
           left: 0,
-          bottom: 5,
+          bottom: 0,
         }}
       >
-        <CartesianGrid stroke={theme.text} opacity={0.15} />
-        <XAxis dataKey="time" stroke={theme.text} opacity={0.25} />
-        <YAxis stroke={theme.text} opacity={0.25} />
-        <TooltipChart content={<CustomTooltip />} />
+        <CartesianGrid
+          vertical={false}
+          horizontal={false}
+          stroke={theme.text}
+          opacity={0.15}
+        />
+        <XAxis
+          dataKey="time"
+          stroke={theme.text}
+          tickMargin={10}
+          opacity={0.25}
+        />
+        <YAxis stroke={theme.text} tickMargin={10} opacity={0.25} />
+        <TooltipChart cursor={false} content={<CustomTooltip />} />{" "}
         <Line
           type="monotone"
           dataKey="wpm"
           stroke={theme.text}
-          activeDot={{ r: 8 }}
+          activeDot={{ r: 6 }}
+        />
+        <Line
+          type="monotone"
+          dataKey="raw"
+          stroke={theme.textTypeBox}
+          activeDot={{ r: 6 }}
         />
       </LineChart>
     </ResponsiveContainer>
@@ -254,6 +286,7 @@ const Stats = ({
               {renderCharStats()}
               {renderTime()}
             </section>
+            <section>{renderResetButton()}</section>
           </section>
         </div>
       )}

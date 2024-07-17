@@ -97,7 +97,7 @@ z-index: 999;
     transform: translate(-50%, -50%);
    display: flex;
    flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   }
 
 .custom-tooltip {
@@ -112,8 +112,8 @@ height: 100%;
 inset: 0;
 background: ${({ theme }) => theme.background};
 z-index: -1;
-border: 1px solid ${({ theme }) => theme.text};
-opacity: .8;
+border: 1px solid ${({ theme }) => theme.textTypeBox};
+opacity: .9;
 }
 
   .stats-header {
