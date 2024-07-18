@@ -25,7 +25,7 @@ const Stats = ({
   const initialTypingTestHistory = [
     {
       wpm: 0,
-      raw: 0,
+      kpm: 0,
       time: 1, // Start time from 1
     },
   ];
@@ -38,14 +38,14 @@ const Stats = ({
 
   const accuracy = Math.round(statsCharCount[0]);
   const roundedRawWpm = Math.round(
-    (rawKeyStrokes / 5 / (countDownConstant - time)) * 60.0
+    (rawKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0
   );
   const roundedWpm = Math.round(wpm);
 
   const data = typingTestHistory.map((history) => {
     return {
       wpm: history.wpm,
-      raw: history.raw,
+      kpm: history.kpm,
       time: history.time, // Use the time property from history
     };
   });
@@ -88,7 +88,7 @@ const Stats = ({
           ...prevTypingTestHistory,
           {
             wpm: roundedWpm,
-            raw: roundedRawWpm,
+            kpm: roundedRawWpm,
             time: newTime,
           },
         ]);
@@ -127,6 +127,17 @@ const Stats = ({
     display: "flex",
     alignItems: "center",
     gap: "8px",
+  };
+
+  const getFormattedLanguageLanguageName = (value) => {
+    switch (value) {
+      case "ENGLISH_MODE":
+        return "Eng";
+      case "CHINESE_MODE":
+        return "Chn";
+      default:
+        return "Eng";
+    }
   };
 
   const renderCharStats = () => (
@@ -176,7 +187,7 @@ const Stats = ({
           </p>
           <p className="desc" style={tooltipStyles}>
             {renderIndicator(theme.textTypeBox)}
-            {`Raw: ${payloadData.raw}`}
+            {`KPM: ${payloadData.kpm}`}
           </p>
         </div>
       );
@@ -195,14 +206,16 @@ const Stats = ({
   const renderRawKpm = () => (
     <div>
       <p style={statsTitleStyles}>KPM</p>
-      <h2 style={statsValueStyles}>{roundedRawKpm}</h2>
+      <h2 style={statsValueStyles}>{roundedRawWpm}</h2>
     </div>
   );
 
   const renderLanguage = () => (
     <div>
       <p style={statsTitleStyles}>Test Mode</p>
-      <h2 style={statsValueStyles}>{language}</h2>
+      <h2 style={statsValueStyles}>
+        {getFormattedLanguageLanguageName(language)}
+      </h2>
     </div>
   );
 
@@ -260,7 +273,7 @@ const Stats = ({
         />
         <Line
           type="monotone"
-          dataKey="raw"
+          dataKey="kpm"
           stroke={theme.textTypeBox}
           activeDot={{ r: 6 }}
         />
