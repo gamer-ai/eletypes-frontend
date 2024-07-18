@@ -1008,6 +1008,8 @@ const TypeBox = ({
     );
   };
 
+  console.log(status);
+
   return (
     <div onClick={handleInputFocus}>
       <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
@@ -1084,7 +1086,7 @@ const TypeBox = ({
             Object.values(history).filter((e) => e === false).length
           }
         ></Stats>
-        {renderResetButton()}
+        {status !== 'finished' && renderResetButton()}
       </div>
       <input
         key="hidden-input"
