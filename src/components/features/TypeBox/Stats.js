@@ -180,7 +180,8 @@ const Stats = ({
           }}
         >
           <p className="label" style={{ fontSize: "12px", fontWeight: "bold" }}>
-            {`Time: ${label} s`}</p>
+            {`Time: ${label} s`}
+          </p>
           <p className="desc" style={tooltipStyles}>
             {renderIndicator(theme.textTypeBox)}
             {`raw WPM: ${payloadData.rawWpm}`}
@@ -285,7 +286,13 @@ const Stats = ({
 
   return (
     <>
-      <h3>{countDown} s</h3>
+      {status !== "finished" && (
+        <>
+          <h3>{countDown} s</h3>
+          <h3>WPM: {Math.round(wpm)}</h3>
+        </>
+      )}
+
       {status === "finished" && (
         <div className="stats-overlay">
           <section className="stats-chart">
