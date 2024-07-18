@@ -430,7 +430,7 @@ export const GlobalStyles = createGlobalStyle`
     font-family: ${({ theme }) => theme.fontFamily};
     overflow: auto;
     resize: none;
-    width: 100vw;
+    width: 100%;
     height: 70vh;
     margin-left: auto;
     margin-right: auto;

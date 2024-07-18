@@ -1071,6 +1071,7 @@ const TypeBox = ({
           countDownConstant={countDownConstant}
           statsCharCount={statsCharCount}
           rawKeyStrokes={rawKeyStrokes}
+          wpmKeyStrokes = {wpmKeyStrokes}
           renderResetButton={renderResetButton}
           currCharIncorrectCount={
             Object.values(history).filter((e) => e === false).length

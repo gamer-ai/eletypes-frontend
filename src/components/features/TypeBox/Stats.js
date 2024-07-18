@@ -18,15 +18,23 @@ const Stats = ({
   countDownConstant,
   statsCharCount,
   rawKeyStrokes,
+  wpmKeyStrokes,
   theme,
   renderResetButton,
   currCharIncorrectCount,
 }) => {
+  const roundedWpm = Math.round(
+    (wpmKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0
+  );
+
+  const roundedRawWpm = Math.round(
+    (rawKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0
+  );
   const initialTypingTestHistory = [
     {
       wpm: 0,
-      kpm: 0,
-      time: 1, // Start time from 1
+      rawWpm: 0,
+      time: 0, // Start time from 0, but truncate time 0 when rendering
     },
   ];
 
@@ -37,15 +45,11 @@ const Stats = ({
   const language = localStorage.getItem("language");
 
   const accuracy = Math.round(statsCharCount[0]);
-  const roundedRawWpm = Math.round(
-    (rawKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0
-  );
-  const roundedWpm = Math.round(wpm);
 
   const data = typingTestHistory.map((history) => {
     return {
       wpm: history.wpm,
-      kpm: history.kpm,
+      rawWpm: history.rawWpm,
       time: history.time, // Use the time property from history
     };
   });
@@ -58,18 +62,15 @@ const Stats = ({
   }, [status]);
 
   useEffect(() => {
-    if (status === "started" && countDown < countDownConstant - 1) {
+    if (status === "started" && countDown < countDownConstant) {
       let shouldRecord = false;
       let increment = 1;
 
       switch (countDownConstant) {
         case 90:
-          shouldRecord = countDown % 4 === 3;
-          increment = 4;
-          break;
         case 60:
-          shouldRecord = countDown % 2 === 1;
-          increment = 2;
+          shouldRecord = countDown % 5 === 0;
+          increment = 5;
           break;
         case 30:
         case 15:
@@ -82,13 +83,13 @@ const Stats = ({
       }
 
       if (shouldRecord) {
-        const newTime = 1 + typingTestHistory.length * increment;
+        const newTime = typingTestHistory.length * increment;
 
         setTypingTestHistory((prevTypingTestHistory) => [
           ...prevTypingTestHistory,
           {
             wpm: roundedWpm,
-            kpm: roundedRawWpm,
+            rawWpm: roundedRawWpm,
             time: newTime,
           },
         ]);
@@ -132,11 +133,11 @@ const Stats = ({
   const getFormattedLanguageLanguageName = (value) => {
     switch (value) {
       case "ENGLISH_MODE":
-        return "Eng";
+        return "eng";
       case "CHINESE_MODE":
-        return "Chn";
+        return "chn";
       default:
-        return "Eng";
+        return "eng";
     }
   };
 
@@ -179,15 +180,14 @@ const Stats = ({
           }}
         >
           <p className="label" style={{ fontSize: "12px", fontWeight: "bold" }}>
-            {label}
+            {`Time: ${label} s`}</p>
+          <p className="desc" style={tooltipStyles}>
+            {renderIndicator(theme.textTypeBox)}
+            {`raw WPM: ${payloadData.rawWpm}`}
           </p>
           <p className="desc" style={tooltipStyles}>
             {renderIndicator(theme.text)}
             {`WPM: ${payloadData.wpm}`}
-          </p>
-          <p className="desc" style={tooltipStyles}>
-            {renderIndicator(theme.textTypeBox)}
-            {`KPM: ${payloadData.kpm}`}
           </p>
         </div>
       );
@@ -206,7 +206,9 @@ const Stats = ({
   const renderRawKpm = () => (
     <div>
       <p style={statsTitleStyles}>KPM</p>
-      <h2 style={statsValueStyles}>{roundedRawWpm}</h2>
+      <h2 style={statsValueStyles}>
+        {Math.round((rawKeyStrokes / countDownConstant) * 60.0)}
+      </h2>
     </div>
   );
 
@@ -229,7 +231,7 @@ const Stats = ({
   const renderWpm = () => (
     <div>
       <h2 style={primaryStatsTitleStyles}>WPM</h2>
-      <h1 style={primaryStatsValueStyles}>{roundedWpm}</h1>
+      <h1 style={primaryStatsValueStyles}>{Math.round(wpm)}</h1>
     </div>
   );
 
@@ -243,7 +245,7 @@ const Stats = ({
       <LineChart
         width="100%"
         height="100%"
-        data={data}
+        data={data.filter((d) => d.time !== 0)}
         margin={{
           top: 12,
           right: 12,
@@ -267,14 +269,14 @@ const Stats = ({
         <TooltipChart cursor={false} content={<CustomTooltip />} />{" "}
         <Line
           type="monotone"
-          dataKey="wpm"
-          stroke={theme.text}
+          dataKey="rawWpm"
+          stroke={theme.textTypeBox}
           activeDot={{ r: 6 }}
         />
         <Line
           type="monotone"
-          dataKey="kpm"
-          stroke={theme.textTypeBox}
+          dataKey="wpm"
+          stroke={theme.text}
           activeDot={{ r: 6 }}
         />
       </LineChart>
