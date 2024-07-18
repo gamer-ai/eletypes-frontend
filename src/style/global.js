@@ -50,6 +50,7 @@ export const GlobalStyles = createGlobalStyle`
     left:0;
     width: 100%;
     text-align: center;
+    z-index: 999;
   }
   .bottom-info {
     color: ${({ theme }) => theme.title};
