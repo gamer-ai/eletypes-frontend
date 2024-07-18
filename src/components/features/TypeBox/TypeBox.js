@@ -53,8 +53,10 @@ const TypeBox = ({
   soundMode,
   soundType,
   handleInputFocus,
+  theme,
 }) => {
   const [play] = useSound(SOUND_MAP[soundType], { volume: 0.5 });
+  const [incorrectCharsCount, setIncorrectCharsCount] = useState(0);
 
   // local persist timer
   const [countDownConstant, setCountDownConstant] = useLocalPersistState(
@@ -84,14 +86,14 @@ const TypeBox = ({
   const [numberAddOn, setNumberAddOn] = useLocalPersistState(
     false,
     NUMBER_ADDON_KEY
-  )
+  );
 
   // local persist words add on for symbol
   const [symbolAddOn, setSymbolAddOn] = useLocalPersistState(
     false,
     SYMBOL_ADDON_KEY
-  )
-  
+  );
+
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
 
@@ -103,12 +105,26 @@ const TypeBox = ({
     if (e.keyCode === 13 || e.keyCode === 9) {
       e.preventDefault();
       setOpenRestart(false);
-      reset(countDownConstant, difficulty, language, numberAddOn, symbolAddOn, false);
+      reset(
+        countDownConstant,
+        difficulty,
+        language,
+        numberAddOn,
+        symbolAddOn,
+        false
+      );
     } // press space to redo
     else if (e.keyCode === 32) {
       e.preventDefault();
       setOpenRestart(false);
-      reset(countDownConstant, difficulty, language, numberAddOn, symbolAddOn, true);
+      reset(
+        countDownConstant,
+        difficulty,
+        language,
+        numberAddOn,
+        symbolAddOn,
+        true
+      );
     } else {
       e.preventDefault();
       setOpenRestart(false);
@@ -121,10 +137,21 @@ const TypeBox = ({
   // set up words state
   const [wordsDict, setWordsDict] = useState(() => {
     if (language === ENGLISH_MODE) {
-      return wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, ENGLISH_MODE, numberAddOn, symbolAddOn);
+      return wordsGenerator(
+        DEFAULT_WORDS_COUNT,
+        difficulty,
+        ENGLISH_MODE,
+        numberAddOn,
+        symbolAddOn
+      );
     }
     if (language === CHINESE_MODE) {
-      return chineseWordsGenerator(difficulty, CHINESE_MODE, numberAddOn, symbolAddOn);
+      return chineseWordsGenerator(
+        difficulty,
+        CHINESE_MODE,
+        numberAddOn,
+        symbolAddOn
+      );
     }
   });
 
@@ -203,22 +230,51 @@ const TypeBox = ({
     if (
       currWordIndex !== 0 &&
       wordSpanRefs[currWordIndex].current.offsetLeft <
-      wordSpanRefs[currWordIndex - 1].current.offsetLeft
+        wordSpanRefs[currWordIndex - 1].current.offsetLeft
     ) {
       wordSpanRefs[currWordIndex - 1].current.scrollIntoView();
     } else {
       return;
     }
-  }, [currWordIndex, wordSpanRefs, difficulty, language, numberAddOn, symbolAddOn]);
+  }, [
+    currWordIndex,
+    wordSpanRefs,
+    difficulty,
+    language,
+    numberAddOn,
+    symbolAddOn,
+  ]);
 
-  const reset = (newCountDown, difficulty, language, newNumberAddOn, newSymbolAddOn, isRedo) => {
+  const reset = (
+    newCountDown,
+    difficulty,
+    language,
+    newNumberAddOn,
+    newSymbolAddOn,
+    isRedo
+  ) => {
     setStatus("waiting");
     if (!isRedo) {
       if (language === CHINESE_MODE) {
-        setWordsDict(chineseWordsGenerator(difficulty, language, newNumberAddOn, newSymbolAddOn));
+        setWordsDict(
+          chineseWordsGenerator(
+            difficulty,
+            language,
+            newNumberAddOn,
+            newSymbolAddOn
+          )
+        );
       }
       if (language === ENGLISH_MODE) {
-        setWordsDict(wordsGenerator(DEFAULT_WORDS_COUNT, difficulty, language, newNumberAddOn, newSymbolAddOn));
+        setWordsDict(
+          wordsGenerator(
+            DEFAULT_WORDS_COUNT,
+            difficulty,
+            language,
+            newNumberAddOn,
+            newSymbolAddOn
+          )
+        );
       }
     }
     setNumberAddOn(newNumberAddOn);
@@ -394,6 +450,12 @@ const TypeBox = ({
       const prevCorrectness = checkPrev();
       // advance to next regardless prev correct/not
       if (prevCorrectness === true || prevCorrectness === false) {
+        if (
+          words[currWordIndex].split("").length > currInput.split("").length
+        ) {
+          setIncorrectCharsCount((prev) => prev + 1);
+        }
+
         // reset currInput
         setCurrInput("");
         // advance to next
@@ -564,6 +626,19 @@ const TypeBox = ({
     }
   };
 
+  useEffect(() => {
+    if (status !== "started") return;
+    const word = words[currWordIndex];
+    const char = word.split("")[currCharIndex];
+
+    if (char !== currChar && char !== undefined)
+      return setIncorrectCharsCount((prev) => prev + 1);
+  }, [currChar, status, currCharIndex]);
+
+  useEffect(() => {
+    // console.log("incorrectCharsCount:", incorrectCharsCount);
+  }, [incorrectCharsCount]);
+
   const getCharClassName = (wordIdx, charIdx, char, word) => {
     const keyString = wordIdx + "." + charIdx;
     if (
@@ -596,6 +671,7 @@ const TypeBox = ({
       ) {
         return "caret-char-right-error";
       }
+
       return "error-char";
     }
     if (
@@ -654,6 +730,281 @@ const TypeBox = ({
       return "active-button";
     }
     return "inactive-button";
+  };
+
+  const renderResetButton = () => {
+    return (
+      <div className="restart-button" key="restart-button">
+        <Grid container justifyContent="center" alignItems="center">
+          <Box display="flex" flexDirection="row">
+            <IconButton
+              aria-label="redo"
+              color="secondary"
+              size="medium"
+              onClick={() => {
+                reset(
+                  countDownConstant,
+                  difficulty,
+                  language,
+                  numberAddOn,
+                  symbolAddOn,
+                  true
+                );
+              }}
+            >
+              <Tooltip title={REDO_BUTTON_TOOLTIP_TITLE}>
+                <UndoIcon />
+              </Tooltip>
+            </IconButton>
+            <IconButton
+              aria-label="restart"
+              color="secondary"
+              size="medium"
+              onClick={() => {
+                reset(
+                  countDownConstant,
+                  difficulty,
+                  language,
+                  numberAddOn,
+                  symbolAddOn,
+                  false
+                );
+              }}
+            >
+              <Tooltip title={RESTART_BUTTON_TOOLTIP_TITLE}>
+                <RestartAltIcon />
+              </Tooltip>
+            </IconButton>
+            {menuEnabled && (
+              <>
+                <IconButton
+                  onClick={() => {
+                    reset(
+                      COUNT_DOWN_90,
+                      difficulty,
+                      language,
+                      numberAddOn,
+                      symbolAddOn,
+                      false
+                    );
+                  }}
+                >
+                  <span className={getTimerButtonClassName(COUNT_DOWN_90)}>
+                    {COUNT_DOWN_90}
+                  </span>
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    reset(
+                      COUNT_DOWN_60,
+                      difficulty,
+                      language,
+                      numberAddOn,
+                      symbolAddOn,
+                      false
+                    );
+                  }}
+                >
+                  <span className={getTimerButtonClassName(COUNT_DOWN_60)}>
+                    {COUNT_DOWN_60}
+                  </span>
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    reset(
+                      COUNT_DOWN_30,
+                      difficulty,
+                      language,
+                      numberAddOn,
+                      symbolAddOn,
+                      false
+                    );
+                  }}
+                >
+                  <span className={getTimerButtonClassName(COUNT_DOWN_30)}>
+                    {COUNT_DOWN_30}
+                  </span>
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    reset(
+                      COUNT_DOWN_15,
+                      difficulty,
+                      language,
+                      numberAddOn,
+                      symbolAddOn,
+                      false
+                    );
+                  }}
+                >
+                  <span className={getTimerButtonClassName(COUNT_DOWN_15)}>
+                    {COUNT_DOWN_15}
+                  </span>
+                </IconButton>
+              </>
+            )}
+          </Box>
+          {menuEnabled && (
+            <Box display="flex" flexDirection="row">
+              <IconButton
+                onClick={() => {
+                  reset(
+                    countDownConstant,
+                    DEFAULT_DIFFICULTY,
+                    language,
+                    numberAddOn,
+                    symbolAddOn,
+                    false
+                  );
+                }}
+              >
+                <Tooltip
+                  title={
+                    language === ENGLISH_MODE
+                      ? DEFAULT_DIFFICULTY_TOOLTIP_TITLE
+                      : DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE
+                  }
+                >
+                  <span
+                    className={getDifficultyButtonClassName(DEFAULT_DIFFICULTY)}
+                  >
+                    {DEFAULT_DIFFICULTY}
+                  </span>
+                </Tooltip>
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  reset(
+                    countDownConstant,
+                    HARD_DIFFICULTY,
+                    language,
+                    numberAddOn,
+                    symbolAddOn,
+                    false
+                  );
+                }}
+              >
+                <Tooltip
+                  title={
+                    language === ENGLISH_MODE
+                      ? HARD_DIFFICULTY_TOOLTIP_TITLE
+                      : HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE
+                  }
+                >
+                  <span
+                    className={getDifficultyButtonClassName(HARD_DIFFICULTY)}
+                  >
+                    {HARD_DIFFICULTY}
+                  </span>
+                </Tooltip>
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  reset(
+                    countDownConstant,
+                    difficulty,
+                    language,
+                    !numberAddOn,
+                    symbolAddOn,
+                    false
+                  );
+                }}
+              >
+                <Tooltip title={NUMBER_ADDON_TOOLTIP_TITLE}>
+                  <span className={getAddOnButtonClassName(numberAddOn)}>
+                    {NUMBER_ADDON}
+                  </span>
+                </Tooltip>
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  reset(
+                    countDownConstant,
+                    difficulty,
+                    language,
+                    numberAddOn,
+                    !symbolAddOn,
+                    false
+                  );
+                }}
+              >
+                <Tooltip title={SYMBOL_ADDON_TOOLTIP_TITLE}>
+                  <span className={getAddOnButtonClassName(symbolAddOn)}>
+                    {SYMBOL_ADDON}
+                  </span>
+                </Tooltip>
+              </IconButton>
+              <IconButton>
+                {" "}
+                <span className="menu-separator"> | </span>{" "}
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  reset(
+                    countDownConstant,
+                    difficulty,
+                    ENGLISH_MODE,
+                    numberAddOn,
+                    symbolAddOn,
+                    false
+                  );
+                }}
+              >
+                <Tooltip title={ENGLISH_MODE_TOOLTIP_TITLE}>
+                  <span className={getLanguageButtonClassName(ENGLISH_MODE)}>
+                    eng
+                  </span>
+                </Tooltip>
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  reset(
+                    countDownConstant,
+                    difficulty,
+                    CHINESE_MODE,
+                    numberAddOn,
+                    symbolAddOn,
+                    false
+                  );
+                }}
+              >
+                <Tooltip title={CHINESE_MODE_TOOLTIP_TITLE}>
+                  <span className={getLanguageButtonClassName(CHINESE_MODE)}>
+                    chn
+                  </span>
+                </Tooltip>
+              </IconButton>
+            </Box>
+          )}
+          {menuEnabled && (
+            <Box display="flex" flexDirection="row">
+              <IconButton
+                onClick={() => {
+                  setPacingStyle(PACING_PULSE);
+                }}
+              >
+                <Tooltip title={PACING_PULSE_TOOLTIP}>
+                  <span className={getPacingStyleButtonClassName(PACING_PULSE)}>
+                    {PACING_PULSE}
+                  </span>
+                </Tooltip>
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  setPacingStyle(PACING_CARET);
+                }}
+              >
+                <Tooltip title={PACING_CARET_TOOLTIP}>
+                  <span className={getPacingStyleButtonClassName(PACING_CARET)}>
+                    {PACING_CARET}
+                  </span>
+                </Tooltip>
+              </IconButton>
+            </Box>
+          )}
+        </Grid>
+      </div>
+    );
   };
 
   return (
@@ -715,239 +1066,18 @@ const TypeBox = ({
         <Stats
           status={status}
           wpm={wpm}
+          theme={theme}
           countDown={countDown}
           countDownConstant={countDownConstant}
           statsCharCount={statsCharCount}
           rawKeyStrokes={rawKeyStrokes}
+          wpmKeyStrokes = {wpmKeyStrokes}
+          renderResetButton={renderResetButton}
+          currCharIncorrectCount={
+            Object.values(history).filter((e) => e === false).length
+          }
         ></Stats>
-        <div className="restart-button" key="restart-button">
-          <Grid container justifyContent="center" alignItems="center">
-            <Box display="flex" flexDirection="row">
-              <IconButton
-                aria-label="redo"
-                color="secondary"
-                size="medium"
-                onClick={() => {
-                  reset(countDownConstant, difficulty, language, numberAddOn, symbolAddOn, true);
-                }}
-              >
-                <Tooltip title={REDO_BUTTON_TOOLTIP_TITLE}>
-                  <UndoIcon />
-                </Tooltip>
-              </IconButton>
-              <IconButton
-                aria-label="restart"
-                color="secondary"
-                size="medium"
-                onClick={() => {
-                  reset(countDownConstant, difficulty, language,numberAddOn, symbolAddOn, false);
-                }}
-              >
-                <Tooltip title={RESTART_BUTTON_TOOLTIP_TITLE}>
-                  <RestartAltIcon />
-                </Tooltip>
-              </IconButton>
-              {menuEnabled && (
-                <>
-                  <IconButton
-                    onClick={() => {
-                      reset(COUNT_DOWN_90, difficulty, language,numberAddOn, symbolAddOn, false);
-                    }}
-                  >
-                    <span className={getTimerButtonClassName(COUNT_DOWN_90)}>
-                      {COUNT_DOWN_90}
-                    </span>
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      reset(COUNT_DOWN_60, difficulty, language, numberAddOn, symbolAddOn,false);
-                    }}
-                  >
-                    <span className={getTimerButtonClassName(COUNT_DOWN_60)}>
-                      {COUNT_DOWN_60}
-                    </span>
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      reset(COUNT_DOWN_30, difficulty, language,numberAddOn, symbolAddOn, false);
-                    }}
-                  >
-                    <span className={getTimerButtonClassName(COUNT_DOWN_30)}>
-                      {COUNT_DOWN_30}
-                    </span>
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      reset(COUNT_DOWN_15, difficulty, language,numberAddOn, symbolAddOn, false);
-                    }}
-                  >
-                    <span className={getTimerButtonClassName(COUNT_DOWN_15)}>
-                      {COUNT_DOWN_15}
-                    </span>
-                  </IconButton>
-                </>
-              )}
-            </Box>
-            {menuEnabled && (
-              <Box display="flex" flexDirection="row">
-                <IconButton
-                  onClick={() => {
-                    reset(
-                      countDownConstant,
-                      DEFAULT_DIFFICULTY,
-                      language,
-                      numberAddOn, symbolAddOn,
-                      false
-                    );
-                  }}
-                >
-                  <Tooltip
-                    title={
-                      language === ENGLISH_MODE
-                        ? DEFAULT_DIFFICULTY_TOOLTIP_TITLE
-                        : DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE
-                    }
-                  >
-                    <span
-                      className={getDifficultyButtonClassName(
-                        DEFAULT_DIFFICULTY
-                      )}
-                    >
-                      {DEFAULT_DIFFICULTY}
-                    </span>
-                  </Tooltip>
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    reset(countDownConstant, HARD_DIFFICULTY, language, numberAddOn, symbolAddOn,false);
-                  }}
-                >
-                  <Tooltip
-                    title={
-                      language === ENGLISH_MODE
-                        ? HARD_DIFFICULTY_TOOLTIP_TITLE
-                        : HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE
-                    }
-                  >
-                    <span
-                      className={getDifficultyButtonClassName(HARD_DIFFICULTY)}
-                    >
-                      {HARD_DIFFICULTY}
-                    </span>
-                  </Tooltip>
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    reset(
-                      countDownConstant,
-                      difficulty,
-                      language,
-                      !numberAddOn,
-                      symbolAddOn,
-                      false
-                    );
-                  }}
-                >
-                  <Tooltip
-                    title={
-                      NUMBER_ADDON_TOOLTIP_TITLE
-                    }
-                  >
-                    <span
-                      className={getAddOnButtonClassName(
-                        numberAddOn
-                      )}
-                    >
-                      {NUMBER_ADDON}
-                    </span>
-                  </Tooltip>
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    reset(
-                      countDownConstant,
-                      difficulty,
-                      language,
-                      numberAddOn,
-                      !symbolAddOn,
-                      false
-                    );
-                  }}
-                >
-                  <Tooltip
-                    title={
-                      SYMBOL_ADDON_TOOLTIP_TITLE
-                    }
-                  >
-                    <span
-                      className={getAddOnButtonClassName(
-                        symbolAddOn
-                      )}
-                    >
-                      {SYMBOL_ADDON}
-                    </span>
-                  </Tooltip>
-                </IconButton>
-                <IconButton>
-                  {" "}
-                  <span className="menu-separator"> | </span>{" "}
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    reset(countDownConstant, difficulty, ENGLISH_MODE, numberAddOn, symbolAddOn,false);
-                  }}
-                >
-                  <Tooltip title={ENGLISH_MODE_TOOLTIP_TITLE}>
-                    <span className={getLanguageButtonClassName(ENGLISH_MODE)}>
-                      eng
-                    </span>
-                  </Tooltip>
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    reset(countDownConstant, difficulty, CHINESE_MODE,numberAddOn, symbolAddOn, false);
-                  }}
-                >
-                  <Tooltip title={CHINESE_MODE_TOOLTIP_TITLE}>
-                    <span className={getLanguageButtonClassName(CHINESE_MODE)}>
-                      chn
-                    </span>
-                  </Tooltip>
-                </IconButton>
-              </Box>
-            )}
-            {menuEnabled && (
-              <Box display="flex" flexDirection="row">
-                <IconButton
-                  onClick={() => {
-                    setPacingStyle(PACING_PULSE);
-                  }}
-                >
-                  <Tooltip title={PACING_PULSE_TOOLTIP}>
-                    <span
-                      className={getPacingStyleButtonClassName(PACING_PULSE)}
-                    >
-                      {PACING_PULSE}
-                    </span>
-                  </Tooltip>
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    setPacingStyle(PACING_CARET);
-                  }}
-                >
-                  <Tooltip title={PACING_CARET_TOOLTIP}>
-                    <span
-                      className={getPacingStyleButtonClassName(PACING_CARET)}
-                    >
-                      {PACING_CARET}
-                    </span>
-                  </Tooltip>
-                </IconButton>
-              </Box>
-            )}
-          </Grid>
-        </div>
+        {renderResetButton()}
       </div>
       <input
         key="hidden-input"

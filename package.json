@@ -16,6 +16,7 @@
     "react-scripts": "5.0.1",
     "react-select": "^5.3.0",
     "react-toastify": "^10.0.4",
+    "recharts": "^2.12.7",
     "styled-components": "^5.3.5",
     "use-sound": "^4.0.1",
     "uvcanvas": "^0.2.1",

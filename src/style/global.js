@@ -50,6 +50,7 @@ export const GlobalStyles = createGlobalStyle`
     left:0;
     width: 100%;
     text-align: center;
+    z-index: 999;
   }
   .bottom-info {
     color: ${({ theme }) => theme.title};
@@ -74,6 +75,53 @@ export const GlobalStyles = createGlobalStyle`
     margin-right: 10px;
     opacity: 0.7;
   }
+  .bottomBar {
+    z-index: 999;
+  }
+
+  .stats-overlay {
+    position: fixed;
+    background: ${({ theme }) => theme.background};
+    inset: 0;
+    z-index: 99;
+  }
+
+  .stats-chart {
+    position: absolute;
+    background: transparent;
+    top: 50%;
+    width: 100%;
+    max-width: 1000px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .custom-tooltip {
+    position: relative;
+  }
+
+  .custom-tooltip::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    background: ${({ theme }) => theme.background};
+    z-index: -1;
+    border: 1px solid ${({ theme }) => theme.textTypeBox};
+    opacity: .9;
+  }
+
+  .stats-header {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+  }
+
   .stats {
     display: block;
     max-width: 1000px;
@@ -83,6 +131,11 @@ export const GlobalStyles = createGlobalStyle`
     margin-right: auto;
     color: ${({ theme }) => theme.stats};
     bottom: 10%;
+  }
+
+  .stats-footer {
+    display: flex;
+    justify-content: space-between;
   }
   .wordscard-UI{
     display: block;
@@ -378,7 +431,7 @@ export const GlobalStyles = createGlobalStyle`
     font-family: ${({ theme }) => theme.fontFamily};
     overflow: auto;
     resize: none;
-    width: 100vw;
+    width: 100%;
     height: 70vh;
     margin-left: auto;
     margin-right: auto;

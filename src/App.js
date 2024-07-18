@@ -184,6 +184,7 @@ function App() {
               textInputRef={textInputRef}
               isFocusedMode={isFocusedMode}
               soundMode={soundMode}
+              theme={theme}
               soundType={soundType}
               key="type-box"
               handleInputFocus={() => focusTextInput()}
