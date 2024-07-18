@@ -193,7 +193,7 @@ const Stats = ({
 
   const renderRawKpm = () => (
     <div>
-      <p style={statsTitleStyles}>Raw</p>
+      <p style={statsTitleStyles}>KPM</p>
       <h2 style={statsValueStyles}>{roundedRawKpm}</h2>
     </div>
   );
