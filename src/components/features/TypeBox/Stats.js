@@ -37,7 +37,7 @@ const Stats = ({
   const language = localStorage.getItem("language");
 
   const accuracy = Math.round(statsCharCount[0]);
-  const roundedRawKpm = Math.round((rawKeyStrokes / countDownConstant) * 60.0);
+  const roundedRawWpm = Math.round((rawKeyStrokes / 5 /  (countDownConstant - time)) * 60.0);
   const roundedWpm = Math.round(wpm);
 
   const data = typingTestHistory.map((history) => {
