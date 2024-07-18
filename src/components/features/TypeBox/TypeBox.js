@@ -46,6 +46,7 @@ import {
   SYMBOL_ADDON_KEY,
 } from "../../../constants/Constants";
 import { SOUND_MAP } from "../sound/sound";
+import { Visibility } from "@mui/icons-material";
 
 const TypeBox = ({
   textInputRef,
@@ -1011,7 +1012,10 @@ const TypeBox = ({
     <div onClick={handleInputFocus}>
       <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
       {language === ENGLISH_MODE && (
-        <div className="type-box">
+        <div
+          className="type-box"
+          style={{ visibility: status === "finished" ? "hidden" : "visible" }}
+        >
           <div className="words">
             {words.map((word, i) => (
               <span
@@ -1034,7 +1038,10 @@ const TypeBox = ({
         </div>
       )}
       {language === CHINESE_MODE && (
-        <div className="type-box-chinese">
+        <div
+          className="type-box-chinese"
+          style={{ visibility: status === "finished" ? "hidden" : "visible" }}
+        >
           <div className="words">
             {words.map((word, i) => (
               <div key={i + "word"}>
@@ -1071,7 +1078,7 @@ const TypeBox = ({
           countDownConstant={countDownConstant}
           statsCharCount={statsCharCount}
           rawKeyStrokes={rawKeyStrokes}
-          wpmKeyStrokes = {wpmKeyStrokes}
+          wpmKeyStrokes={wpmKeyStrokes}
           renderResetButton={renderResetButton}
           currCharIncorrectCount={
             Object.values(history).filter((e) => e === false).length
