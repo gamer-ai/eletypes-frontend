@@ -86,7 +86,7 @@ const Stats = ({
           ...prevTypingTestHistory,
           {
             wpm: roundedWpm,
-            raw: roundedRawKpm,
+            raw: roundedRawWpm,
             time: newTime,
           },
         ]);
