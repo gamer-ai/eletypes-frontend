@@ -37,7 +37,9 @@ const Stats = ({
   const language = localStorage.getItem("language");
 
   const accuracy = Math.round(statsCharCount[0]);
-  const roundedRawWpm = Math.round((rawKeyStrokes / 5 /  (countDownConstant - time)) * 60.0);
+  const roundedRawWpm = Math.round(
+    (rawKeyStrokes / 5 / (countDownConstant - time)) * 60.0
+  );
   const roundedWpm = Math.round(wpm);
 
   const data = typingTestHistory.map((history) => {
@@ -156,7 +158,6 @@ const Stats = ({
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
-      console.log(payload[0].payload.error);
       const payloadData = payload[0].payload;
       return (
         <div
