@@ -44,6 +44,7 @@ To join the community, please go to the website and hit "discord" icon.
     - KPM
     - Accuracy
     - Error analysis (correct/error/missing/extra chars count)
+    - Visualizations
   - Pacing Style (word pulse/ character caret):
     - Pulse mode: the active word will have an underline pulse, which helps improve the speed typing habit.
     - Caret mode: a pacing caret, advancing character by character, which aligns normal typing habit.
@@ -168,6 +169,10 @@ Create a branch with proper name example 'feat/your-cool-feature', create the pu
 ### Buy Me A Coffee:
 
 https://www.buymeacoffee.com/daguozi
+
+## Credits
+
+Thanks [@rendi12345678](https://github.com/rendi12345678) for his continuous contributions and making the feature of data visualization for the typing stats!
 
 
 
