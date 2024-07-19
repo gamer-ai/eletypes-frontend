@@ -434,8 +434,8 @@ const TypeBox = ({
       return;
     }
 
-    // update stats when typing unless there is no effective wpm
-    if (wpmKeyStrokes !== 0) {
+    // Update stats when typing unless there is no effective WPM
+    if (wpmKeyStrokes !== 0 && countDownConstant - countDown !== 0) {
       const currWpm =
         (wpmKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0;
       setWpm(currWpm);
@@ -1008,7 +1008,7 @@ const TypeBox = ({
     );
   };
 
-  console.log(status);
+  // console.log(status);
 
   return (
     <div onClick={handleInputFocus}>
@@ -1075,6 +1075,8 @@ const TypeBox = ({
         <Stats
           status={status}
           wpm={wpm}
+          setIncorrectCharsCount={setIncorrectCharsCount}
+          incorrectCharsCount={incorrectCharsCount}
           theme={theme}
           countDown={countDown}
           countDownConstant={countDownConstant}
@@ -1082,11 +1084,8 @@ const TypeBox = ({
           rawKeyStrokes={rawKeyStrokes}
           wpmKeyStrokes={wpmKeyStrokes}
           renderResetButton={renderResetButton}
-          currCharIncorrectCount={
-            Object.values(history).filter((e) => e === false).length
-          }
         ></Stats>
-        {status !== 'finished' && renderResetButton()}
+        {status !== "finished" && renderResetButton()}
       </div>
       <input
         key="hidden-input"

@@ -9,7 +9,10 @@ import {
   CartesianGrid,
   Tooltip as TooltipChart,
   ResponsiveContainer,
+  Bar,
+  ComposedChart,
 } from "recharts";
+import { red } from "@mui/material/colors";
 
 const Stats = ({
   status,
@@ -21,7 +24,8 @@ const Stats = ({
   wpmKeyStrokes,
   theme,
   renderResetButton,
-  currCharIncorrectCount,
+  setIncorrectCharsCount,
+  incorrectCharsCount,
 }) => {
   const roundedWpm = Math.round(
     (wpmKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0
@@ -35,6 +39,7 @@ const Stats = ({
       wpm: 0,
       rawWpm: 0,
       time: 0, // Start time from 0, but truncate time 0 when rendering
+      error: 0,
     },
   ];
 
@@ -51,6 +56,7 @@ const Stats = ({
       wpm: history.wpm,
       rawWpm: history.rawWpm,
       time: history.time, // Use the time property from history
+      error: history.error,
     };
   });
 
@@ -91,8 +97,11 @@ const Stats = ({
             wpm: roundedWpm,
             rawWpm: roundedRawWpm,
             time: newTime,
+            error: incorrectCharsCount,
           },
         ]);
+
+        setIncorrectCharsCount(0);
       }
     }
   }, [countDown]);
@@ -162,9 +171,9 @@ const Stats = ({
 
   const renderIndicator = (color) => {
     return (
-      <div
+      <span
         style={{ backgroundColor: color, height: "12px", width: "24px" }}
-      ></div>
+      ></span>
     );
   };
 
@@ -183,8 +192,12 @@ const Stats = ({
             {`Time: ${label} s`}
           </p>
           <p className="desc" style={tooltipStyles}>
+            {renderIndicator(red[400])}
+            {`Errors: ${payloadData.error}`}
+          </p>
+          <p className="desc" style={tooltipStyles}>
             {renderIndicator(theme.textTypeBox)}
-            {`raw WPM: ${payloadData.rawWpm}`}
+            {`Raw WPM: ${payloadData.rawWpm}`}
           </p>
           <p className="desc" style={tooltipStyles}>
             {renderIndicator(theme.text)}
@@ -225,7 +238,7 @@ const Stats = ({
   const renderTime = () => (
     <div>
       <p style={statsTitleStyles}>Time</p>
-      <h2 style={statsValueStyles}>{countDownConstant}s</h2>
+      <h2 style={statsValueStyles}>{countDownConstant} s</h2>
     </div>
   );
 
@@ -243,7 +256,7 @@ const Stats = ({
       maxHeight={200}
       height="100%"
     >
-      <LineChart
+      <ComposedChart
         width="100%"
         height="100%"
         data={data.filter((d) => d.time !== 0)}
@@ -280,7 +293,8 @@ const Stats = ({
           stroke={theme.text}
           activeDot={{ r: 6 }}
         />
-      </LineChart>
+        <Bar dataKey="error" barSize={12} fill={`${red[400]}`} />
+      </ComposedChart>
     </ResponsiveContainer>
   );
 
