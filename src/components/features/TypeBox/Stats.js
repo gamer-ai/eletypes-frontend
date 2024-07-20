@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Tooltip } from "@mui/material";
 import { CHAR_TOOLTIP_TITLE } from "../../../constants/Constants";
 import {
-  LineChart,
   Line,
   XAxis,
   YAxis,
@@ -213,7 +212,7 @@ const Stats = ({
   const renderAccuracy = () => (
     <div style={{ marginTop: "16px" }}>
       <h2 style={primaryStatsTitleStyles}>ACC</h2>
-      <h1 style={primaryStatsValueStyles}>{accuracy} %</h1>
+      <h1 style={primaryStatsValueStyles}>{accuracy}%</h1>
     </div>
   );
 
@@ -245,7 +244,11 @@ const Stats = ({
   const renderWpm = () => (
     <div>
       <h2 style={primaryStatsTitleStyles}>WPM</h2>
-      <h1 style={primaryStatsValueStyles}>{Math.round(wpm)}</h1>
+      <h1 style={primaryStatsValueStyles}>
+        {Math.round(
+          data.map((e) => e.wpm).reduce((a, b) => a + b, 0) / (data.length - 1)
+        )}
+      </h1>
     </div>
   );
 
