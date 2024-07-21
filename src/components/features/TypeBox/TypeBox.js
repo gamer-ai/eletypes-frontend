@@ -1008,7 +1008,22 @@ const TypeBox = ({
     );
   };
 
-  // console.log(status);
+  const startIndex = 0;
+  const [itemsToRender, setItemsToRender] = useState(40);
+
+  // Calculate the end index for slicing
+  const endIndex = startIndex + itemsToRender;
+
+  // Get the current slice of words
+  const currentWords = words.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    const distanceToEnd = currentWords.length - 1 - currWordIndex;
+
+    if (distanceToEnd === 20) {
+      setItemsToRender((prev) => prev + 20);
+    }
+  }, [currWordIndex]);
 
   return (
     <div onClick={handleInputFocus}>
@@ -1019,23 +1034,25 @@ const TypeBox = ({
           style={{ visibility: status === "finished" ? "hidden" : "visible" }}
         >
           <div className="words">
-            {words.map((word, i) => (
-              <span
-                key={i}
-                ref={wordSpanRefs[i]}
-                className={getWordClassName(i)}
-              >
-                {word.split("").map((char, idx) => (
-                  <span
-                    key={"word" + idx}
-                    className={getCharClassName(i, idx, char, word)}
-                  >
-                    {char}
-                  </span>
-                ))}
-                {getExtraCharsDisplay(word, i)}
-              </span>
-            ))}
+            {currentWords.map((word, i) => {
+              return (
+                <span
+                  key={i}
+                  ref={wordSpanRefs[i]}
+                  className={getWordClassName(i)}
+                >
+                  {word.split("").map((char, idx) => (
+                    <span
+                      key={"word" + idx}
+                      className={getCharClassName(i, idx, char, word)}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                  {getExtraCharsDisplay(word, i)}
+                </span>
+              );
+            })}
           </div>
         </div>
       )}
@@ -1045,7 +1062,7 @@ const TypeBox = ({
           style={{ visibility: status === "finished" ? "hidden" : "visible" }}
         >
           <div className="words">
-            {words.map((word, i) => (
+            {currentWords.map((word, i) => (
               <div key={i + "word"}>
                 <span
                   key={i + "anchor"}
