@@ -95,6 +95,8 @@ const TypeBox = ({
     SYMBOL_ADDON_KEY
   );
 
+  const [itemsToRender, setItemsToRender] = useState(40);
+
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
 
@@ -106,6 +108,7 @@ const TypeBox = ({
     if (e.keyCode === 13 || e.keyCode === 9) {
       e.preventDefault();
       setOpenRestart(false);
+      setItemsToRender(40);
       reset(
         countDownConstant,
         difficulty,
@@ -118,6 +121,7 @@ const TypeBox = ({
     else if (e.keyCode === 32) {
       e.preventDefault();
       setOpenRestart(false);
+      setItemsToRender(40);
       reset(
         countDownConstant,
         difficulty,
@@ -1009,7 +1013,6 @@ const TypeBox = ({
   };
 
   const startIndex = 0;
-  const [itemsToRender, setItemsToRender] = useState(40);
 
   // Calculate the end index for slicing
   const endIndex = startIndex + itemsToRender;
