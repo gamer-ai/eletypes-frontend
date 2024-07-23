@@ -283,18 +283,20 @@ const Stats = ({
           opacity={0.25}
         />
         <YAxis stroke={theme.text} tickMargin={10} opacity={0.25} />
-        <TooltipChart cursor={false} content={<CustomTooltip />} />{" "}
+        <TooltipChart cursor content={<CustomTooltip />} />{" "}
         <Line
           type="monotone"
           dataKey="rawWpm"
           stroke={theme.textTypeBox}
-          activeDot={{ r: 6 }}
+          dot={false}
+          activeDot={false}
         />
         <Line
           type="monotone"
           dataKey="wpm"
           stroke={theme.text}
-          activeDot={{ r: 6 }}
+          dot={false}
+          activeDot={false}
         />
         <Bar dataKey="error" barSize={12} fill={`${red[400]}`} />
       </ComposedChart>
