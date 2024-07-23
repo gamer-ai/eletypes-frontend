@@ -221,7 +221,6 @@ export const GlobalStyles = createGlobalStyle`
     width: 100%;
     align-content: center;
     user-select: none;
-    transition: 300ms;
   }
   .word{
     margin: 5px 5px;
@@ -230,7 +229,6 @@ export const GlobalStyles = createGlobalStyle`
     border-bottom: 1px solid transparent;
     border-top: 1px solid transparent;
     scroll-margin: 4px;
-    transition: 300ms;
   }
   .active-word{
     animation: blinkingBackground 2s infinite;
@@ -244,40 +242,33 @@ export const GlobalStyles = createGlobalStyle`
       100%	{border-bottom-color: ${({ theme }) => theme.stats};}
     };
     scroll-margin: 4px;
-    transition: 300ms;
   }
   .active-word-no-pulse{
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
     scroll-margin: 4px;
-    transition: 300ms;
   }
   .error-word{
     border-bottom: 1px solid red;
     scroll-margin: 4px;
-    transition: 300ms;
   }
   .char{
     border-left: 1px solid transparent;
     border-right: 1px solid transparent;
-    transition: 300ms;
   }
   .correct-char{
     border-left: 1px solid transparent;
     border-right: 1px solid transparent;
     color: ${({ theme }) => theme.text};
-    transition: 300ms;
   }
   .error-char{
     border-left: 1px solid transparent;
     border-right: 1px solid transparent;
     color: red;
-    transition: 300ms;
   }
   .caret-char-left{
     border-left: 1px solid ${({ theme }) => theme.stats};
     border-right: 1px solid transparent;
-    transition: 300ms;
   }
   .caret-char-left-start{
     border-left: 1px solid;
@@ -291,30 +282,25 @@ export const GlobalStyles = createGlobalStyle`
       75%		{ border-left-color: ${({ theme }) => theme.textTypeBox};}
       100%	{ border-left-color: ${({ theme }) => theme.stats};}
     }
-    transition: 300ms;
   }
   .caret-char-right{
     border-right: 1px solid ${({ theme }) => theme.stats};
     border-left: 1x solid transparent;
-    transition: 300ms;
   }
   .caret-char-right-correct{
     color: ${({ theme }) => theme.text};
     border-right: 1px solid ${({ theme }) => theme.stats};
     border-left: 1px solid transparent;
-    transition: 300ms;
   }
   .caret-char-right-error{
     color: red;
     border-right: 1px solid ${({ theme }) => theme.stats};
     border-left: 1px solid transparent;
-    transition: 300ms;
   }
   .caret-extra-char-right-error{
     color: red;
     border-right: 1px solid ${({ theme }) => theme.stats};
     border-left: 1px solid transparent;
-    transition: 400ms;
   }
 
   .hidden-input{
