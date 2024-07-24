@@ -9,6 +9,17 @@ const lightTheme = {
   fontFamily: "sans-serif",
 };
 
+const tokyoNightTheme = {
+  label: "Tokyo Night",
+  background: "#011628",
+  text: "#CBE0F0",
+  gradient: "linear-gradient(315deg, #F7971E 0%, #FFD200 94%)",
+  title: "#ff9e64",
+  textTypeBox: "#547998",
+  stats: "#B4D0E9",
+  fontFamily: "sans-serif",
+};
+
 const darkTheme = {
   label: "Dark",
   background: "#121212",
@@ -118,7 +129,7 @@ const aluminiumTheme = {
   textTypeBox: "#FAF9F6",
   stats: "#2D3436",
   fontFamily: "Rufina",
-  textShadow: "0px -1px 0px rgba(0,0,0,0.3)"
+  textShadow: "0px -1px 0px rgba(0,0,0,0.3)",
 };
 
 const pianoTheme = {
@@ -130,7 +141,7 @@ const pianoTheme = {
   textTypeBox: "#555",
   stats: "#FAF9F6",
   fontFamily: "Rufina",
-  textShadow: "0px -1px 0px rgba(0,0,0,0.3)"
+  textShadow: "0px -1px 0px rgba(0,0,0,0.3)",
 };
 
 const coolKidTheme = {
@@ -142,7 +153,7 @@ const coolKidTheme = {
   textTypeBox: "#090261",
   stats: "#EA00BA",
   fontFamily: "Tomorrow",
-  textShadow: "0px -1px 0px rgba(0,0,0,0.3)"
+  textShadow: "0px -1px 0px rgba(0,0,0,0.3)",
 };
 
 const edgeRunnerTheme = {
@@ -154,7 +165,7 @@ const edgeRunnerTheme = {
   textTypeBox: "#D1C5C0",
   stats: "#FE00FE",
   fontFamily: "Tomorrow",
-  textShadow: "0 0 2vw #E7E7E3"
+  textShadow: "0 0 2vw #E7E7E3",
 };
 
 const tranquiluxeTheme = {
@@ -166,7 +177,7 @@ const tranquiluxeTheme = {
   textTypeBox: "#FAF9F6",
   stats: "#1b2021",
   fontFamily: "Rufina",
-  textShadow: "0px 1px 1px #000000"
+  textShadow: "0px 1px 1px #000000",
 };
 
 const lumiflexTheme = {
@@ -178,7 +189,7 @@ const lumiflexTheme = {
   textTypeBox: "#2f2f2f",
   stats: "#20F0A0",
   fontFamily: "Rufina",
-  textShadow: "2px 0px 2px #888B8D"
+  textShadow: "2px 0px 2px #888B8D",
 };
 
 const opulentoTheme = {
@@ -190,7 +201,7 @@ const opulentoTheme = {
   textTypeBox: "#B67352",
   stats: "#20F0A0",
   fontFamily: "Rufina",
-  textShadow: "4px 4px 2px #000000"
+  textShadow: "4px 4px 2px #000000",
 };
 
 const velustroTheme = {
@@ -202,13 +213,14 @@ const velustroTheme = {
   textTypeBox: "#3E3232",
   stats: "#FAF9F6",
   fontFamily: "Rufina",
-  textShadow: "1px 0px 0px #000000"
+  textShadow: "1px 0px 0px #000000",
 };
 
 const defaultTheme = darkTheme;
 
 const themesOptions = [
   { value: darkTheme, label: "Dark" },
+  { value: tokyoNightTheme, label: "Tokyo Night" },
   { value: aluminiumTheme, label: "Aluminium" },
   { value: pianoTheme, label: "Piano" },
   { value: terminalTheme, label: "Terminal" },
@@ -224,8 +236,8 @@ const themesOptions = [
   { value: lightTheme, label: "Light" },
   { value: tranquiluxeTheme, label: "Tranquiluxe" },
   { value: lumiflexTheme, label: "Lumiflex" },
-  { value: opulentoTheme, label: "Opulento"},
-  { value: velustroTheme, label: "Velustro"}
+  { value: opulentoTheme, label: "Opulento" },
+  { value: velustroTheme, label: "Velustro" },
 ];
 
 export {
@@ -247,5 +259,6 @@ export {
   edgeRunnerTheme,
   tranquiluxeTheme,
   lumiflexTheme,
-  opulentoTheme
+  opulentoTheme,
+  tokyoNightTheme,
 };
