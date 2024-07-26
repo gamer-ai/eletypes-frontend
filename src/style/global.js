@@ -84,6 +84,7 @@ export const GlobalStyles = createGlobalStyle`
     background: ${({ theme }) => theme.background};
     inset: 0;
     z-index: 99;
+    padding-inline: 1rem;
   }
 
   .stats-chart {
