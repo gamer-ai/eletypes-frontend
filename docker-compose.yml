@@ -1,7 +1,7 @@
-version: '3.3'
 services:
   eletypes-react:
     build:
+      context: .
       dockerfile: Dockerfile
     image: eletypes_react
     ports:

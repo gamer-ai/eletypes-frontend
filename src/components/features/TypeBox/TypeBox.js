@@ -1038,10 +1038,18 @@ const TypeBox = ({
         >
           <div className="words">
             {currentWords.map((word, i) => {
+              const opacityValue = Math.max(
+                1 - Math.abs(i - currWordIndex) * 0.1,
+                0.1
+              );
               return (
                 <span
                   key={i}
                   ref={wordSpanRefs[i]}
+                  style={{
+                    opacity: opacityValue,
+                    transition: "500ms",
+                  }}
                   className={getWordClassName(i)}
                 >
                   {word.split("").map((char, idx) => (
@@ -1065,29 +1073,42 @@ const TypeBox = ({
           style={{ visibility: status === "finished" ? "hidden" : "visible" }}
         >
           <div className="words">
-            {currentWords.map((word, i) => (
-              <div key={i + "word"}>
-                <span
-                  key={i + "anchor"}
-                  className={getChineseWordKeyClassName(i)}
-                  ref={wordSpanRefs[i]}
+            {currentWords.map((word, i) => {
+              const opacityValue = Math.max(
+                1 - Math.abs(i - currWordIndex) * 0.1,
+                0.1
+              );
+
+              return (
+                <div
+                  key={i + "word"}
+                  style={{
+                    opacity: opacityValue,
+                    transition: "500ms",
+                  }}
                 >
-                  {" "}
-                  {wordsKey[i]}
-                </span>
-                <span key={i + "val"} className={getChineseWordClassName(i)}>
-                  {word.split("").map((char, idx) => (
-                    <span
-                      key={"word" + idx}
-                      className={getCharClassName(i, idx, char, word)}
-                    >
-                      {char}
-                    </span>
-                  ))}
-                  {getExtraCharsDisplay(word, i)}
-                </span>
-              </div>
-            ))}
+                  <span
+                    key={i + "anchor"}
+                    className={getChineseWordKeyClassName(i)}
+                    ref={wordSpanRefs[i]}
+                  >
+                    {" "}
+                    {wordsKey[i]}
+                  </span>
+                  <span key={i + "val"} className={getChineseWordClassName(i)}>
+                    {word.split("").map((char, idx) => (
+                      <span
+                        key={"word" + idx}
+                        className={getCharClassName(i, idx, char, word)}
+                      >
+                        {char}
+                      </span>
+                    ))}
+                    {getExtraCharsDisplay(word, i)}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
