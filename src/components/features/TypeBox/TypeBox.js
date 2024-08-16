@@ -47,6 +47,8 @@ import {
 } from "../../../constants/Constants";
 import { SOUND_MAP } from "../sound/sound";
 import SocialLinksModal from "../../common/SocialLinksModal";
+import WorkerBuilder from "../../../worker/WorkerBuilder";
+import calculateWpmWorker from "../../../worker/calculateWpmWorker";
 
 const TypeBox = ({
   textInputRef,
@@ -450,9 +452,14 @@ const TypeBox = ({
 
     // Update stats when typing unless there is no effective WPM
     if (wpmKeyStrokes !== 0 && countDownConstant - countDown !== 0) {
-      const currWpm =
-        (wpmKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0;
-      setWpm(currWpm);
+      const worker = WorkerBuilder(calculateWpmWorker);
+
+      worker.postMessage({ wpmKeyStrokes, countDownConstant, countDown });
+
+      worker.onmessage = (event) => {
+        setWpm(event.data);
+        worker.terminate();
+      };
     }
 
     // start the game by typing any thing
