@@ -717,10 +717,10 @@ export const GlobalStyles = createGlobalStyle`
   }
   .fade-element {
     opacity: 0;
-    transition: opacity 500ms ease-in, visibility 0ms ease-in 500ms;
+    transition: opacity 500ms ease-in;
   }
   .fade-element:hover {
     opacity: 1;
-    transition: opacity 500ms ease-in, visibility 0ms ease-in 0ms;
+    transition: opacity 500ms ease-in;
   }
 `;
