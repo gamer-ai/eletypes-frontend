@@ -76,9 +76,9 @@ const FooterMenu = ({
 
   return (
     <AppBar
-      position={`static ${isFocusedMode && "fade-element"}`}
+      position="static"
       color="transparent"
-      className="bottomBar"
+      className={`bottomBar ${isFocusedMode && "fade-element"}`}
     >
       <Grid container justifyContent="space-between" alignItems="center">
         <Box display="flex" flexDirection="row">

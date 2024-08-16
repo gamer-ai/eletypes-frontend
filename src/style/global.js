@@ -33,6 +33,42 @@ export const GlobalStyles = createGlobalStyle`
       padding: 1rem;
       transition: padding-top .125s;
   }
+.fixed-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dark background with opacity */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; /* Ensure the overlay is on top */
+}
+
+.modal-content {
+  background: ${({ theme }) => theme.background};
+  padding: 40px; /* Increased padding */
+  border-radius: 8px;
+  position: relative; /* To position the close button */
+  width: 80%; /* Increased width */
+  max-width: 600px; /* Max width to keep it from getting too large */
+  height: auto; /* Allow height to grow with content */
+}
+.close-button {
+    color: ${({ theme }) => theme.textTypeBox};
+}
+.modal-title {
+  margin-bottom: 20px; /* Add space below title */
+}
+
+.modal-description {
+  margin-bottom: 20px; /* Add space below description */
+}
+
+.modal-icons {
+  margin-top: 20px; /* Add space above icons */
+}
   .dynamicBackground {
     heigh: 100%;
     width: 100%;
@@ -717,10 +753,10 @@ export const GlobalStyles = createGlobalStyle`
   }
   .fade-element {
     opacity: 0;
-    transition: opacity 500ms ease-in;
+    transition: opacity 500ms ease-in-out;
   }
   .fade-element:hover {
     opacity: 1;
-    transition: opacity 500ms ease-in;
+    transition: opacity 500ms ease-in-out;
   }
 `;

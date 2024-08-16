@@ -46,7 +46,7 @@ import {
   SYMBOL_ADDON_KEY,
 } from "../../../constants/Constants";
 import { SOUND_MAP } from "../sound/sound";
-import { Visibility } from "@mui/icons-material";
+import SocialLinksModal from "../../common/SocialLinksModal";
 
 const TypeBox = ({
   textInputRef,
@@ -102,6 +102,16 @@ const TypeBox = ({
 
   // tab-enter restart dialog
   const [openRestart, setOpenRestart] = useState(false);
+
+  // State to manage the modal's open/close state
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // URL of your typing test project
+  const projectUrl = "https://www.eletypes.com";
+
+  // Functions to open and close the modal
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
 
   const EnterkeyPressReset = (e) => {
     // press enter/or tab to reset;
@@ -1028,74 +1038,71 @@ const TypeBox = ({
     }
   }, [currWordIndex]);
 
-  return (
-    <div onClick={handleInputFocus}>
-      <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
-      {language === ENGLISH_MODE && (
-        <div
-          className="type-box"
-          style={{ visibility: status === "finished" ? "hidden" : "visible" }}
-        >
-          <div className="words">
-            {currentWords.map((word, i) => {
-              const opacityValue = Math.max(
-                1 - Math.abs(i - currWordIndex) * 0.1,
-                0.1
-              );
-              return (
-                <span
-                  key={i}
-                  ref={wordSpanRefs[i]}
-                  style={{
-                    opacity: isFocusedMode ? opacityValue : "1",
-                    transition: "500ms",
-                  }}
-                  className={getWordClassName(i)}
-                >
-                  {word.split("").map((char, idx) => (
-                    <span
-                      key={"word" + idx}
-                      className={getCharClassName(i, idx, char, word)}
-                    >
-                      {char}
-                    </span>
-                  ))}
-                  {getExtraCharsDisplay(word, i)}
-                </span>
-              );
-            })}
-          </div>
-        </div>
-      )}
-      {language === CHINESE_MODE && (
-        <div
-          className="type-box-chinese"
-          style={{ visibility: status === "finished" ? "hidden" : "visible" }}
-        >
-          <div className="words">
-            {currentWords.map((word, i) => {
-              const opacityValue = Math.max(
-                1 - Math.abs(i - currWordIndex) * 0.1,
-                0.1
-              );
+  useEffect(() => {
+    const body = document.getElementsByTagName("body")[0];
+    const delay = 500;
+    let timeoutId;
 
-              return (
-                <div
-                  key={i + "word"}
-                  style={{
-                    opacity: opacityValue,
-                    transition: "500ms",
-                  }}
-                >
+    const showCursor = () => {
+      body.style.cursor = "default";
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(hideCursor, delay); // Adjust timeout duration as needed
+    };
+
+    const hideCursor = () => {
+      body.style.cursor = "none";
+    };
+
+    if (status === "started") {
+      body.style.cursor = "none"; // Initially hide the cursor
+      timeoutId = setTimeout(hideCursor, delay); // Set timeout to hide cursor after inactivity
+
+      document.addEventListener("mousemove", showCursor);
+
+      return () => {
+        document.removeEventListener("mousemove", showCursor);
+        clearTimeout(timeoutId); // Clear timeout on cleanup
+        body.style.cursor = "default"; // Reset cursor style on cleanup
+      };
+    } else {
+      if (status === "finished") {
+        handleOpenModal();
+      }
+      // Ensure cursor is reset if status is not "started"
+      body.style.cursor = "default";
+    }
+  }, [status]);
+
+  return (
+    <>
+      <SocialLinksModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        projectUrl={projectUrl}
+      />
+      <div onClick={handleInputFocus}>
+        <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
+        {language === ENGLISH_MODE && (
+          <div
+            className="type-box"
+            style={{ visibility: status === "finished" ? "hidden" : "visible" }}
+          >
+            <div className="words">
+              {currentWords.map((word, i) => {
+                const opacityValue = Math.max(
+                  1 - Math.abs(i - currWordIndex) * 0.1,
+                  0.1
+                );
+                return (
                   <span
-                    key={i + "anchor"}
-                    className={getChineseWordKeyClassName(i)}
+                    key={i}
                     ref={wordSpanRefs[i]}
+                    style={{
+                      opacity: isFocusedMode ? opacityValue : "1",
+                      transition: "500ms",
+                    }}
+                    className={getWordClassName(i)}
                   >
-                    {" "}
-                    {wordsKey[i]}
-                  </span>
-                  <span key={i + "val"} className={getChineseWordClassName(i)}>
                     {word.split("").map((char, idx) => (
                       <span
                         key={"word" + idx}
@@ -1106,67 +1113,115 @@ const TypeBox = ({
                     ))}
                     {getExtraCharsDisplay(word, i)}
                   </span>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
+        )}
+        {language === CHINESE_MODE && (
+          <div
+            className="type-box-chinese"
+            style={{ visibility: status === "finished" ? "hidden" : "visible" }}
+          >
+            <div className="words">
+              {currentWords.map((word, i) => {
+                const opacityValue = Math.max(
+                  1 - Math.abs(i - currWordIndex) * 0.1,
+                  0.1
+                );
+
+                return (
+                  <div
+                    key={i + "word"}
+                    style={{
+                      opacity: opacityValue,
+                      transition: "500ms",
+                    }}
+                  >
+                    <span
+                      key={i + "anchor"}
+                      className={getChineseWordKeyClassName(i)}
+                      ref={wordSpanRefs[i]}
+                    >
+                      {" "}
+                      {wordsKey[i]}
+                    </span>
+                    <span
+                      key={i + "val"}
+                      className={getChineseWordClassName(i)}
+                    >
+                      {word.split("").map((char, idx) => (
+                        <span
+                          key={"word" + idx}
+                          className={getCharClassName(i, idx, char, word)}
+                        >
+                          {char}
+                        </span>
+                      ))}
+                      {getExtraCharsDisplay(word, i)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        <div className="stats">
+          <Stats
+            status={status}
+            wpm={wpm}
+            setIncorrectCharsCount={setIncorrectCharsCount}
+            incorrectCharsCount={incorrectCharsCount}
+            theme={theme}
+            countDown={countDown}
+            countDownConstant={countDownConstant}
+            statsCharCount={statsCharCount}
+            rawKeyStrokes={rawKeyStrokes}
+            wpmKeyStrokes={wpmKeyStrokes}
+            renderResetButton={renderResetButton}
+          ></Stats>
+          {status !== "finished" && renderResetButton()}
         </div>
-      )}
-      <div className="stats">
-        <Stats
-          status={status}
-          wpm={wpm}
-          setIncorrectCharsCount={setIncorrectCharsCount}
-          incorrectCharsCount={incorrectCharsCount}
-          theme={theme}
-          countDown={countDown}
-          countDownConstant={countDownConstant}
-          statsCharCount={statsCharCount}
-          rawKeyStrokes={rawKeyStrokes}
-          wpmKeyStrokes={wpmKeyStrokes}
-          renderResetButton={renderResetButton}
-        ></Stats>
-        {status !== "finished" && renderResetButton()}
+        <input
+          key="hidden-input"
+          ref={textInputRef}
+          type="text"
+          className="hidden-input"
+          onKeyDown={(e) => handleKeyDown(e)}
+          onKeyUp={(e) => handleKeyUp(e)}
+          value={currInput}
+          onChange={(e) => UpdateInput(e)}
+        />
+        <Dialog
+          PaperProps={{
+            style: {
+              backgroundColor: "transparent",
+              boxShadow: "none",
+            },
+          }}
+          open={openRestart}
+          onKeyDown={EnterkeyPressReset}
+        >
+          <DialogTitle>
+            <div>
+              <span className="key-note"> press </span>
+              <span className="key-type">Space</span>{" "}
+              <span className="key-note">to redo</span>
+            </div>
+            <div>
+              <span className="key-note"> press </span>
+              <span className="key-type">Tab</span>{" "}
+              <span className="key-note">/</span>{" "}
+              <span className="key-type">Enter</span>{" "}
+              <span className="key-note">to restart</span>
+            </div>
+            <span className="key-note"> press </span>
+            <span className="key-type">any key </span>{" "}
+            <span className="key-note">to exit</span>
+          </DialogTitle>
+        </Dialog>
       </div>
-      <input
-        key="hidden-input"
-        ref={textInputRef}
-        type="text"
-        className="hidden-input"
-        onKeyDown={(e) => handleKeyDown(e)}
-        onKeyUp={(e) => handleKeyUp(e)}
-        value={currInput}
-        onChange={(e) => UpdateInput(e)}
-      />
-      <Dialog
-        PaperProps={{
-          style: {
-            backgroundColor: "transparent",
-            boxShadow: "none",
-          },
-        }}
-        open={openRestart}
-        onKeyDown={EnterkeyPressReset}
-      >
-        <DialogTitle>
-          <div>
-            <span className="key-note"> press </span>
-            <span className="key-type">Space</span>{" "}
-            <span className="key-note">to redo</span>
-          </div>
-          <div>
-            <span className="key-note"> press </span>
-            <span className="key-type">Tab</span>{" "}
-            <span className="key-note">/</span>{" "}
-            <span className="key-type">Enter</span>{" "}
-            <span className="key-note">to restart</span>
-          </div>
-          <span className="key-note"> press </span>
-          <span className="key-type">any key </span>{" "}
-          <span className="key-note">to exit</span>
-        </DialogTitle>
-      </Dialog>
-    </div>
+    </>
   );
 };
 
