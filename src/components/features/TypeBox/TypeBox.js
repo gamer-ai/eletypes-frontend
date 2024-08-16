@@ -1047,7 +1047,7 @@ const TypeBox = ({
                   key={i}
                   ref={wordSpanRefs[i]}
                   style={{
-                    opacity: opacityValue,
+                    opacity: isFocusedMode ? opacityValue : "1",
                     transition: "500ms",
                   }}
                   className={getWordClassName(i)}
