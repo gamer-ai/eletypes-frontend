@@ -715,4 +715,12 @@ export const GlobalStyles = createGlobalStyle`
   .select-chapter-title{
     font-size: 16px;
   }
+  .fade-element {
+    opacity: 0;
+    transition: opacity 500ms ease-in, visibility 0ms ease-in 500ms;
+  }
+  .fade-element:hover {
+    opacity: 1;
+    transition: opacity 500ms ease-in, visibility 0ms ease-in 0ms;
+  }
 `;
