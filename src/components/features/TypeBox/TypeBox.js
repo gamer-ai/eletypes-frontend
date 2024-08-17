@@ -709,14 +709,35 @@ const TypeBox = ({
     }
   };
 
+  const charsWorkerRef = useRef();
+
+  useEffect(() => {
+    charsWorkerRef.current = new Worker(
+      new URL("../../../worker/trackCharsErrorsWorker", import.meta.url)
+    );
+
+    charsWorkerRef.current.onmessage = (e) => {
+      if (e.data.type === "increment") {
+        setIncorrectCharsCount((prev) => prev + 1);
+      }
+    };
+
+    return () => {
+      charsWorkerRef.current.terminate();
+    };
+  }, []);
+
   useEffect(() => {
     if (status !== "started") return;
-    const word = words[currWordIndex];
-    const char = word.split("")[currCharIndex];
 
-    if (char !== currChar && char !== undefined)
-      return setIncorrectCharsCount((prev) => prev + 1);
-  }, [currChar, status, currCharIndex]);
+    const word = words[currWordIndex];
+
+    charsWorkerRef.current.postMessage({
+      word,
+      currChar,
+      currCharIndex,
+    });
+  }, [currChar, status, currCharIndex, words, currWordIndex]);
 
   const getCharClassName = (wordIdx, charIdx, char, word) => {
     const keyString = wordIdx + "." + charIdx;
@@ -1226,10 +1247,11 @@ const TypeBox = ({
           >
             <div className="words">
               {currentWords.map((word, i) => {
-                const opacityValue = Math.max(
-                  1 - Math.abs(i - currWordIndex) * 0.1,
-                  0.1
-                );
+                const opacityValue =
+                  i >= currWordIndex && i < currWordIndex + 3
+                    ? 1
+                    : Math.max(1 - Math.abs(i - currWordIndex) * 0.1, 0.1);
+
                 return (
                   <span
                     key={i}

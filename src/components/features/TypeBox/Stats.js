@@ -20,19 +20,27 @@ const Stats = ({
   countDownConstant,
   statsCharCount,
   rawKeyStrokes,
-  wpmKeyStrokes,
   theme,
   renderResetButton,
   setIncorrectCharsCount,
   incorrectCharsCount,
 }) => {
-  const roundedWpm = Math.round(
-    (wpmKeyStrokes / 5 / Math.max(countDownConstant - countDown, 1)) * 60.0
-  );
+  const [roundedRawWpm, setRoundedRawWpm] = useState(0);
+  const roundedWpm = Math.round(wpm);
 
-  const roundedRawWpm = Math.round(
-    (rawKeyStrokes / 5 / Math.max(countDownConstant - countDown, 1)) * 60.0
-  );
+  useEffect(() => {
+    const worker = new Worker(
+      new URL("../../../worker/calculateRawWpmWorker", import.meta.url)
+    );
+
+    worker.postMessage({ rawKeyStrokes, countDownConstant, countDown });
+
+    worker.onmessage = function (e) {
+      setRoundedRawWpm(e.data);
+    };
+
+    return () => worker.terminate();
+  }, [rawKeyStrokes, countDownConstant, countDown]);
 
   const initialTypingTestHistory = [
     {
@@ -66,40 +74,33 @@ const Stats = ({
 
   useEffect(() => {
     if (status === "started" && countDown < countDownConstant) {
-      let shouldRecord = false;
-      let increment = 1;
+      const worker = new Worker(
+        new URL("../../../worker/trackHistoryWorker", import.meta.url)
+      );
 
-      switch (countDownConstant) {
-        case 90:
-        case 60:
-          shouldRecord = countDown % 5 === 0;
-          increment = 5;
-          break;
-        case 30:
-        case 15:
-          shouldRecord = true;
-          increment = 1;
-          break;
-        default:
-          shouldRecord = true;
-          increment = 1;
-      }
+      worker.postMessage({
+        countDown,
+        countDownConstant,
+        typingTestHistory,
+        roundedWpm,
+        roundedRawWpm,
+        incorrectCharsCount,
+      });
 
-      if (shouldRecord) {
-        const newTime = typingTestHistory.length * increment;
-
+      worker.onmessage = function (e) {
+        const { newEntry, resetErrors } = e.data;
         setTypingTestHistory((prevTypingTestHistory) => [
           ...prevTypingTestHistory,
-          {
-            wpm: roundedWpm,
-            rawWpm: roundedRawWpm,
-            time: newTime,
-            error: incorrectCharsCount,
-          },
+          newEntry,
         ]);
 
-        setIncorrectCharsCount(0);
-      }
+        if (resetErrors) {
+          setIncorrectCharsCount(0);
+        }
+      };
+
+      // Clean up the worker on component unmount
+      return () => worker.terminate();
     }
   }, [countDown]);
 
