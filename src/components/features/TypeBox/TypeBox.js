@@ -414,7 +414,7 @@ const TypeBox = ({
 
   useEffect(() => {
     // Initialize worker
-    wpmWorkerRef.current = WorkerBuilder(calculateWpmWorker);
+    wpmWorkerRef.current = new WorkerBuilder(calculateWpmWorker);
 
     return () => {
       // Cleanup worker on component unmount
@@ -588,7 +588,7 @@ const TypeBox = ({
   const workerRef = useRef(null);
 
   useEffect(() => {
-    workerRef.current = WorkerBuilder(checkPrevWorker);
+    workerRef.current = new WorkerBuilder(checkPrevWorker);
 
     return () => {
       if (workerRef.current) {
