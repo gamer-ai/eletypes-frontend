@@ -47,9 +47,6 @@ import {
 } from "../../../constants/Constants";
 import { SOUND_MAP } from "../sound/sound";
 import SocialLinksModal from "../../common/SocialLinksModal";
-import WorkerBuilder from "../../../worker/WorkerBuilder";
-import calculateWpmWorker from "../../../worker/calculateWpmWorker";
-import checkPrevWorker from "../../../worker/checkPrevWorker";
 
 const TypeBox = ({
   textInputRef,
@@ -414,7 +411,9 @@ const TypeBox = ({
 
   useEffect(() => {
     // Initialize worker
-    wpmWorkerRef.current = new WorkerBuilder(calculateWpmWorker);
+    wpmWorkerRef.current = new Worker(
+      new URL("../../../worker/calculateWpmWorker", import.meta.url)
+    );
 
     return () => {
       // Cleanup worker on component unmount
@@ -588,7 +587,9 @@ const TypeBox = ({
   const workerRef = useRef(null);
 
   useEffect(() => {
-    workerRef.current = new WorkerBuilder(checkPrevWorker);
+    workerRef.current = new Worker(
+      new URL("../../../worker/checkPrevWorker", import.meta.url)
+    );
 
     return () => {
       if (workerRef.current) {
