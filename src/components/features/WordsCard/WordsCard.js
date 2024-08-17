@@ -100,34 +100,11 @@ const WordsCard = ({ soundType, soundMode }) => {
     }
   };
 
-  const throttle = (fn, limit) => {
-    let lastFn;
-    let lastTime;
-    return function (...args) {
-      const context = this;
-      if (!lastTime) {
-        fn.apply(context, args);
-        lastTime = Date.now();
-      } else {
-        clearTimeout(lastFn);
-        lastFn = setTimeout(() => {
-          if (Date.now() - lastTime >= limit) {
-            fn.apply(context, args);
-            lastTime = Date.now();
-          }
-        }, limit - (Date.now() - lastTime));
-      }
-    };
-  };
-
   const handleInputChange = (e) => {
     setCurrInput(e.target.value);
     hiddenInputRef.current.value = e.target.value;
     e.preventDefault();
   };
-
-  // Throttled version of the input change handler
-  const throttledInputChange = throttle(handleInputChange, 50);
 
   const updateAlphabetSet = (char) => {
     const newAlphabetSet = new Set(alphabetSet);
@@ -410,7 +387,7 @@ const WordsCard = ({ soundType, soundMode }) => {
           className="hidden-input"
           ref={hiddenInputRef}
           onBlur={handleInputBlur}
-          onChange={throttledInputChange}
+          onChange={handleInputChange}
           onKeyDown={(e) => handleKeyDown(e)}
         ></input>
         <div className="wordcard-meaning-display-field">{currMeaning}</div>
