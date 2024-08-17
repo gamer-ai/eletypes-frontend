@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import useSound from "use-sound";
 import {
   wordsGenerator,
@@ -49,6 +49,7 @@ import { SOUND_MAP } from "../sound/sound";
 import SocialLinksModal from "../../common/SocialLinksModal";
 import WorkerBuilder from "../../../worker/WorkerBuilder";
 import calculateWpmWorker from "../../../worker/calculateWpmWorker";
+import checkPrevWorker from "../../../worker/checkPrevWorker";
 
 const TypeBox = ({
   textInputRef,
@@ -409,6 +410,41 @@ const TypeBox = ({
     setCapsLocked(e.getModifierState("CapsLock"));
   };
 
+  const wpmWorkerRef = useRef(null);
+
+  useEffect(() => {
+    // Initialize worker
+    wpmWorkerRef.current = WorkerBuilder(calculateWpmWorker);
+
+    return () => {
+      // Cleanup worker on component unmount
+      if (wpmWorkerRef.current) {
+        wpmWorkerRef.current.terminate();
+      }
+    };
+  }, []);
+
+  const calculateWpm = (wpmKeyStrokes, countDownConstant, countDown) => {
+    if (wpmKeyStrokes !== 0 && countDownConstant - countDown !== 0) {
+      if (!wpmWorkerRef.current) return; // Ensure worker is initialized
+
+      wpmWorkerRef.current.postMessage({
+        wpmKeyStrokes,
+        countDownConstant,
+        countDown,
+      });
+
+      wpmWorkerRef.current.onmessage = (event) => {
+        console.log(event.data);
+        setWpm(event.data);
+      };
+
+      wpmWorkerRef.current.onerror = (error) => {
+        console.error("Worker error:", error);
+      };
+    }
+  };
+
   const handleKeyDown = (e) => {
     if (status !== "finished" && soundMode) {
       play();
@@ -452,14 +488,7 @@ const TypeBox = ({
 
     // Update stats when typing unless there is no effective WPM
     if (wpmKeyStrokes !== 0 && countDownConstant - countDown !== 0) {
-      const worker = WorkerBuilder(calculateWpmWorker);
-
-      worker.postMessage({ wpmKeyStrokes, countDownConstant, countDown });
-
-      worker.onmessage = (event) => {
-        setWpm(event.data);
-        worker.terminate();
-      };
+      calculateWpm(wpmKeyStrokes, countDownConstant, countDown);
     }
 
     // start the game by typing any thing
@@ -557,37 +586,56 @@ const TypeBox = ({
     }
   };
 
-  const checkPrev = () => {
-    const wordToCompare = words[currWordIndex];
-    const currInputWithoutSpaces = currInput.trim();
-    const isCorrect = wordToCompare === currInputWithoutSpaces;
-    if (!currInputWithoutSpaces || currInputWithoutSpaces.length === 0) {
-      return null;
-    }
-    if (isCorrect) {
-      // console.log("detected match");
-      wordsCorrect.add(currWordIndex);
-      wordsInCorrect.delete(currWordIndex);
-      let inputWordsHistoryUpdate = { ...inputWordsHistory };
-      inputWordsHistoryUpdate[currWordIndex] = currInputWithoutSpaces;
-      setInputWordsHistory(inputWordsHistoryUpdate);
-      // reset prevInput to empty (will not go back)
-      setPrevInput("");
+  const workerRef = useRef(null);
 
-      // here count the space as effective wpm.
-      setWpmKeyStrokes(wpmKeyStrokes + 1);
-      return true;
-    } else {
-      // console.log("detected unmatch");
-      wordsInCorrect.add(currWordIndex);
-      wordsCorrect.delete(currWordIndex);
-      let inputWordsHistoryUpdate = { ...inputWordsHistory };
-      inputWordsHistoryUpdate[currWordIndex] = currInputWithoutSpaces;
-      setInputWordsHistory(inputWordsHistoryUpdate);
-      // append currInput to prevInput
-      setPrevInput(prevInput + " " + currInputWithoutSpaces);
-      return false;
-    }
+  useEffect(() => {
+    workerRef.current = WorkerBuilder(checkPrevWorker);
+
+    return () => {
+      if (workerRef.current) {
+        workerRef.current.terminate();
+      }
+    };
+  }, []);
+
+  const checkPrev = () => {
+    if (!workerRef.current) return;
+
+    const currInputWithoutSpaces = currInput.trim();
+    workerRef.current.postMessage({
+      words,
+      currWordIndex,
+      currInputWithoutSpaces,
+      wordsCorrect: Array.from(wordsCorrect),
+      wordsInCorrect: Array.from(wordsInCorrect),
+      inputWordsHistory,
+      prevInput,
+      wpmKeyStrokes,
+    });
+
+    workerRef.current.onmessage = (event) => {
+      const {
+        isCorrect,
+        updatedWordsCorrect,
+        updatedWordsInCorrect,
+        updatedInputWordsHistory,
+        updatedPrevInput,
+        updatedWpmKeyStrokes,
+      } = event.data;
+
+      if (isCorrect !== null) {
+        setWordsCorrect(new Set(updatedWordsCorrect));
+        setWordsInCorrect(new Set(updatedWordsInCorrect));
+        setInputWordsHistory(updatedInputWordsHistory);
+        setPrevInput(updatedPrevInput);
+        setWpmKeyStrokes(updatedWpmKeyStrokes);
+
+        // Always move to the next word
+        setCurrWordIndex((prevIndex) => prevIndex + 1);
+        setCurrInput("");
+        setCurrCharIndex(-1);
+      }
+    };
   };
 
   const getWordClassName = (wordIdx) => {
@@ -1045,6 +1093,74 @@ const TypeBox = ({
     }
   }, [currWordIndex]);
 
+  const MODAL_DISPLAY_KEY = "modalDisplayedTimestamp"; // Key for local storage
+  const COUNTDOWN_KEY = "countdownStartTime"; // Key for countdown start time
+  const COUNTDOWN_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+  const [isShouldShowModal, setIsShouldShowModal] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(COUNTDOWN_DURATION);
+
+  const checkIfModalShouldBeDisplayed = () => {
+    const lastDisplayed = localStorage.getItem(MODAL_DISPLAY_KEY);
+    const countdownStartTime = parseInt(
+      localStorage.getItem(COUNTDOWN_KEY),
+      10
+    );
+    const now = new Date().getTime();
+
+    if (
+      !lastDisplayed ||
+      now - parseInt(lastDisplayed, 10) >= COUNTDOWN_DURATION
+    ) {
+      // Show modal and record timestamp
+      setIsShouldShowModal(true);
+      localStorage.setItem(MODAL_DISPLAY_KEY, now.toString());
+    }
+  };
+
+  const startCountdown = () => {
+    const now = new Date().getTime();
+    localStorage.setItem(COUNTDOWN_KEY, now.toString());
+    checkIfModalShouldBeDisplayed();
+  };
+
+  const calculateRemainingTime = () => {
+    const countdownStartTime = parseInt(
+      localStorage.getItem(COUNTDOWN_KEY),
+      10
+    );
+    const now = new Date().getTime();
+    const elapsedTime = now - countdownStartTime;
+    const timeLeft = COUNTDOWN_DURATION - elapsedTime;
+
+    if (timeLeft <= 0) {
+      setRemainingTime(0);
+      localStorage.removeItem(COUNTDOWN_KEY); // Clear the countdown start time
+      setIsShouldShowModal(true);
+      localStorage.setItem(MODAL_DISPLAY_KEY, now.toString()); // Update modal display timestamp
+    } else {
+      setRemainingTime(timeLeft);
+    }
+  };
+
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60000);
+    const seconds = Math.floor((time % 60000) / 1000);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
+  useEffect(() => {
+    calculateRemainingTime(); // Initial calculation
+    const timer = setInterval(calculateRemainingTime, 1000); // Update every second
+
+    // Start countdown if not already started
+    if (!localStorage.getItem(COUNTDOWN_KEY)) {
+      startCountdown();
+    }
+
+    return () => clearInterval(timer); // Cleanup on component unmount
+  }, []);
+
   useEffect(() => {
     const body = document.getElementsByTagName("body")[0];
     const delay = 500;
@@ -1072,13 +1188,18 @@ const TypeBox = ({
         body.style.cursor = "default"; // Reset cursor style on cleanup
       };
     } else {
-      if (status === "finished") {
-        handleOpenModal();
+      // Reset countdown and show modal if finished and should show modal
+      if (status === "finished" && isShouldShowModal) {
+        setIsShouldShowModal(false); // Hide the modal
+        localStorage.removeItem(COUNTDOWN_KEY); // Reset countdown start time
+        localStorage.removeItem(MODAL_DISPLAY_KEY); // Clear modal display timestamp
+        setRemainingTime(COUNTDOWN_DURATION); // Reset remaining time
+        handleOpenModal()
       }
       // Ensure cursor is reset if status is not "started"
       body.style.cursor = "default";
     }
-  }, [status]);
+  }, [status, isShouldShowModal]);
 
   return (
     <>
