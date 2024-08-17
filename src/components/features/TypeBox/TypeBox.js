@@ -704,10 +704,6 @@ const TypeBox = ({
       return setIncorrectCharsCount((prev) => prev + 1);
   }, [currChar, status, currCharIndex]);
 
-  useEffect(() => {
-    // console.log("incorrectCharsCount:", incorrectCharsCount);
-  }, [incorrectCharsCount]);
-
   const getCharClassName = (wordIdx, charIdx, char, word) => {
     const keyString = wordIdx + "." + charIdx;
     if (
