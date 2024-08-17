@@ -23,6 +23,7 @@ export default () => {
         ? wpmKeyStrokes
         : 0;
 
+    // Check if the current input is empty
     if (!currInputWithoutSpaces || currInputWithoutSpaces.length === 0) {
       postMessage({ isCorrect: null });
       return;
