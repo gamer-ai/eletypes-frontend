@@ -13,8 +13,6 @@ export default () => {
       wpmKeyStrokes,
     } = event.data;
 
-    console.log(event.data);
-
     // Validate input data
     const wordToCompare = words[currWordIndex];
     const isCorrect = wordToCompare === currInputWithoutSpaces;

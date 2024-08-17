@@ -435,7 +435,6 @@ const TypeBox = ({
       });
 
       wpmWorkerRef.current.onmessage = (event) => {
-        console.log(event.data);
         setWpm(event.data);
       };
 
@@ -1194,7 +1193,7 @@ const TypeBox = ({
         localStorage.removeItem(COUNTDOWN_KEY); // Reset countdown start time
         localStorage.removeItem(MODAL_DISPLAY_KEY); // Clear modal display timestamp
         setRemainingTime(COUNTDOWN_DURATION); // Reset remaining time
-        handleOpenModal()
+        handleOpenModal();
       }
       // Ensure cursor is reset if status is not "started"
       body.style.cursor = "default";

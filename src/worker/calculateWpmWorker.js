@@ -4,8 +4,6 @@ export default () => {
   self.onmessage = function (e) {
     const { wpmKeyStrokes, countDownConstant, countDown } = e.data;
 
-    console.log(wpmKeyStrokes);
-
     const currWpm =
       (wpmKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0;
 
