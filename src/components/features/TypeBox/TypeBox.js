@@ -150,25 +150,34 @@ const TypeBox = ({
   };
 
   // set up words state
-  const [wordsDict, setWordsDict] = useState(() => {
+  const [wordsDict, setWordsDict] = useState([]);
+
+  useEffect(() => {
     if (language === ENGLISH_MODE) {
-      return wordsGenerator(
-        DEFAULT_WORDS_COUNT,
-        difficulty,
-        ENGLISH_MODE,
-        numberAddOn,
-        symbolAddOn
-      );
+      (async () => {
+        const generatedWords = await wordsGenerator(
+          DEFAULT_WORDS_COUNT,
+          difficulty,
+          ENGLISH_MODE,
+          numberAddOn,
+          symbolAddOn
+        );
+
+        setWordsDict(generatedWords);
+      })();
     }
+
     if (language === CHINESE_MODE) {
-      return chineseWordsGenerator(
+      const generatedWords = chineseWordsGenerator(
         difficulty,
         CHINESE_MODE,
         numberAddOn,
         symbolAddOn
       );
+
+      setWordsDict(generatedWords);
     }
-  });
+  }, []);
 
   const words = useMemo(() => {
     return wordsDict.map((e) => e.val);
@@ -223,14 +232,16 @@ const TypeBox = ({
   useEffect(() => {
     if (currWordIndex === DEFAULT_WORDS_COUNT - 1) {
       if (language === ENGLISH_MODE) {
-        const generatedEng = wordsGenerator(
-          DEFAULT_WORDS_COUNT,
-          difficulty,
-          ENGLISH_MODE,
-          numberAddOn,
-          symbolAddOn
-        );
-        setWordsDict((currentArray) => [...currentArray, ...generatedEng]);
+        (async () => {
+          const generatedEng = await wordsGenerator(
+            DEFAULT_WORDS_COUNT,
+            difficulty,
+            ENGLISH_MODE,
+            numberAddOn,
+            symbolAddOn
+          );
+          setWordsDict((currentArray) => [...currentArray, ...generatedEng]);
+        })();
       }
       if (language === CHINESE_MODE) {
         const generatedChinese = chineseWordsGenerator(
@@ -281,15 +292,17 @@ const TypeBox = ({
         );
       }
       if (language === ENGLISH_MODE) {
-        setWordsDict(
-          wordsGenerator(
+        (async () => {
+          const generatedWords = await wordsGenerator(
             DEFAULT_WORDS_COUNT,
             difficulty,
             language,
             newNumberAddOn,
             newSymbolAddOn
-          )
-        );
+          );
+
+          setWordsDict(generatedWords);
+        })();
       }
     }
     setNumberAddOn(newNumberAddOn);
