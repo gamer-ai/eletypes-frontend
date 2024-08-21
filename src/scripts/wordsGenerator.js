@@ -35,10 +35,12 @@ const wordsGenerator = (
     worker.onmessage = function (e) {
       const generatedWords = e.data;
       resolve(generatedWords);
+      worker.terminate();
     };
 
     worker.onerror = function (e) {
       reject(e);
+      worker.terminate();
     };
 
     worker.postMessage({

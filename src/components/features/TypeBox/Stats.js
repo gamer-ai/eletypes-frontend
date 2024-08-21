@@ -37,6 +37,7 @@ const Stats = ({
 
     worker.onmessage = function (e) {
       setRoundedRawWpm(e.data);
+      worker.terminate();
     };
 
     return () => worker.terminate();
@@ -104,39 +105,6 @@ const Stats = ({
     }
   }, [countDown]);
 
-  const primaryStatsTitleStyles = {
-    color: theme.textTypeBox,
-    marginBlock: 0,
-    marginBottom: "6px",
-    fontSize: "20px",
-  };
-
-  const primaryStatsValueStyles = {
-    marginBlock: 0,
-    fontSize: "36px",
-    color: theme.text,
-  };
-
-  const statsTitleStyles = {
-    color: theme.textTypeBox,
-    marginBlock: 0,
-    marginBottom: "6px",
-    fontWeight: "bold",
-    fontSize: "16px",
-  };
-
-  const statsValueStyles = {
-    marginBlock: 0,
-  };
-
-  const tooltipStyles = {
-    fontSize: "14px",
-    lineHeight: "6px",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  };
-
   const getFormattedLanguageLanguageName = (value) => {
     switch (value) {
       case "ENGLISH_MODE":
@@ -155,8 +123,8 @@ const Stats = ({
       }
     >
       <div>
-        <p style={statsTitleStyles}>Characters</p>
-        <h2 style={statsValueStyles}>
+        <p className="stats-title">Characters</p>
+        <h2 className="stats-value">
           <span className="correct-char-stats">{statsCharCount[1]}</span>/
           <span className="incorrect-char-stats">{statsCharCount[2]}</span>/
           <span className="missing-char-stats">{statsCharCount[3]}</span>/
@@ -187,15 +155,15 @@ const Stats = ({
           <p className="label" style={{ fontSize: "12px", fontWeight: "bold" }}>
             {`Time: ${label} s`}
           </p>
-          <p className="desc" style={tooltipStyles}>
+          <p className="desc tooltip">
             {renderIndicator(red[400])}
             {`Errors: ${payloadData.error}`}
           </p>
-          <p className="desc" style={tooltipStyles}>
+          <p className="desc tooltip">
             {renderIndicator(theme.textTypeBox)}
             {`Raw WPM: ${payloadData.rawWpm}`}
           </p>
-          <p className="desc" style={tooltipStyles}>
+          <p className="desc tooltip">
             {renderIndicator(theme.text)}
             {`WPM: ${payloadData.wpm}`}
           </p>
@@ -208,15 +176,15 @@ const Stats = ({
 
   const renderAccuracy = () => (
     <div style={{ marginTop: "16px" }}>
-      <h2 style={primaryStatsTitleStyles}>ACC</h2>
-      <h1 style={primaryStatsValueStyles}>{accuracy}%</h1>
+      <h2 className="primary-stats-title">ACC</h2>
+      <h1 className="primary-stats-value">{accuracy}%</h1>
     </div>
   );
 
   const renderRawKpm = () => (
     <div>
-      <p style={statsTitleStyles}>KPM</p>
-      <h2 style={statsValueStyles}>
+      <p className="stats-title">KPM</p>
+      <h2 className="stats-value">
         {Math.round((rawKeyStrokes / Math.max(countDownConstant, 1)) * 60.0)}
       </h2>
     </div>
@@ -224,8 +192,8 @@ const Stats = ({
 
   const renderLanguage = () => (
     <div>
-      <p style={statsTitleStyles}>Test Mode</p>
-      <h2 style={statsValueStyles}>
+      <p className="stats-title">Test Mode</p>
+      <h2 className="stats-value">
         {getFormattedLanguageLanguageName(language)}
       </h2>
     </div>
@@ -233,8 +201,8 @@ const Stats = ({
 
   const renderTime = () => (
     <div>
-      <p style={statsTitleStyles}>Time</p>
-      <h2 style={statsValueStyles}>{countDownConstant} s</h2>
+      <p className="stats-title">Time</p>
+      <h2 className="stats-value">{countDownConstant} s</h2>
     </div>
   );
 
@@ -243,8 +211,8 @@ const Stats = ({
     const averageWpm = data.length > 1 ? totalWpm / (data.length - 1) : 0;
     return (
       <div>
-        <h2 style={primaryStatsTitleStyles}>WPM</h2>
-        <h1 style={primaryStatsValueStyles}>{Math.round(averageWpm)}</h1>
+        <h2 className="primary-stats-title">WPM</h2>
+        <h1 className="primary-stats-value">{Math.round(averageWpm)}</h1>
       </div>
     );
   };

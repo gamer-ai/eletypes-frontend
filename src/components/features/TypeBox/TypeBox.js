@@ -95,7 +95,7 @@ const TypeBox = ({
     SYMBOL_ADDON_KEY
   );
 
-  const [itemsToRender, setItemsToRender] = useState(40);
+  const [itemsToRender, setItemsToRender] = useState(50);
 
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
@@ -118,7 +118,7 @@ const TypeBox = ({
     if (e.keyCode === 13 || e.keyCode === 9) {
       e.preventDefault();
       setOpenRestart(false);
-      setItemsToRender(40);
+      setItemsToRender(50);
       reset(
         countDownConstant,
         difficulty,
@@ -131,7 +131,7 @@ const TypeBox = ({
     else if (e.keyCode === 32) {
       e.preventDefault();
       setOpenRestart(false);
-      setItemsToRender(40);
+      setItemsToRender(50);
       reset(
         countDownConstant,
         difficulty,
@@ -643,7 +643,6 @@ const TypeBox = ({
         setPrevInput(updatedPrevInput);
         setWpmKeyStrokes(updatedWpmKeyStrokes);
 
-        // Always move to the next word
         setCurrWordIndex((prevIndex) => prevIndex + 1);
         setCurrInput("");
         setCurrCharIndex(-1);
@@ -1118,8 +1117,8 @@ const TypeBox = ({
   useEffect(() => {
     const distanceToEnd = currentWords.length - 1 - currWordIndex;
 
-    if (distanceToEnd === 20) {
-      setItemsToRender((prev) => prev + 20);
+    if (distanceToEnd === 25) {
+      setItemsToRender((prev) => prev + 25);
     }
   }, [currWordIndex]);
 
@@ -1231,6 +1230,44 @@ const TypeBox = ({
     }
   }, [status, isShouldShowModal]);
 
+  const renderEnglishMode = () => (
+    <div
+      className="type-box"
+      style={{ visibility: status === "finished" ? "hidden" : "visible" }}
+    >
+      <div className="words">
+        {currentWords.map((word, i) => {
+          const opacityValue = Math.max(
+            1 - Math.abs(i - currWordIndex) * 0.1,
+            0.1
+          );
+
+          return (
+            <span
+              key={i}
+              ref={wordSpanRefs[i]}
+              style={{
+                opacity: isFocusedMode ? opacityValue : "1",
+                transition: "500ms",
+              }}
+              className={getWordClassName(i)}
+            >
+              {word.split("").map((char, idx) => (
+                <span
+                  key={"word" + idx}
+                  className={getCharClassName(i, idx, char, word)}
+                >
+                  {char}
+                </span>
+              ))}
+              {getExtraCharsDisplay(word, i)}
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+
   return (
     <>
       <SocialLinksModal
@@ -1240,43 +1277,7 @@ const TypeBox = ({
       />
       <div onClick={handleInputFocus}>
         <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
-        {language === ENGLISH_MODE && (
-          <div
-            className="type-box"
-            style={{ visibility: status === "finished" ? "hidden" : "visible" }}
-          >
-            <div className="words">
-              {currentWords.map((word, i) => {
-                const opacityValue =
-                  i >= currWordIndex && i < currWordIndex + 3
-                    ? 1
-                    : Math.max(1 - Math.abs(i - currWordIndex) * 0.1, 0.1);
-
-                return (
-                  <span
-                    key={i}
-                    ref={wordSpanRefs[i]}
-                    style={{
-                      opacity: isFocusedMode ? opacityValue : "1",
-                      transition: "500ms",
-                    }}
-                    className={getWordClassName(i)}
-                  >
-                    {word.split("").map((char, idx) => (
-                      <span
-                        key={"word" + idx}
-                        className={getCharClassName(i, idx, char, word)}
-                      >
-                        {char}
-                      </span>
-                    ))}
-                    {getExtraCharsDisplay(word, i)}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        {language === ENGLISH_MODE && renderEnglishMode()}
         {language === CHINESE_MODE && (
           <div
             className="type-box-chinese"

@@ -1,11 +1,11 @@
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
-  *,
-  *::after,
-  *::before {
-    box-sizing: border-box;
-  }
+*,
+*::after,
+*::before {
+box-sizing: border-box;
+}
 body {
 display: flex;
 flex-direction: column;
@@ -132,6 +132,7 @@ max-width: 1000px;
 left: 50%;
 transform: translate(-50%, -50%);
 display: flex;
+padding-inline: 1rem;
 flex-direction: column;
 gap: 20px;
 }
@@ -297,17 +298,21 @@ border-right: 1px solid transparent;
 border-left: 1px solid transparent;
 border-right: 1px solid transparent;
 color: ${({ theme }) => theme.text};
+
 }
 .error-char{
 border-left: 1px solid transparent;
 border-right: 1px solid transparent;
 color: red;
+
 }
 .caret-char-left{
 border-left: 1px solid ${({ theme }) => theme.stats};
 border-right: 1px solid transparent;
+
 }
 .caret-char-left-start{
+
 border-left: 1px solid;
 border-right: 1px solid transparent;
 animation: blinkingCaretLeft 2s infinite;
@@ -323,21 +328,25 @@ animation-timing-function: ease;
 .caret-char-right{
 border-right: 1px solid ${({ theme }) => theme.stats};
 border-left: 1x solid transparent;
+
 }
 .caret-char-right-correct{
 color: ${({ theme }) => theme.text};
 border-right: 1px solid ${({ theme }) => theme.stats};
 border-left: 1px solid transparent;
+
 }
 .caret-char-right-error{
 color: red;
 border-right: 1px solid ${({ theme }) => theme.stats};
 border-left: 1px solid transparent;
+
 }
 .caret-extra-char-right-error{
 color: red;
 border-right: 1px solid ${({ theme }) => theme.stats};
 border-left: 1px solid transparent;
+
 }
 
 .hidden-input{
@@ -758,5 +767,33 @@ transition: opacity 500ms ease-in-out;
 .fade-element:hover {
 opacity: 1;
 transition: opacity 500ms ease-in-out;
+}
+.primary-stats-title {
+color: ${({ theme }) => theme.textTypeBox};
+margin-block: 0;
+margin-bottom: 6px;
+font-size: 20px;
+}
+.primary-stats-value {
+color: ${({ theme }) => theme.text};
+margin-block: 0;
+font-size: 36px;
+}
+.stats-title {
+color: ${({ theme }) => theme.textTypeBox};
+margin-block: 0;
+margin-bottom: 6px;
+font-weight: bold;
+font-size: 16px;
+}
+.stats-value {
+margin-block: 0;
+}
+.tooltip {
+font-size: 14px;
+line-height: 6px;
+display: flex;
+align-items: center;
+gap: 8px;
 }
 `;

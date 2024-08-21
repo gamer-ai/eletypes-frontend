@@ -15,10 +15,10 @@ self.onmessage = function (e) {
   switch (countDownConstant) {
     case 90:
     case 60:
+    case 30:
       shouldRecord = countDown % 5 === 0;
       increment = 5;
       break;
-    case 30:
     case 15:
       shouldRecord = true;
       increment = 1;
