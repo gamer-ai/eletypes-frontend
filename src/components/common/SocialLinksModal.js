@@ -66,13 +66,16 @@ const SocialLinksModal = ({ status }) => {
 
   // Initial setup and cleanup for countdown timer
   useEffect(() => {
-    calculateRemainingTime(); // Initial calculation
-    const timer = setInterval(calculateRemainingTime, 1000); // Update every second
+    const now = new Date().getTime();
 
     // Start countdown if not already started
     if (!localStorage.getItem(COUNTDOWN_KEY)) {
       startCountdown();
+    } else {
+      calculateRemainingTime(); // Calculate remaining time if countdown already started
     }
+
+    const timer = setInterval(calculateRemainingTime, 1000); // Update every second
 
     return () => clearInterval(timer); // Cleanup on component unmount
   }, []);
@@ -105,17 +108,32 @@ const SocialLinksModal = ({ status }) => {
         body.style.cursor = "default"; // Reset cursor style on cleanup
       };
     } else {
-      // Reset countdown and show modal if finished and should show modal
-      if (status === "finished" && isShouldShowModal) {
-        setIsShouldShowModal(false); // Hide the modal
-        localStorage.removeItem(COUNTDOWN_KEY); // Reset countdown start time
-        localStorage.removeItem(MODAL_DISPLAY_KEY); // Clear modal display timestamp
-        setRemainingTime(COUNTDOWN_DURATION); // Reset remaining time
-      }
       // Ensure cursor is reset if status is not "started"
       body.style.cursor = "default";
     }
-  }, [status, isShouldShowModal]);
+
+    if (status === "finished") {
+      // Check and show modal if 5 minutes have passed
+      const now = new Date().getTime();
+      const countdownStartTime = parseInt(
+        localStorage.getItem(COUNTDOWN_KEY),
+        10
+      );
+
+      if (
+        countdownStartTime &&
+        now - countdownStartTime >= COUNTDOWN_DURATION
+      ) {
+        setIsShouldShowModal(true);
+        localStorage.setItem(MODAL_DISPLAY_KEY, now.toString()); // Update modal display timestamp
+      }
+
+      // Reset countdown and modal if finished and should reset
+      localStorage.removeItem(COUNTDOWN_KEY); // Clear countdown start time
+      localStorage.removeItem(MODAL_DISPLAY_KEY); // Clear modal display timestamp
+      setRemainingTime(COUNTDOWN_DURATION); // Reset remaining time
+    }
+  }, [status]);
 
   // Handle clicks on the overlay
   const handleOverlayClick = (e) => {
