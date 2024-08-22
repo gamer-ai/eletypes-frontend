@@ -142,7 +142,7 @@ const SocialLinksModal = ({ status }) => {
     }
   };
 
-  if (!isShouldShowModal) {
+  if (!isShouldShowModal || status !== "finished") {
     return null; // Do not render anything if the modal should not be shown
   }
 

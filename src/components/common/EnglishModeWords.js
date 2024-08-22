@@ -1,55 +1,54 @@
-import React, { memo } from "react";
+import React, { memo, useCallback, useRef } from "react";
 
-// Define the component
 const EnglishModeWords = ({
-  currentWords,
   currWordIndex,
+  currentWords,
   isFocusedMode,
   status,
   wordSpanRefs,
   getWordClassName,
   getCharClassName,
+  startIndex,
   getExtraCharsDisplay,
 }) => {
-  const wordMap = {};
+  const containerRef = useRef(null);
+
+  // Get word opacity for focus mode
+  const getWordOpacity = useCallback(
+    (globalIndex) =>
+      Math.max(1 - Math.abs(globalIndex - currWordIndex) * 0.1, 0.1),
+    [currWordIndex]
+  );
 
   return (
     <div
       className="type-box"
       style={{ visibility: status === "finished" ? "hidden" : "visible" }}
+      ref={containerRef}
     >
       <div className="words">
         {currentWords.map((word, i) => {
-          // Use a HashMap (object) to store the word by its index
-          if (!wordMap[i]) {
-            wordMap[i] = word;
-          }
-
-          // Process the word immediately using the HashMap
-          const opacityValue = Math.max(
-            1 - Math.abs(i - currWordIndex) * 0.1,
-            0.1
-          );
+          const globalIndex = startIndex + i;
 
           return (
             <span
-              key={i}
-              ref={wordSpanRefs[i]}
+              key={globalIndex}
+              ref={wordSpanRefs[globalIndex]}
               style={{
-                opacity: isFocusedMode ? opacityValue : "1",
+                opacity: isFocusedMode ? getWordOpacity(globalIndex) : "1",
                 transition: "500ms",
               }}
-              className={getWordClassName(i)}
+              className={getWordClassName(globalIndex)}
             >
-              {wordMap[i].split("").map((char, idx) => (
+              {word.split("").map((char, idx) => (
                 <span
-                  key={"word" + idx}
-                  className={getCharClassName(i, idx, char, wordMap[i])}
+                  key={`word${globalIndex}_${idx}`}
+                  className={getCharClassName(globalIndex, idx, char, word)}
                 >
                   {char}
                 </span>
               ))}
-              {getExtraCharsDisplay(wordMap[i], i)}
+              {getExtraCharsDisplay(word, globalIndex)}
             </span>
           );
         })}

@@ -48,6 +48,7 @@ import {
 import { SOUND_MAP } from "../sound/sound";
 import SocialLinksModal from "../../common/SocialLinksModal";
 import EnglishModeWords from "../../common/EnglishModeWords";
+import ChineseModeWords from "../../common/ChineseModeWords";
 
 const TypeBox = ({
   textInputRef,
@@ -96,8 +97,6 @@ const TypeBox = ({
     SYMBOL_ADDON_KEY
   );
 
-  const [itemsToRender, setItemsToRender] = useState(60);
-
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
 
@@ -109,7 +108,6 @@ const TypeBox = ({
     if (e.keyCode === 13 || e.keyCode === 9) {
       e.preventDefault();
       setOpenRestart(false);
-      setItemsToRender(60);
       reset(
         countDownConstant,
         difficulty,
@@ -122,7 +120,6 @@ const TypeBox = ({
     else if (e.keyCode === 32) {
       e.preventDefault();
       setOpenRestart(false);
-      setItemsToRender(60);
       reset(
         countDownConstant,
         difficulty,
@@ -233,12 +230,13 @@ const TypeBox = ({
         setWordsDict((currentArray) => [...currentArray, ...generatedChinese]);
       }
     }
-    if (
-      currWordIndex !== 0 &&
-      wordSpanRefs[currWordIndex].current.offsetLeft <
-        wordSpanRefs[currWordIndex - 1].current.offsetLeft
-    ) {
-      wordSpanRefs[currWordIndex - 1].current.scrollIntoView();
+    if (wordSpanRefs[currWordIndex]) {
+      const scrollElement = wordSpanRefs[currWordIndex].current;
+      if (scrollElement) {
+        scrollElement.scrollIntoView({
+          block: "center",
+        });
+      }
     } else {
       return;
     }
@@ -1064,21 +1062,48 @@ const TypeBox = ({
     );
   };
 
-  const startIndex = 0;
+  const baseChunkSize = 120;
+  const [startIndex, setStartIndex] = useState(0);
+  const [visibleWordsCount, setVisibleWordsCount] = useState(baseChunkSize);
 
-  // Calculate the end index for slicing
-  const endIndex = startIndex + itemsToRender;
-
-  // Get the current slice of words
-  const currentWords = words.slice(startIndex, endIndex);
-
+  // Reset startIndex when status changes
   useEffect(() => {
-    const distanceToEnd = currentWords.length - 1 - currWordIndex;
+    setStartIndex(0);
+  }, [status]);
 
-    if (distanceToEnd === 30) {
-      setItemsToRender((prev) => prev + 30);
+  // Adjust visible words based on current word index
+  useEffect(() => {
+    const endIndex = startIndex + visibleWordsCount;
+
+    // Ensure the current word is within the visible area
+    if (currWordIndex >= endIndex - 5) {
+      const newStartIndex = Math.max(
+        0,
+        Math.min(
+          currWordIndex - Math.floor(visibleWordsCount / 2),
+          words.length - visibleWordsCount
+        )
+      );
+
+      if (newStartIndex !== startIndex) {
+        setStartIndex(newStartIndex);
+        setVisibleWordsCount(
+          Math.min(words.length - newStartIndex, baseChunkSize)
+        );
+      }
     }
-  }, [currWordIndex]);
+  }, [currWordIndex, startIndex, words.length, visibleWordsCount]);
+
+  // Calculate the end index and slice the words
+  const endIndex = useMemo(
+    () => Math.min(startIndex + visibleWordsCount, words.length),
+    [startIndex, visibleWordsCount, words.length]
+  );
+
+  const currentWords = useMemo(
+    () => words.slice(startIndex, endIndex),
+    [startIndex, endIndex, words]
+  );
 
   return (
     <>
@@ -1090,6 +1115,7 @@ const TypeBox = ({
             currentWords={currentWords}
             currWordIndex={currWordIndex}
             isFocusedMode={isFocusedMode}
+            startIndex={startIndex}
             status={status}
             wordSpanRefs={wordSpanRefs}
             getWordClassName={getWordClassName}
@@ -1098,52 +1124,18 @@ const TypeBox = ({
           />
         )}
         {language === CHINESE_MODE && (
-          <div
-            className="type-box-chinese"
-            style={{ visibility: status === "finished" ? "hidden" : "visible" }}
-          >
-            <div className="words">
-              {currentWords.map((word, i) => {
-                const opacityValue = Math.max(
-                  1 - Math.abs(i - currWordIndex) * 0.1,
-                  0.1
-                );
-
-                return (
-                  <div
-                    key={i + "word"}
-                    style={{
-                      opacity: opacityValue,
-                      transition: "500ms",
-                    }}
-                  >
-                    <span
-                      key={i + "anchor"}
-                      className={getChineseWordKeyClassName(i)}
-                      ref={wordSpanRefs[i]}
-                    >
-                      {" "}
-                      {wordsKey[i]}
-                    </span>
-                    <span
-                      key={i + "val"}
-                      className={getChineseWordClassName(i)}
-                    >
-                      {word.split("").map((char, idx) => (
-                        <span
-                          key={"word" + idx}
-                          className={getCharClassName(i, idx, char, word)}
-                        >
-                          {char}
-                        </span>
-                      ))}
-                      {getExtraCharsDisplay(word, i)}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          <ChineseModeWords
+            currentWords={currentWords}
+            currWordIndex={currWordIndex}
+            wordsKey={wordsKey}
+            isFocusedMode={isFocusedMode}
+            status={status}
+            wordSpanRefs={wordSpanRefs}
+            getChineseWordKeyClassName={getChineseWordKeyClassName}
+            getChineseWordClassName={getChineseWordClassName}
+            getCharClassName={getCharClassName}
+            getExtraCharsDisplay={getExtraCharsDisplay}
+          />
         )}
         <div className="stats">
           <Stats
