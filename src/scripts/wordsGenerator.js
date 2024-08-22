@@ -27,34 +27,42 @@ const wordsGenerator = (
   numberAddOn,
   symbolAddOn
 ) => {
-  return new Promise((resolve, reject) => {
-    const worker = new Worker(
-      new URL("../worker/wordsGeneratorWorker.js", import.meta.url)
-    );
+  if (languageMode === ENGLISH_MODE) {
+    if (difficulty === DEFAULT_DIFFICULTY) {
+      const EnglishWordList = [];
+      for (let i = 0; i < DEFAULT_WORDS_COUNT; i++) {
+        const rand = randomIntFromRange(0, 550);
+        let wordCandidate = COMMON_WORDS[rand].val;
+        if (numberAddOn) {
+          wordCandidate = wordCandidate + generateRandomNumChras(1, 2);
+        }
+        if (symbolAddOn) {
+          wordCandidate = wordCandidate + generateRandomSymbolChras(1, 1);
+        }
+        EnglishWordList.push({ key: wordCandidate, val: wordCandidate });
+      }
+      return EnglishWordList;
+    }
 
-    worker.onmessage = function (e) {
-      const generatedWords = e.data;
-      resolve(generatedWords);
-      worker.terminate();
-    };
-
-    worker.onerror = function (e) {
-      reject(e);
-      worker.terminate();
-    };
-
-    worker.postMessage({
-      wordsCount,
-      ENGLISH_MODE,
-      COMMON_WORDS,
-      DEFAULT_DIFFICULTY,
-      DEFAULT_WORDS_COUNT,
-      difficulty,
-      languageMode,
-      numberAddOn,
-      symbolAddOn,
+    // hard
+    const randomWordsGenerated = randomWords({
+      exactly: wordsCount,
+      maxLength: 7,
     });
-  });
+    const words = [];
+    for (let i = 0; i < wordsCount; i++) {
+      let wordCandidate = randomWordsGenerated[i];
+      if (numberAddOn) {
+        wordCandidate = wordCandidate + generateRandomNumChras(1, 2);
+      }
+      if (symbolAddOn) {
+        wordCandidate = wordCandidate + generateRandomSymbolChras(1, 1);
+      }
+      words.push({ key: wordCandidate, val: wordCandidate });
+    }
+    return words;
+  }
+  return ["something", "went", "wrong"];
 };
 
 const chineseWordsGenerator = (

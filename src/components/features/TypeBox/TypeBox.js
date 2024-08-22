@@ -95,7 +95,7 @@ const TypeBox = ({
     SYMBOL_ADDON_KEY
   );
 
-  const [itemsToRender, setItemsToRender] = useState(50);
+  const [itemsToRender, setItemsToRender] = useState(60);
 
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
@@ -118,7 +118,7 @@ const TypeBox = ({
     if (e.keyCode === 13 || e.keyCode === 9) {
       e.preventDefault();
       setOpenRestart(false);
-      setItemsToRender(50);
+      setItemsToRender(60);
       reset(
         countDownConstant,
         difficulty,
@@ -131,7 +131,7 @@ const TypeBox = ({
     else if (e.keyCode === 32) {
       e.preventDefault();
       setOpenRestart(false);
-      setItemsToRender(50);
+      setItemsToRender(60);
       reset(
         countDownConstant,
         difficulty,
@@ -150,34 +150,25 @@ const TypeBox = ({
   };
 
   // set up words state
-  const [wordsDict, setWordsDict] = useState([]);
-
-  useEffect(() => {
+  const [wordsDict, setWordsDict] = useState(() => {
     if (language === ENGLISH_MODE) {
-      (async () => {
-        const generatedWords = await wordsGenerator(
-          DEFAULT_WORDS_COUNT,
-          difficulty,
-          ENGLISH_MODE,
-          numberAddOn,
-          symbolAddOn
-        );
-
-        setWordsDict(generatedWords);
-      })();
+      return wordsGenerator(
+        DEFAULT_WORDS_COUNT,
+        difficulty,
+        ENGLISH_MODE,
+        numberAddOn,
+        symbolAddOn
+      );
     }
-
     if (language === CHINESE_MODE) {
-      const generatedWords = chineseWordsGenerator(
+      return chineseWordsGenerator(
         difficulty,
         CHINESE_MODE,
         numberAddOn,
         symbolAddOn
       );
-
-      setWordsDict(generatedWords);
     }
-  }, []);
+  });
 
   const words = useMemo(() => {
     return wordsDict.map((e) => e.val);
@@ -232,16 +223,14 @@ const TypeBox = ({
   useEffect(() => {
     if (currWordIndex === DEFAULT_WORDS_COUNT - 1) {
       if (language === ENGLISH_MODE) {
-        (async () => {
-          const generatedEng = await wordsGenerator(
-            DEFAULT_WORDS_COUNT,
-            difficulty,
-            ENGLISH_MODE,
-            numberAddOn,
-            symbolAddOn
-          );
-          setWordsDict((currentArray) => [...currentArray, ...generatedEng]);
-        })();
+        const generatedEng = wordsGenerator(
+          DEFAULT_WORDS_COUNT,
+          difficulty,
+          ENGLISH_MODE,
+          numberAddOn,
+          symbolAddOn
+        );
+        setWordsDict((currentArray) => [...currentArray, ...generatedEng]);
       }
       if (language === CHINESE_MODE) {
         const generatedChinese = chineseWordsGenerator(
@@ -292,17 +281,15 @@ const TypeBox = ({
         );
       }
       if (language === ENGLISH_MODE) {
-        (async () => {
-          const generatedWords = await wordsGenerator(
+        setWordsDict(
+          wordsGenerator(
             DEFAULT_WORDS_COUNT,
             difficulty,
             language,
             newNumberAddOn,
             newSymbolAddOn
-          );
-
-          setWordsDict(generatedWords);
-        })();
+          )
+        );
       }
     }
     setNumberAddOn(newNumberAddOn);
@@ -597,57 +584,37 @@ const TypeBox = ({
     }
   };
 
-  const workerRef = useRef(null);
-
-  useEffect(() => {
-    workerRef.current = new Worker(
-      new URL("../../../worker/checkPrevWorker", import.meta.url)
-    );
-
-    return () => {
-      if (workerRef.current) {
-        workerRef.current.terminate();
-      }
-    };
-  }, []);
-
   const checkPrev = () => {
-    if (!workerRef.current) return;
-
+    const wordToCompare = words[currWordIndex];
     const currInputWithoutSpaces = currInput.trim();
-    workerRef.current.postMessage({
-      words,
-      currWordIndex,
-      currInputWithoutSpaces,
-      wordsCorrect: Array.from(wordsCorrect),
-      wordsInCorrect: Array.from(wordsInCorrect),
-      inputWordsHistory,
-      prevInput,
-      wpmKeyStrokes,
-    });
+    const isCorrect = wordToCompare === currInputWithoutSpaces;
+    if (!currInputWithoutSpaces || currInputWithoutSpaces.length === 0) {
+      return null;
+    }
+    if (isCorrect) {
+      // console.log("detected match");
+      wordsCorrect.add(currWordIndex);
+      wordsInCorrect.delete(currWordIndex);
+      let inputWordsHistoryUpdate = { ...inputWordsHistory };
+      inputWordsHistoryUpdate[currWordIndex] = currInputWithoutSpaces;
+      setInputWordsHistory(inputWordsHistoryUpdate);
+      // reset prevInput to empty (will not go back)
+      setPrevInput("");
 
-    workerRef.current.onmessage = (event) => {
-      const {
-        isCorrect,
-        updatedWordsCorrect,
-        updatedWordsInCorrect,
-        updatedInputWordsHistory,
-        updatedPrevInput,
-        updatedWpmKeyStrokes,
-      } = event.data;
-
-      if (isCorrect !== null) {
-        setWordsCorrect(new Set(updatedWordsCorrect));
-        setWordsInCorrect(new Set(updatedWordsInCorrect));
-        setInputWordsHistory(updatedInputWordsHistory);
-        setPrevInput(updatedPrevInput);
-        setWpmKeyStrokes(updatedWpmKeyStrokes);
-
-        setCurrWordIndex((prevIndex) => prevIndex + 1);
-        setCurrInput("");
-        setCurrCharIndex(-1);
-      }
-    };
+      // here count the space as effective wpm.
+      setWpmKeyStrokes(wpmKeyStrokes + 1);
+      return true;
+    } else {
+      // console.log("detected unmatch");
+      wordsInCorrect.add(currWordIndex);
+      wordsCorrect.delete(currWordIndex);
+      let inputWordsHistoryUpdate = { ...inputWordsHistory };
+      inputWordsHistoryUpdate[currWordIndex] = currInputWithoutSpaces;
+      setInputWordsHistory(inputWordsHistoryUpdate);
+      // append currInput to prevInput
+      setPrevInput(prevInput + " " + currInputWithoutSpaces);
+      return false;
+    }
   };
 
   const getWordClassName = (wordIdx) => {
@@ -1117,8 +1084,8 @@ const TypeBox = ({
   useEffect(() => {
     const distanceToEnd = currentWords.length - 1 - currWordIndex;
 
-    if (distanceToEnd === 25) {
-      setItemsToRender((prev) => prev + 25);
+    if (distanceToEnd === 30) {
+      setItemsToRender((prev) => prev + 30);
     }
   }, [currWordIndex]);
 

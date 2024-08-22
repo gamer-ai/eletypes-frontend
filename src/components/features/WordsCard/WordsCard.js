@@ -267,7 +267,6 @@ const WordsCard = ({ soundType, soundMode }) => {
   };
 
   const handleKeyDown = (e) => {
-    console.log("handleKeyDown");
     if (soundMode) {
       play();
     }
