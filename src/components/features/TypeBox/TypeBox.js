@@ -47,6 +47,7 @@ import {
 } from "../../../constants/Constants";
 import { SOUND_MAP } from "../sound/sound";
 import SocialLinksModal from "../../common/SocialLinksModal";
+import EnglishModeWords from "../../common/EnglishModeWords";
 
 const TypeBox = ({
   textInputRef,
@@ -102,16 +103,6 @@ const TypeBox = ({
 
   // tab-enter restart dialog
   const [openRestart, setOpenRestart] = useState(false);
-
-  // State to manage the modal's open/close state
-  const [modalOpen, setModalOpen] = useState(false);
-
-  // URL of your typing test project
-  const projectUrl = "https://www.eletypes.com";
-
-  // Functions to open and close the modal
-  const handleOpenModal = () => setModalOpen(true);
-  const handleCloseModal = () => setModalOpen(false);
 
   const EnterkeyPressReset = (e) => {
     // press enter/or tab to reset;
@@ -1089,162 +1080,23 @@ const TypeBox = ({
     }
   }, [currWordIndex]);
 
-  const MODAL_DISPLAY_KEY = "modalDisplayedTimestamp"; // Key for local storage
-  const COUNTDOWN_KEY = "countdownStartTime"; // Key for countdown start time
-  const COUNTDOWN_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
-
-  const [isShouldShowModal, setIsShouldShowModal] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(COUNTDOWN_DURATION);
-
-  const checkIfModalShouldBeDisplayed = () => {
-    const lastDisplayed = localStorage.getItem(MODAL_DISPLAY_KEY);
-    const countdownStartTime = parseInt(
-      localStorage.getItem(COUNTDOWN_KEY),
-      10
-    );
-    const now = new Date().getTime();
-
-    if (
-      !lastDisplayed ||
-      now - parseInt(lastDisplayed, 10) >= COUNTDOWN_DURATION
-    ) {
-      // Show modal and record timestamp
-      setIsShouldShowModal(true);
-      localStorage.setItem(MODAL_DISPLAY_KEY, now.toString());
-    }
-  };
-
-  const startCountdown = () => {
-    const now = new Date().getTime();
-    localStorage.setItem(COUNTDOWN_KEY, now.toString());
-    checkIfModalShouldBeDisplayed();
-  };
-
-  const calculateRemainingTime = () => {
-    const countdownStartTime = parseInt(
-      localStorage.getItem(COUNTDOWN_KEY),
-      10
-    );
-    const now = new Date().getTime();
-    const elapsedTime = now - countdownStartTime;
-    const timeLeft = COUNTDOWN_DURATION - elapsedTime;
-
-    if (timeLeft <= 0) {
-      setRemainingTime(0);
-      localStorage.removeItem(COUNTDOWN_KEY); // Clear the countdown start time
-      setIsShouldShowModal(true);
-      localStorage.setItem(MODAL_DISPLAY_KEY, now.toString()); // Update modal display timestamp
-    } else {
-      setRemainingTime(timeLeft);
-    }
-  };
-
-  const formatTime = (time) => {
-    const minutes = Math.floor(time / 60000);
-    const seconds = Math.floor((time % 60000) / 1000);
-    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-  };
-
-  useEffect(() => {
-    calculateRemainingTime(); // Initial calculation
-    const timer = setInterval(calculateRemainingTime, 1000); // Update every second
-
-    // Start countdown if not already started
-    if (!localStorage.getItem(COUNTDOWN_KEY)) {
-      startCountdown();
-    }
-
-    return () => clearInterval(timer); // Cleanup on component unmount
-  }, []);
-
-  useEffect(() => {
-    const body = document.getElementsByTagName("body")[0];
-    const delay = 500;
-    let timeoutId;
-
-    const showCursor = () => {
-      body.style.cursor = "default";
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(hideCursor, delay); // Adjust timeout duration as needed
-    };
-
-    const hideCursor = () => {
-      body.style.cursor = "none";
-    };
-
-    if (status === "started") {
-      body.style.cursor = "none"; // Initially hide the cursor
-      timeoutId = setTimeout(hideCursor, delay); // Set timeout to hide cursor after inactivity
-
-      document.addEventListener("mousemove", showCursor);
-
-      return () => {
-        document.removeEventListener("mousemove", showCursor);
-        clearTimeout(timeoutId); // Clear timeout on cleanup
-        body.style.cursor = "default"; // Reset cursor style on cleanup
-      };
-    } else {
-      // Reset countdown and show modal if finished and should show modal
-      if (status === "finished" && isShouldShowModal) {
-        setIsShouldShowModal(false); // Hide the modal
-        localStorage.removeItem(COUNTDOWN_KEY); // Reset countdown start time
-        localStorage.removeItem(MODAL_DISPLAY_KEY); // Clear modal display timestamp
-        setRemainingTime(COUNTDOWN_DURATION); // Reset remaining time
-        handleOpenModal();
-      }
-      // Ensure cursor is reset if status is not "started"
-      body.style.cursor = "default";
-    }
-  }, [status, isShouldShowModal]);
-
-  const renderEnglishMode = () => (
-    <div
-      className="type-box"
-      style={{ visibility: status === "finished" ? "hidden" : "visible" }}
-    >
-      <div className="words">
-        {currentWords.map((word, i) => {
-          const opacityValue = Math.max(
-            1 - Math.abs(i - currWordIndex) * 0.1,
-            0.1
-          );
-
-          return (
-            <span
-              key={i}
-              ref={wordSpanRefs[i]}
-              style={{
-                opacity: isFocusedMode ? opacityValue : "1",
-                transition: "500ms",
-              }}
-              className={getWordClassName(i)}
-            >
-              {word.split("").map((char, idx) => (
-                <span
-                  key={"word" + idx}
-                  className={getCharClassName(i, idx, char, word)}
-                >
-                  {char}
-                </span>
-              ))}
-              {getExtraCharsDisplay(word, i)}
-            </span>
-          );
-        })}
-      </div>
-    </div>
-  );
-
   return (
     <>
-      <SocialLinksModal
-        open={modalOpen}
-        onClose={handleCloseModal}
-        projectUrl={projectUrl}
-      />
+      <SocialLinksModal status={status} />
       <div onClick={handleInputFocus}>
         <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
-        {language === ENGLISH_MODE && renderEnglishMode()}
+        {language === ENGLISH_MODE && (
+          <EnglishModeWords
+            currentWords={currentWords}
+            currWordIndex={currWordIndex}
+            isFocusedMode={isFocusedMode}
+            status={status}
+            wordSpanRefs={wordSpanRefs}
+            getWordClassName={getWordClassName}
+            getCharClassName={getCharClassName}
+            getExtraCharsDisplay={getExtraCharsDisplay}
+          />
+        )}
         {language === CHINESE_MODE && (
           <div
             className="type-box-chinese"
