@@ -2,8 +2,8 @@ import React, { memo, useCallback, useRef } from "react";
 
 const EnglishModeWords = ({
   currWordIndex,
+  isUltraZenMode,
   currentWords,
-  isFocusedMode,
   status,
   wordSpanRefs,
   getWordClassName,
@@ -35,7 +35,7 @@ const EnglishModeWords = ({
               key={globalIndex}
               ref={wordSpanRefs[globalIndex]}
               style={{
-                opacity: isFocusedMode ? getWordOpacity(globalIndex) : "1",
+                opacity: isUltraZenMode ? getWordOpacity(globalIndex) : "1",
                 transition: "500ms",
               }}
               className={getWordClassName(globalIndex)}

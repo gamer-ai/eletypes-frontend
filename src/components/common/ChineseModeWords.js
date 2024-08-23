@@ -3,8 +3,8 @@ import React, { memo, useCallback, useRef } from "react";
 const ChineseModeWords = ({
   currentWords,
   currWordIndex,
+  isUltraZenMode,
   wordsKey,
-  isFocusedMode,
   status,
   wordSpanRefs,
   getChineseWordKeyClassName,
@@ -28,7 +28,7 @@ const ChineseModeWords = ({
     >
       <div className="words">
         {currentWords.map((word, i) => {
-          const opacityValue = isFocusedMode ? getWordOpacity(i) : 1;
+          const opacityValue = isUltraZenMode ? getWordOpacity(i) : 1;
 
           return (
             <div

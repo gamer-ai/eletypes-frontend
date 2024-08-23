@@ -11,8 +11,10 @@ const NUMBER_ADDON = "+number";
 const SYMBOL_ADDON = "+symbol";
 const RESTART_BUTTON_TOOLTIP_TITLE = "[Tab] + [Enter] to quickly restart";
 const REDO_BUTTON_TOOLTIP_TITLE = "[Tab] + [Space] to quickly redo";
-const RESTART_BUTTON_TOOLTIP_TITLE_WORDSCARD = "[Tab] + [Enter] to quick restart the chapter";
-const SELECT_ONE_OR_MORE_CHAPTERS = "Open to select one or more chapters. Pick the chapters in the typing area."
+const RESTART_BUTTON_TOOLTIP_TITLE_WORDSCARD =
+  "[Tab] + [Enter] to quick restart the chapter";
+const SELECT_ONE_OR_MORE_CHAPTERS =
+  "Open to select one or more chapters. Pick the chapters in the typing area.";
 const RECITE_MODE_TITLE = "hide the word (默写模式)";
 const DEFAULT_DIFFICULTY_TOOLTIP_TITLE =
   "normal mode generates random words from top 1000 most frequently used words in English dataset.";
@@ -32,7 +34,6 @@ const DEFAULT_DIFFICULTY_TOOLTIP_TITLE_CHINESE =
 const HARD_DIFFICULTY_TOOLTIP_TITLE_CHINESE =
   "hard mode generates random words from top 1500 most used Chinese idioms.";
 
-
 const GITHUB_TOOLTIP_TITLE =
   "Dear visitors: \n For feature requests or bug reports, please submit an issue to the github repo. \n Welcome contributing with a fork. \n If you like my works, please star the project. \n Thanks! \n";
 const SUPPORT_TOOLTIP_TITLE =
@@ -41,6 +42,8 @@ const AUTHOR = "author: @Muyang Guo\n";
 const GITHUB_REPO_LINK = "project: @Github\n";
 
 const FOCUS_MODE = "Focus mode";
+
+const ULTRA_ZEN_MODE = "Ultra Zen Mode";
 
 const MUSIC_MODE =
   "Spotify player. You will need to login spotify first to use the full feature.";
@@ -64,16 +67,18 @@ const FIFTEEN_SENTENCES_COUNT = 15;
 const ENGLISH_SENTENCE_MODE_TOOLTIP_TITLE = "English Sentence Mode";
 const CHINESE_SENTENCE_MODE_TOOLTIP_TITLE = "Chinese Sentence Mode";
 
-const WORDS_CARD_MODE = "Words Card mode, learn something in typing!"
+const WORDS_CARD_MODE = "Words Card mode, learn something in typing!";
 
 const PACING_CARET = "caret";
 const PACING_PULSE = "pulse";
 
-const PACING_CARET_TOOLTIP = "type the word with a caret \"|\" , character by character.";
-const PACING_PULSE_TOOLTIP = "type the word with a pulse \"____\", this helps improving wpm and your speed typing pace habit.";
+const PACING_CARET_TOOLTIP =
+  'type the word with a caret "|" , character by character.';
+const PACING_PULSE_TOOLTIP =
+  'type the word with a pulse "____", this helps improving wpm and your speed typing pace habit.';
 
-const NUMBER_ADDON_KEY = 'number';
-const SYMBOL_ADDON_KEY = 'symbol';
+const NUMBER_ADDON_KEY = "number";
+const SYMBOL_ADDON_KEY = "symbol";
 
 export {
   DEFAULT_WORDS_COUNT,
@@ -127,5 +132,6 @@ export {
   PACING_CARET_TOOLTIP,
   PACING_PULSE_TOOLTIP,
   NUMBER_ADDON_KEY,
-  SYMBOL_ADDON_KEY
+  SYMBOL_ADDON_KEY,
+  ULTRA_ZEN_MODE,
 };

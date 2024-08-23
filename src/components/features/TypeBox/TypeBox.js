@@ -53,6 +53,7 @@ import ChineseModeWords from "../../common/ChineseModeWords";
 const TypeBox = ({
   textInputRef,
   isFocusedMode,
+  isUltraZenMode,
   soundMode,
   soundType,
   handleInputFocus,
@@ -1114,7 +1115,7 @@ const TypeBox = ({
           <EnglishModeWords
             currentWords={currentWords}
             currWordIndex={currWordIndex}
-            isFocusedMode={isFocusedMode}
+            isUltraZenMode={isUltraZenMode}
             startIndex={startIndex}
             status={status}
             wordSpanRefs={wordSpanRefs}
@@ -1128,7 +1129,7 @@ const TypeBox = ({
             currentWords={currentWords}
             currWordIndex={currWordIndex}
             wordsKey={wordsKey}
-            isFocusedMode={isFocusedMode}
+            isUltraZenMode={isUltraZenMode}
             status={status}
             wordSpanRefs={wordSpanRefs}
             getChineseWordKeyClassName={getChineseWordKeyClassName}
