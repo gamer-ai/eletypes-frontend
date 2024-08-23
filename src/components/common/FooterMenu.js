@@ -1,4 +1,5 @@
 import React from "react";
+import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 import { Grid, AppBar } from "@mui/material";
 import { Box } from "@mui/system";
 import { Tooltip } from "@mui/material";
@@ -16,6 +17,7 @@ import {
   GAME_MODE_SENTENCE,
   TRAINER_MODE,
   WORDS_CARD_MODE,
+  ULTRA_ZEN_MODE,
 } from "../../constants/Constants";
 import { Link } from "@mui/material";
 import SupportMe from "../features/SupportMe";
@@ -45,6 +47,8 @@ const FooterMenu = ({
   handleThemeChange,
   toggleFocusedMode,
   toggleMusicMode,
+  toggleUltraZenMode,
+  isUltraZenMode,
   toggleCoffeeMode,
   isMusicMode,
   isFocusedMode,
@@ -54,6 +58,7 @@ const FooterMenu = ({
   isTrainerMode,
   toggleTrainerMode,
   isWordsCardMode,
+  isWordGameMode,
   toggleWordsCardMode,
 }) => {
   const isSiteInfoDisabled = isMusicMode || isFocusedMode;
@@ -75,8 +80,11 @@ const FooterMenu = ({
   };
 
   return (
-    <AppBar position="static"
-    color="transparent" className="bottomBar">
+    <AppBar
+      position="static"
+      color="transparent"
+      className={`bottomBar ${isFocusedMode && "fade-element"}`}
+    >
       <Grid container justifyContent="space-between" alignItems="center">
         <Box display="flex" flexDirection="row">
           <Select
@@ -168,6 +176,15 @@ const FooterMenu = ({
                   {WORD_MODE_LABEL}
                 </span>
               </IconButton>
+              {isWordGameMode && (
+                <IconButton onClick={toggleUltraZenMode}>
+                  <Tooltip title={ULTRA_ZEN_MODE}>
+                    <span className={getModeButtonClassName(isUltraZenMode)}>
+                      <ZoomInMapIcon fontSize="small" />
+                    </span>
+                  </Tooltip>{" "}
+                </IconButton>
+              )}
               <IconButton
                 onClick={() => {
                   handleGameModeChange(GAME_MODE_SENTENCE);

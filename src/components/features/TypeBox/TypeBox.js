@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import useSound from "use-sound";
 import {
   wordsGenerator,
@@ -46,11 +46,14 @@ import {
   SYMBOL_ADDON_KEY,
 } from "../../../constants/Constants";
 import { SOUND_MAP } from "../sound/sound";
-import { Visibility } from "@mui/icons-material";
+import SocialLinksModal from "../../common/SocialLinksModal";
+import EnglishModeWords from "../../common/EnglishModeWords";
+import ChineseModeWords from "../../common/ChineseModeWords";
 
 const TypeBox = ({
   textInputRef,
   isFocusedMode,
+  isUltraZenMode,
   soundMode,
   soundType,
   handleInputFocus,
@@ -95,8 +98,6 @@ const TypeBox = ({
     SYMBOL_ADDON_KEY
   );
 
-  const [itemsToRender, setItemsToRender] = useState(40);
-
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
 
@@ -108,7 +109,6 @@ const TypeBox = ({
     if (e.keyCode === 13 || e.keyCode === 9) {
       e.preventDefault();
       setOpenRestart(false);
-      setItemsToRender(40);
       reset(
         countDownConstant,
         difficulty,
@@ -121,7 +121,6 @@ const TypeBox = ({
     else if (e.keyCode === 32) {
       e.preventDefault();
       setOpenRestart(false);
-      setItemsToRender(40);
       reset(
         countDownConstant,
         difficulty,
@@ -232,12 +231,13 @@ const TypeBox = ({
         setWordsDict((currentArray) => [...currentArray, ...generatedChinese]);
       }
     }
-    if (
-      currWordIndex !== 0 &&
-      wordSpanRefs[currWordIndex].current.offsetLeft <
-        wordSpanRefs[currWordIndex - 1].current.offsetLeft
-    ) {
-      wordSpanRefs[currWordIndex - 1].current.scrollIntoView();
+    if (wordSpanRefs[currWordIndex]) {
+      const scrollElement = wordSpanRefs[currWordIndex].current;
+      if (scrollElement) {
+        scrollElement.scrollIntoView({
+          block: "center",
+        });
+      }
     } else {
       return;
     }
@@ -397,6 +397,42 @@ const TypeBox = ({
     setCapsLocked(e.getModifierState("CapsLock"));
   };
 
+  const wpmWorkerRef = useRef(null);
+
+  useEffect(() => {
+    // Initialize worker
+    wpmWorkerRef.current = new Worker(
+      new URL("../../../worker/calculateWpmWorker", import.meta.url)
+    );
+
+    return () => {
+      // Cleanup worker on component unmount
+      if (wpmWorkerRef.current) {
+        wpmWorkerRef.current.terminate();
+      }
+    };
+  }, []);
+
+  const calculateWpm = (wpmKeyStrokes, countDownConstant, countDown) => {
+    if (wpmKeyStrokes !== 0) {
+      if (!wpmWorkerRef.current) return; // Ensure worker is initialized
+
+      wpmWorkerRef.current.postMessage({
+        wpmKeyStrokes,
+        countDownConstant,
+        countDown,
+      });
+
+      wpmWorkerRef.current.onmessage = (event) => {
+        setWpm(event.data);
+      };
+
+      wpmWorkerRef.current.onerror = (error) => {
+        console.error("Worker error:", error);
+      };
+    }
+  };
+
   const handleKeyDown = (e) => {
     if (status !== "finished" && soundMode) {
       play();
@@ -439,10 +475,8 @@ const TypeBox = ({
     }
 
     // Update stats when typing unless there is no effective WPM
-    if (wpmKeyStrokes !== 0 && countDownConstant - countDown !== 0) {
-      const currWpm =
-        (wpmKeyStrokes / 5 / (countDownConstant - countDown)) * 60.0;
-      setWpm(currWpm);
+    if (wpmKeyStrokes !== 0) {
+      calculateWpm(wpmKeyStrokes, countDownConstant, countDown);
     }
 
     // start the game by typing any thing
@@ -631,18 +665,35 @@ const TypeBox = ({
     }
   };
 
+  const charsWorkerRef = useRef();
+
+  useEffect(() => {
+    charsWorkerRef.current = new Worker(
+      new URL("../../../worker/trackCharsErrorsWorker", import.meta.url)
+    );
+
+    charsWorkerRef.current.onmessage = (e) => {
+      if (e.data.type === "increment") {
+        setIncorrectCharsCount((prev) => prev + 1);
+      }
+    };
+
+    return () => {
+      charsWorkerRef.current.terminate();
+    };
+  }, []);
+
   useEffect(() => {
     if (status !== "started") return;
+
     const word = words[currWordIndex];
-    const char = word.split("")[currCharIndex];
 
-    if (char !== currChar && char !== undefined)
-      return setIncorrectCharsCount((prev) => prev + 1);
-  }, [currChar, status, currCharIndex]);
-
-  useEffect(() => {
-    // console.log("incorrectCharsCount:", incorrectCharsCount);
-  }, [incorrectCharsCount]);
+    charsWorkerRef.current.postMessage({
+      word,
+      currChar,
+      currCharIndex,
+    });
+  }, [currChar, status, currCharIndex, words, currWordIndex]);
 
   const getCharClassName = (wordIdx, charIdx, char, word) => {
     const keyString = wordIdx + "." + charIdx;
@@ -1012,140 +1063,138 @@ const TypeBox = ({
     );
   };
 
-  const startIndex = 0;
+  const baseChunkSize = 120;
+  const [startIndex, setStartIndex] = useState(0);
+  const [visibleWordsCount, setVisibleWordsCount] = useState(baseChunkSize);
 
-  // Calculate the end index for slicing
-  const endIndex = startIndex + itemsToRender;
-
-  // Get the current slice of words
-  const currentWords = words.slice(startIndex, endIndex);
-
+  // Reset startIndex when status changes
   useEffect(() => {
-    const distanceToEnd = currentWords.length - 1 - currWordIndex;
+    setStartIndex(0);
+  }, [status]);
 
-    if (distanceToEnd === 20) {
-      setItemsToRender((prev) => prev + 20);
+  // Adjust visible words based on current word index
+  useEffect(() => {
+    const endIndex = startIndex + visibleWordsCount;
+
+    // Ensure the current word is within the visible area
+    if (currWordIndex >= endIndex - 5) {
+      const newStartIndex = Math.max(
+        0,
+        Math.min(
+          currWordIndex - Math.floor(visibleWordsCount / 2),
+          words.length - visibleWordsCount
+        )
+      );
+
+      if (newStartIndex !== startIndex) {
+        setStartIndex(newStartIndex);
+        setVisibleWordsCount(
+          Math.min(words.length - newStartIndex, baseChunkSize)
+        );
+      }
     }
-  }, [currWordIndex]);
+  }, [currWordIndex, startIndex, words.length, visibleWordsCount]);
+
+  // Calculate the end index and slice the words
+  const endIndex = useMemo(
+    () => Math.min(startIndex + visibleWordsCount, words.length),
+    [startIndex, visibleWordsCount, words.length]
+  );
+
+  const currentWords = useMemo(
+    () => words.slice(startIndex, endIndex),
+    [startIndex, endIndex, words]
+  );
 
   return (
-    <div onClick={handleInputFocus}>
-      <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
-      {language === ENGLISH_MODE && (
-        <div
-          className="type-box"
-          style={{ visibility: status === "finished" ? "hidden" : "visible" }}
-        >
-          <div className="words">
-            {currentWords.map((word, i) => {
-              return (
-                <span
-                  key={i}
-                  ref={wordSpanRefs[i]}
-                  className={getWordClassName(i)}
-                >
-                  {word.split("").map((char, idx) => (
-                    <span
-                      key={"word" + idx}
-                      className={getCharClassName(i, idx, char, word)}
-                    >
-                      {char}
-                    </span>
-                  ))}
-                  {getExtraCharsDisplay(word, i)}
-                </span>
-              );
-            })}
-          </div>
+    <>
+      {/* <SocialLinksModal status={status} /> */}
+      <div onClick={handleInputFocus}>
+        <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
+        {language === ENGLISH_MODE && (
+          <EnglishModeWords
+            currentWords={currentWords}
+            currWordIndex={currWordIndex}
+            isUltraZenMode={isUltraZenMode}
+            startIndex={startIndex}
+            status={status}
+            wordSpanRefs={wordSpanRefs}
+            getWordClassName={getWordClassName}
+            getCharClassName={getCharClassName}
+            getExtraCharsDisplay={getExtraCharsDisplay}
+          />
+        )}
+        {language === CHINESE_MODE && (
+          <ChineseModeWords
+            currentWords={currentWords}
+            currWordIndex={currWordIndex}
+            wordsKey={wordsKey}
+            isUltraZenMode={isUltraZenMode}
+            status={status}
+            wordSpanRefs={wordSpanRefs}
+            getChineseWordKeyClassName={getChineseWordKeyClassName}
+            getChineseWordClassName={getChineseWordClassName}
+            getCharClassName={getCharClassName}
+            getExtraCharsDisplay={getExtraCharsDisplay}
+          />
+        )}
+        <div className="stats">
+          <Stats
+            status={status}
+            language={language}
+            wpm={wpm}
+            setIncorrectCharsCount={setIncorrectCharsCount}
+            incorrectCharsCount={incorrectCharsCount}
+            theme={theme}
+            countDown={countDown}
+            countDownConstant={countDownConstant}
+            statsCharCount={statsCharCount}
+            rawKeyStrokes={rawKeyStrokes}
+            wpmKeyStrokes={wpmKeyStrokes}
+            renderResetButton={renderResetButton}
+          ></Stats>
+          {status !== "finished" && renderResetButton()}
         </div>
-      )}
-      {language === CHINESE_MODE && (
-        <div
-          className="type-box-chinese"
-          style={{ visibility: status === "finished" ? "hidden" : "visible" }}
+        <input
+          key="hidden-input"
+          ref={textInputRef}
+          type="text"
+          className="hidden-input"
+          onKeyDown={(e) => handleKeyDown(e)}
+          onKeyUp={(e) => handleKeyUp(e)}
+          value={currInput}
+          onChange={(e) => UpdateInput(e)}
+        />
+        <Dialog
+          PaperProps={{
+            style: {
+              backgroundColor: "transparent",
+              boxShadow: "none",
+            },
+          }}
+          open={openRestart}
+          onKeyDown={EnterkeyPressReset}
         >
-          <div className="words">
-            {currentWords.map((word, i) => (
-              <div key={i + "word"}>
-                <span
-                  key={i + "anchor"}
-                  className={getChineseWordKeyClassName(i)}
-                  ref={wordSpanRefs[i]}
-                >
-                  {" "}
-                  {wordsKey[i]}
-                </span>
-                <span key={i + "val"} className={getChineseWordClassName(i)}>
-                  {word.split("").map((char, idx) => (
-                    <span
-                      key={"word" + idx}
-                      className={getCharClassName(i, idx, char, word)}
-                    >
-                      {char}
-                    </span>
-                  ))}
-                  {getExtraCharsDisplay(word, i)}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      <div className="stats">
-        <Stats
-          status={status}
-          wpm={wpm}
-          setIncorrectCharsCount={setIncorrectCharsCount}
-          incorrectCharsCount={incorrectCharsCount}
-          theme={theme}
-          countDown={countDown}
-          countDownConstant={countDownConstant}
-          statsCharCount={statsCharCount}
-          rawKeyStrokes={rawKeyStrokes}
-          wpmKeyStrokes={wpmKeyStrokes}
-          renderResetButton={renderResetButton}
-        ></Stats>
-        {status !== "finished" && renderResetButton()}
+          <DialogTitle>
+            <div>
+              <span className="key-note"> press </span>
+              <span className="key-type">Space</span>{" "}
+              <span className="key-note">to redo</span>
+            </div>
+            <div>
+              <span className="key-note"> press </span>
+              <span className="key-type">Tab</span>{" "}
+              <span className="key-note">/</span>{" "}
+              <span className="key-type">Enter</span>{" "}
+              <span className="key-note">to restart</span>
+            </div>
+            <span className="key-note"> press </span>
+            <span className="key-type">any key </span>{" "}
+            <span className="key-note">to exit</span>
+          </DialogTitle>
+        </Dialog>
       </div>
-      <input
-        key="hidden-input"
-        ref={textInputRef}
-        type="text"
-        className="hidden-input"
-        onKeyDown={(e) => handleKeyDown(e)}
-        onKeyUp={(e) => handleKeyUp(e)}
-        value={currInput}
-        onChange={(e) => UpdateInput(e)}
-      />
-      <Dialog
-        PaperProps={{
-          style: {
-            backgroundColor: "transparent",
-            boxShadow: "none",
-          },
-        }}
-        open={openRestart}
-        onKeyDown={EnterkeyPressReset}
-      >
-        <DialogTitle>
-          <div>
-            <span className="key-note"> press </span>
-            <span className="key-type">Space</span>{" "}
-            <span className="key-note">to redo</span>
-          </div>
-          <div>
-            <span className="key-note"> press </span>
-            <span className="key-type">Tab</span>{" "}
-            <span className="key-note">/</span>{" "}
-            <span className="key-type">Enter</span>{" "}
-            <span className="key-note">to restart</span>
-          </div>
-          <span className="key-note"> press </span>
-          <span className="key-type">any key </span>{" "}
-          <span className="key-note">to exit</span>
-        </DialogTitle>
-      </Dialog>
-    </div>
+    </>
   );
 };
 

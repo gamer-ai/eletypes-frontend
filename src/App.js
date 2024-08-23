@@ -66,6 +66,11 @@ function App() {
   // musicMode setting
   const [isMusicMode, setIsMusicMode] = useState(false);
 
+  // ultraZenMode setting
+  const [isUltraZenMode, setIsUltraZenMode] = useState(
+    localStorage.getItem("ultra-zen-mode") === "true"
+  );
+
   // coffeeMode setting
   const [isCoffeeMode, setIsCoffeeMode] = useState(false);
 
@@ -110,6 +115,10 @@ function App() {
     setIsMusicMode(!isMusicMode);
   };
 
+  const toggleUltraZenMode = () => {
+    setIsUltraZenMode(!isUltraZenMode);
+  };
+
   const toggleCoffeeMode = () => {
     setIsCoffeeMode(!isCoffeeMode);
     setIsTrainerMode(false);
@@ -131,6 +140,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem("focused-mode", isFocusedMode);
   }, [isFocusedMode]);
+
+  useEffect(() => {
+    localStorage.setItem("ultra-zen-mode", isUltraZenMode);
+  }, [isUltraZenMode]);
 
   const textInputRef = useRef(null);
   const focusTextInput = () => {
@@ -181,6 +194,7 @@ function App() {
           <Logo isFocusedMode={isFocusedMode} isMusicMode={isMusicMode}></Logo>
           {isWordGameMode && (
             <TypeBox
+              isUltraZenMode={isUltraZenMode}
               textInputRef={textInputRef}
               isFocusedMode={isFocusedMode}
               soundMode={soundMode}
@@ -218,12 +232,14 @@ function App() {
           )}
           <div className="bottomBar">
             <FooterMenu
+              isWordGameMode={isWordGameMode}
               themesOptions={themesOptions}
               theme={theme}
               soundMode={soundMode}
               toggleSoundMode={toggleSoundMode}
               soundOptions={soundOptions}
               soundType={soundType}
+              toggleUltraZenMode={toggleUltraZenMode}
               handleSoundTypeChange={handleSoundTypeChange}
               handleThemeChange={handleThemeChange}
               toggleFocusedMode={toggleFocusedMode}
@@ -231,6 +247,7 @@ function App() {
               toggleCoffeeMode={toggleCoffeeMode}
               isCoffeeMode={isCoffeeMode}
               isMusicMode={isMusicMode}
+              isUltraZenMode={isUltraZenMode}
               isFocusedMode={isFocusedMode}
               gameMode={gameMode}
               handleGameModeChange={handleGameModeChange}

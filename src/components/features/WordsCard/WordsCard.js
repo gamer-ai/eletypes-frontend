@@ -20,7 +20,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import useSound from "use-sound";
 import { SOUND_MAP } from "../sound/sound";
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 
 const WordsCard = ({ soundType, soundMode }) => {
   // set up game loop status state
@@ -294,7 +294,7 @@ const WordsCard = ({ soundType, soundMode }) => {
       if (keyCode === 13 || keyCode === 32) {
         if (currWord === currInput) {
           if (keyCode === 32) {
-            e.preventDefault()
+            e.preventDefault();
           }
           const nextIndex = index + 1;
           // to next chapter or back to default
@@ -357,7 +357,8 @@ const WordsCard = ({ soundType, soundMode }) => {
     return <VisibilityOffIcon></VisibilityOffIcon>;
   };
 
-  const audioSource = 'https://dict.youdao.com/dictvoice?audio=' + currWord + '&type=2';
+  const audioSource =
+    "https://dict.youdao.com/dictvoice?audio=" + currWord + "&type=2";
 
   const playAudio = () => {
     const audio = document.getElementById("hiddenAudio");
@@ -365,7 +366,7 @@ const WordsCard = ({ soundType, soundMode }) => {
       audio.load();
       audio.play();
     }
-  }
+  };
 
   return (
     <div className="words-card-container">
@@ -389,9 +390,7 @@ const WordsCard = ({ soundType, soundMode }) => {
           onChange={handleInputChange}
           onKeyDown={(e) => handleKeyDown(e)}
         ></input>
-        <div className="wordcard-meaning-display-field">
-          {currMeaning}
-        </div>
+        <div className="wordcard-meaning-display-field">{currMeaning}</div>
         <IconButton
           aria-label="restart"
           color="secondary"
@@ -419,7 +418,14 @@ const WordsCard = ({ soundType, soundMode }) => {
         </div>
         <div className="wordscard-UI">
           <div>
-            <audio id="hiddenAudio" hidden src={audioSource} preload="none" controls controlsList="nodownload nofullscreen noremoteplayback" />
+            <audio
+              id="hiddenAudio"
+              hidden
+              src={audioSource}
+              preload="none"
+              controls
+              controlsList="nodownload nofullscreen noremoteplayback"
+            />
           </div>
           <div className="wordscard-UI-info">
             {"Chapter  " + currChapter.toUpperCase() + ": "} {index + 1} /{" "}
