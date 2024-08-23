@@ -19,6 +19,7 @@ const Stats = ({
   countDown,
   countDownConstant,
   statsCharCount,
+  language,
   rawKeyStrokes,
   theme,
   renderResetButton,
@@ -55,8 +56,6 @@ const Stats = ({
   const [typingTestHistory, setTypingTestHistory] = useState(
     initialTypingTestHistory
   );
-
-  const language = localStorage.getItem("language");
 
   const accuracy = Math.round(statsCharCount[0]);
 

@@ -1141,6 +1141,7 @@ const TypeBox = ({
         <div className="stats">
           <Stats
             status={status}
+            language={language}
             wpm={wpm}
             setIncorrectCharsCount={setIncorrectCharsCount}
             incorrectCharsCount={incorrectCharsCount}
