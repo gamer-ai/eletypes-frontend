@@ -77,6 +77,7 @@ To join the community, please go to the website and hit "discord" icon.
 - Static Themes
 
   - Dark
+  - Tokyo night
   - Piano
   - Aluminum
   - Terminal (matrix inspired)
