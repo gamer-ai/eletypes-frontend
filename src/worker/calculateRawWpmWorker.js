@@ -3,7 +3,7 @@ self.onmessage = function (e) {
   const { rawKeyStrokes, countDownConstant, countDown } = e.data;
 
   const roundedRawWpm = Math.round(
-    (rawKeyStrokes / 5 / Math.max(countDownConstant - countDown, 1)) * 60.0
+    (rawKeyStrokes / 5 / (countDownConstant - countDown + 1)) * 60.0
   );
 
   postMessage(roundedRawWpm);

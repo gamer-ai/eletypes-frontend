@@ -3,7 +3,7 @@ self.onmessage = function (e) {
   const { wpmKeyStrokes, countDownConstant, countDown } = e.data;
 
   const currWpm =
-    (wpmKeyStrokes / 5 / Math.max(countDownConstant - countDown, 1)) * 60.0;
+    wpmKeyStrokes / 5 / (countDownConstant - countDown + 1) * 60.0;
 
   postMessage(currWpm);
 };

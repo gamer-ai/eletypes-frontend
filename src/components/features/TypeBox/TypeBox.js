@@ -414,7 +414,7 @@ const TypeBox = ({
   }, []);
 
   const calculateWpm = (wpmKeyStrokes, countDownConstant, countDown) => {
-    if (wpmKeyStrokes !== 0 && countDownConstant - countDown !== 0) {
+    if (wpmKeyStrokes !== 0) {
       if (!wpmWorkerRef.current) return; // Ensure worker is initialized
 
       wpmWorkerRef.current.postMessage({
@@ -475,7 +475,7 @@ const TypeBox = ({
     }
 
     // Update stats when typing unless there is no effective WPM
-    if (wpmKeyStrokes !== 0 && countDownConstant - countDown !== 0) {
+    if (wpmKeyStrokes !== 0) {
       calculateWpm(wpmKeyStrokes, countDownConstant, countDown);
     }
 
