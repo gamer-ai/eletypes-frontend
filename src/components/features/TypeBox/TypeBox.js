@@ -1108,7 +1108,7 @@ const TypeBox = ({
 
   return (
     <>
-      <SocialLinksModal status={status} />
+      {/* <SocialLinksModal status={status} /> */}
       <div onClick={handleInputFocus}>
         <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
         {language === ENGLISH_MODE && (
