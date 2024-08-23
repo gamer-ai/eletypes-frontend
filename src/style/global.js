@@ -760,12 +760,13 @@ margin-top: 20px;
 .select-chapter-title{
 font-size: 16px;
 }
-.fade-element > * {
-opacity: 0;
-transition: 500ms;
+.fade-element {
+  opacity: 0;
+  transition: opacity 500ms ease-in;
 }
-.fade-element:hover > * {
-opacity: 1;
+.fade-element:hover {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
 }
 .primary-stats-title {
 color: ${({ theme }) => theme.textTypeBox};
