@@ -180,7 +180,7 @@ const FooterMenu = ({
                 <IconButton onClick={toggleUltraZenMode}>
                   <Tooltip title={ULTRA_ZEN_MODE}>
                     <span className={getModeButtonClassName(isUltraZenMode)}>
-                      <ZoomInMapIcon fontSize="medium" />
+                      <ZoomInMapIcon fontSize="small" />
                     </span>
                   </Tooltip>{" "}
                 </IconButton>
