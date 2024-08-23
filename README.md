@@ -110,8 +110,15 @@ To join the community, please go to the website and hit "discord" icon.
   - move header to footer. 
   - hide the setting menu. leave only timer, wpm stats. 
   - If music enabled, a compact spotify will be put in footer.
+
+#### 9. Ultra Zen Mode
+
+![image](https://github.com/user-attachments/assets/ab3e7c94-4f38-4607-86aa-1cd3d8296381)
+
+toggle ![image](https://github.com/user-attachments/assets/b552b444-f411-4a1d-a40a-981b05e3e59d) to use the ultra zen mode when in words mode. The ultra zen mode can auto highlight and auto dim while you are typing. 
+
  
-#### 9. Typing Sound Effect 
+#### 10. Typing Sound Effect
 
   - default: cherry blue switch
   - optional: keyboard (hard)
@@ -119,7 +126,7 @@ To join the community, please go to the website and hit "discord" icon.
   
   <img width="120" alt="Screen Shot 2022-09-29 at 2 01 51 AM" src="https://user-images.githubusercontent.com/39578778/192989337-637e1154-fbca-420b-babb-22846d5dbdb1.png">
   
-#### 10. [Tab] key to Fast redo/reset
+#### 11. [Tab] key to Fast redo/reset
 
   - [Tab] + [Space] for quickly redo
   - [Tab] + [Enter] / [Tab] + [Tab] for quickly reset
