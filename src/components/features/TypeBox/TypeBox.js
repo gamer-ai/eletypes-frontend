@@ -1084,6 +1084,35 @@ const TypeBox = ({
   // Reset startIndex when status changes
   useEffect(() => {
     setStartIndex(0);
+    const body = document.getElementsByTagName("body")[0];
+    const delay = 500;
+    let timeoutId;
+
+    const showCursor = () => {
+      body.style.cursor = "default";
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(hideCursor, delay); // Adjust timeout duration as needed
+    };
+
+    const hideCursor = () => {
+      body.style.cursor = "none";
+    };
+
+    if (status === "started") {
+      body.style.cursor = "none"; // Initially hide the cursor
+      timeoutId = setTimeout(hideCursor, delay); // Set timeout to hide cursor after inactivity
+
+      document.addEventListener("mousemove", showCursor);
+
+      return () => {
+        document.removeEventListener("mousemove", showCursor);
+        clearTimeout(timeoutId); // Clear timeout on cleanup
+        body.style.cursor = "default"; // Reset cursor style on cleanup
+      };
+    } else {
+      // Ensure cursor is reset if status is not "started"
+      body.style.cursor = "default";
+    }
   }, [status]);
 
   // Adjust visible words based on current word index
