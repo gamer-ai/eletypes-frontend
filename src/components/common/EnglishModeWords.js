@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useRef } from "react";
+import React, { memo, useCallback, useRef, useMemo } from "react";
 
 const EnglishModeWords = ({
   currWordIndex,
@@ -13,46 +13,65 @@ const EnglishModeWords = ({
 }) => {
   const containerRef = useRef(null);
 
-  // Get word opacity for focus mode
+  // Memoized word opacity calculation
   const getWordOpacity = useCallback(
     (globalIndex) =>
       Math.max(1 - Math.abs(globalIndex - currWordIndex) * 0.1, 0.1),
     [currWordIndex]
   );
 
-  return (
-    <div
-      className="type-box"
-      style={{ visibility: status === "finished" ? "hidden" : "visible" }}
-      ref={containerRef}
-    >
-      <div className="words">
-        {currentWords.map((word, i) => {
-          const globalIndex = startIndex + i;
+  // Memoized container styles
+  const containerStyle = useMemo(
+    () => ({ visibility: status === "finished" ? "hidden" : "visible" }),
+    [status]
+  );
 
-          return (
-            <span
-              key={globalIndex}
-              ref={wordSpanRefs[globalIndex]}
-              style={{
-                opacity: isUltraZenMode ? getWordOpacity(globalIndex) : "1",
-                transition: "500ms",
-              }}
-              className={getWordClassName(globalIndex)}
-            >
-              {word.split("").map((char, idx) => (
-                <span
-                  key={`word${globalIndex}_${idx}`}
-                  className={getCharClassName(globalIndex, idx, char, word)}
-                >
-                  {char}
-                </span>
-              ))}
-              {getExtraCharsDisplay(word, globalIndex)}
-            </span>
-          );
-        })}
-      </div>
+  // Memoized transition style
+  const transitionStyle = useMemo(() => ({ transition: "opacity 500ms" }), []);
+
+  // Render the words with proper memoization and improved logic
+  const renderedWords = useMemo(
+    () =>
+      currentWords.map((word, i) => {
+        const globalIndex = startIndex + i;
+
+        return (
+          <span
+            key={globalIndex}
+            ref={wordSpanRefs[globalIndex]}
+            style={{
+              opacity: isUltraZenMode ? getWordOpacity(globalIndex) : 1,
+              ...transitionStyle,
+            }}
+            className={getWordClassName(globalIndex)}
+          >
+            {word.split("").map((char, idx) => (
+              <span
+                key={`word${globalIndex}_${idx}`}
+                className={getCharClassName(globalIndex, idx, char, word)}
+              >
+                {char}
+              </span>
+            ))}
+            {getExtraCharsDisplay(word, globalIndex)}
+          </span>
+        );
+      }),
+    [
+      currentWords,
+      startIndex,
+      isUltraZenMode,
+      getWordOpacity,
+      getWordClassName,
+      getCharClassName,
+      getExtraCharsDisplay,
+      wordSpanRefs,
+    ]
+  );
+
+  return (
+    <div className="type-box" style={containerStyle} ref={containerRef}>
+      <div className="words">{renderedWords}</div>
     </div>
   );
 };

@@ -392,9 +392,15 @@ const TypeBox = ({
     if (status === "finished") {
       return;
     }
-    setCurrInput(e.target.value);
-    inputWordsHistory[currWordIndex] = e.target.value.trim();
-    setInputWordsHistory(inputWordsHistory);
+
+    const newInput = e.target.value.trim();
+    setCurrInput(newInput);
+
+    // Use a functional update to ensure the most recent state
+    setInputWordsHistory((prevHistory) => ({
+      ...prevHistory,
+      [currWordIndex]: newInput,
+    }));
   };
 
   const handleKeyUp = (e) => {
@@ -581,92 +587,92 @@ const TypeBox = ({
   const checkPrev = () => {
     const wordToCompare = words[currWordIndex];
     const currInputWithoutSpaces = currInput.trim();
-    const isCorrect = wordToCompare === currInputWithoutSpaces;
-    if (!currInputWithoutSpaces || currInputWithoutSpaces.length === 0) {
+
+    // Skip checks if current input is empty
+    if (!currInputWithoutSpaces) {
       return null;
     }
+
+    const isCorrect = wordToCompare === currInputWithoutSpaces;
+    const updatedInputWordsHistory = {
+      ...inputWordsHistory,
+      [currWordIndex]: currInputWithoutSpaces,
+    };
+
+    // Update correct and incorrect word sets
     if (isCorrect) {
-      // console.log("detected match");
       wordsCorrect.add(currWordIndex);
       wordsInCorrect.delete(currWordIndex);
-      let inputWordsHistoryUpdate = { ...inputWordsHistory };
-      inputWordsHistoryUpdate[currWordIndex] = currInputWithoutSpaces;
-      setInputWordsHistory(inputWordsHistoryUpdate);
-      // reset prevInput to empty (will not go back)
       setPrevInput("");
-
-      // here count the space as effective wpm.
       setWpmKeyStrokes(wpmKeyStrokes + 1);
-      return true;
     } else {
-      // console.log("detected unmatch");
       wordsInCorrect.add(currWordIndex);
       wordsCorrect.delete(currWordIndex);
-      let inputWordsHistoryUpdate = { ...inputWordsHistory };
-      inputWordsHistoryUpdate[currWordIndex] = currInputWithoutSpaces;
-      setInputWordsHistory(inputWordsHistoryUpdate);
-      // append currInput to prevInput
-      setPrevInput(prevInput + " " + currInputWithoutSpaces);
-      return false;
+      setPrevInput(
+        prevInput
+          ? `${prevInput} ${currInputWithoutSpaces}`
+          : currInputWithoutSpaces
+      );
     }
+
+    // Update the input words history state
+    setInputWordsHistory(updatedInputWordsHistory);
+    return isCorrect;
   };
 
   const getWordClassName = (wordIdx) => {
-    if (wordsInCorrect.has(wordIdx)) {
-      if (currWordIndex === wordIdx) {
-        if (pacingStyle === PACING_PULSE) {
-          return "word error-word active-word";
-        } else {
-          return "word error-word active-word-no-pulse";
-        }
-      }
-      return "word error-word";
-    } else {
-      if (currWordIndex === wordIdx) {
-        if (pacingStyle === PACING_PULSE) {
-          return "word active-word";
-        } else {
-          return "word active-word-no-pulse";
-        }
-      }
-      return "word";
+    const isCurrentWord = currWordIndex === wordIdx;
+    const isWordInCorrect = wordsInCorrect.has(wordIdx);
+    const isPulseMode = pacingStyle === PACING_PULSE;
+
+    if (isWordInCorrect) {
+      return isCurrentWord
+        ? isPulseMode
+          ? "word error-word active-word"
+          : "word error-word active-word-no-pulse"
+        : "word error-word";
     }
+
+    return isCurrentWord
+      ? isPulseMode
+        ? "word active-word"
+        : "word active-word-no-pulse"
+      : "word";
   };
 
   const getChineseWordKeyClassName = (wordIdx) => {
-    if (wordsInCorrect.has(wordIdx)) {
-      if (currWordIndex === wordIdx) {
-        return "chinese-word-key error-chinese active-chinese";
-      }
-      return "chinese-word-key error-chinese";
-    } else {
-      if (currWordIndex === wordIdx) {
-        return "chinese-word-key active-chinese";
-      }
-      return "chinese-word-key";
+    const isCurrentWord = currWordIndex === wordIdx;
+    const isWordInCorrect = wordsInCorrect.has(wordIdx);
+
+    if (isWordInCorrect) {
+      return isCurrentWord
+        ? "chinese-word-key error-chinese active-chinese"
+        : "chinese-word-key error-chinese";
     }
+
+    return isCurrentWord
+      ? "chinese-word-key active-chinese"
+      : "chinese-word-key";
   };
 
   const getChineseWordClassName = (wordIdx) => {
-    if (wordsInCorrect.has(wordIdx)) {
-      if (currWordIndex === wordIdx) {
-        if (pacingStyle === PACING_PULSE) {
-          return "chinese-word error-word active-word";
-        } else {
-          return "chinese-word error-word active-word-no-pulse";
-        }
-      }
-      return "chinese-word error-word";
-    } else {
-      if (currWordIndex === wordIdx) {
-        if (pacingStyle === PACING_PULSE) {
-          return "chinese-word active-word";
-        } else {
-          return "chinese-word active-word-no-pulse";
-        }
-      }
-      return "chinese-word";
+    const isCurrentWord = currWordIndex === wordIdx;
+    const isWordInCorrect = wordsInCorrect.has(wordIdx);
+    const isPulseMode = pacingStyle === PACING_PULSE;
+
+    if (isWordInCorrect) {
+      return isCurrentWord
+        ? isPulseMode
+          ? "chinese-word error-word active-word"
+          : "chinese-word error-word active-word-no-pulse"
+        : "chinese-word error-word";
     }
+
+    return isCurrentWord
+      ? isPulseMode
+        ? "chinese-word active-word"
+        : "chinese-word active-word-no-pulse"
+      : "chinese-word";
   };
 
   const charsWorkerRef = useRef();
@@ -700,46 +706,50 @@ const TypeBox = ({
   }, [currChar, status, currCharIndex, words, currWordIndex]);
 
   const getCharClassName = (wordIdx, charIdx, char, word) => {
-    const keyString = wordIdx + "." + charIdx;
+    const keyString = `${wordIdx}.${charIdx}`;
+
+    const isCurrentWord = wordIdx === currWordIndex;
+    const isCurrentChar = charIdx === currCharIndex;
+    const isCaretMode = pacingStyle === PACING_CARET;
+    const isFinished = status === "finished";
+
     if (
-      pacingStyle === PACING_CARET &&
-      wordIdx === currWordIndex &&
+      isCaretMode &&
+      isCurrentWord &&
       charIdx === currCharIndex + 1 &&
-      status !== "finished"
+      !isFinished
     ) {
       return "caret-char-left";
     }
-    if (history[keyString] === true) {
+
+    const historyValue = history[keyString];
+    if (historyValue === true) {
       if (
-        pacingStyle === PACING_CARET &&
-        wordIdx === currWordIndex &&
+        isCaretMode &&
+        isCurrentWord &&
         word.length - 1 === currCharIndex &&
-        charIdx === currCharIndex &&
-        status !== "finished"
+        isCurrentChar &&
+        !isFinished
       ) {
         return "caret-char-right-correct";
       }
       return "correct-char";
     }
-    if (history[keyString] === false) {
+
+    if (historyValue === false) {
       if (
-        pacingStyle === PACING_CARET &&
-        wordIdx === currWordIndex &&
+        isCaretMode &&
+        isCurrentWord &&
         word.length - 1 === currCharIndex &&
-        charIdx === currCharIndex &&
-        status !== "finished"
+        isCurrentChar &&
+        !isFinished
       ) {
         return "caret-char-right-error";
       }
-
       return "error-char";
     }
-    if (
-      wordIdx === currWordIndex &&
-      charIdx === currCharIndex &&
-      currChar &&
-      status !== "finished"
-    ) {
+
+    if (isCurrentWord && isCurrentChar && currChar && !isFinished) {
       if (char === currChar) {
         history[keyString] = true;
         return "correct-char";
@@ -747,14 +757,14 @@ const TypeBox = ({
         history[keyString] = false;
         return "error-char";
       }
-    } else {
-      if (wordIdx < currWordIndex) {
-        // missing chars
-        history[keyString] = undefined;
-      }
-
-      return "char";
     }
+
+    if (wordIdx < currWordIndex) {
+      // Missing chars
+      history[keyString] = undefined;
+    }
+
+    return "char";
   };
 
   const getDifficultyButtonClassName = (buttonDifficulty) => {
