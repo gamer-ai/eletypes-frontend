@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef, Suspense } from "react";
 import useSound from "use-sound";
 import {
   wordsGenerator,
@@ -46,9 +46,13 @@ import {
   SYMBOL_ADDON_KEY,
 } from "../../../constants/Constants";
 import { SOUND_MAP } from "../sound/sound";
-import SocialLinksModal from "../../common/SocialLinksModal";
-import EnglishModeWords from "../../common/EnglishModeWords";
-import ChineseModeWords from "../../common/ChineseModeWords";
+// import SocialLinksModal from "../../common/SocialLinksModal";
+const EnglishModeWords = React.lazy(() =>
+  import("../../common/EnglishModeWords")
+);
+const ChineseModeWords = React.lazy(() =>
+  import("../../common/ChineseModeWords")
+);
 
 const TypeBox = ({
   textInputRef,
@@ -1112,31 +1116,35 @@ const TypeBox = ({
       <div onClick={handleInputFocus}>
         <CapsLockSnackbar open={capsLocked}></CapsLockSnackbar>
         {language === ENGLISH_MODE && (
-          <EnglishModeWords
-            currentWords={currentWords}
-            currWordIndex={currWordIndex}
-            isUltraZenMode={isUltraZenMode}
-            startIndex={startIndex}
-            status={status}
-            wordSpanRefs={wordSpanRefs}
-            getWordClassName={getWordClassName}
-            getCharClassName={getCharClassName}
-            getExtraCharsDisplay={getExtraCharsDisplay}
-          />
+          <Suspense>
+            <EnglishModeWords
+              currentWords={currentWords}
+              currWordIndex={currWordIndex}
+              isUltraZenMode={isUltraZenMode}
+              startIndex={startIndex}
+              status={status}
+              wordSpanRefs={wordSpanRefs}
+              getWordClassName={getWordClassName}
+              getCharClassName={getCharClassName}
+              getExtraCharsDisplay={getExtraCharsDisplay}
+            />
+          </Suspense>
         )}
         {language === CHINESE_MODE && (
-          <ChineseModeWords
-            currentWords={currentWords}
-            currWordIndex={currWordIndex}
-            wordsKey={wordsKey}
-            isUltraZenMode={isUltraZenMode}
-            status={status}
-            wordSpanRefs={wordSpanRefs}
-            getChineseWordKeyClassName={getChineseWordKeyClassName}
-            getChineseWordClassName={getChineseWordClassName}
-            getCharClassName={getCharClassName}
-            getExtraCharsDisplay={getExtraCharsDisplay}
-          />
+          <Suspense>
+            <ChineseModeWords
+              currentWords={currentWords}
+              currWordIndex={currWordIndex}
+              wordsKey={wordsKey}
+              isUltraZenMode={isUltraZenMode}
+              status={status}
+              wordSpanRefs={wordSpanRefs}
+              getChineseWordKeyClassName={getChineseWordKeyClassName}
+              getChineseWordClassName={getChineseWordClassName}
+              getCharClassName={getCharClassName}
+              getExtraCharsDisplay={getExtraCharsDisplay}
+            />
+          </Suspense>
         )}
         <div className="stats">
           <Stats
