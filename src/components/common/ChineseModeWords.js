@@ -33,6 +33,11 @@ const ChineseModeWords = ({
   const renderedWords = useMemo(
     () =>
       currentWords.map((word, i) => {
+        // Condition to skip rendering words outside the desired range
+        if (i >= currWordIndex + 40) {
+          return null;
+        }
+
         const opacityValue = isUltraZenMode ? getWordOpacity(i) : 1;
 
         return (

@@ -35,6 +35,11 @@ const EnglishModeWords = ({
       currentWords.map((word, i) => {
         const globalIndex = startIndex + i;
 
+        // Condition to skip rendering words outside the desired range
+        if (globalIndex >= currWordIndex + 40) {
+          return null;
+        }
+
         return (
           <span
             key={globalIndex}
