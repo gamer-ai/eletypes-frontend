@@ -36,7 +36,7 @@ const Stats = ({
 
     worker.postMessage({ rawKeyStrokes, countDownConstant, countDown });
 
-    worker.onmessage = function (e) {
+    worker.onmessage = function(e) {
       setRoundedRawWpm(e.data);
       worker.terminate();
     };
@@ -87,7 +87,7 @@ const Stats = ({
         incorrectCharsCount,
       });
 
-      worker.onmessage = function (e) {
+      worker.onmessage = function(e) {
         const { newEntry, resetErrors } = e.data;
         setTypingTestHistory((prevTypingTestHistory) => [
           ...prevTypingTestHistory,

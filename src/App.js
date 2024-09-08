@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ThemeProvider } from "styled-components";
+import LeaderboardTable from "./components/common/LeaderboardTable";
 import { defaultTheme, themesOptions } from "./style/theme";
 import { GlobalStyles } from "./style/global";
 import TypeBox from "./components/features/TypeBox/TypeBox";
@@ -192,6 +193,9 @@ function App() {
         <div className="canvas">
           <GlobalStyles />
           <Logo isFocusedMode={isFocusedMode} isMusicMode={isMusicMode}></Logo>
+          <div className="leaderboard-overlay">
+            <LeaderboardTable timer_duration={"30"} theme={theme} />
+          </div>
           {isWordGameMode && (
             <TypeBox
               isUltraZenMode={isUltraZenMode}

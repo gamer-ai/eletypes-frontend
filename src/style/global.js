@@ -33,6 +33,24 @@ z-index: 1;
 padding: 1rem;
 transition: padding-top .125s;
 }
+.leaderboard-overlay {
+position: fixed;
+inset:0;
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 99;
+background: ${({ theme }) => theme.background};
+
+}
+.leaderboard-container {
+max-width: 1000px;
+width: 100%;
+background: ${({ theme }) => theme.background};
+}
+.next-btn {
+color: ${({ theme }) => theme.text};
+}
 .fixed-overlay {
 position: fixed;
 top: 0;
