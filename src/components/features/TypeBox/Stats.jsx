@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Tooltip } from "@mui/material";
+import { CSSTransition } from "react-transition-group";
 import { CHAR_TOOLTIP_TITLE } from "../../../constants/Constants";
 import {
   Line,
@@ -277,24 +278,31 @@ const Stats = ({
       )}
 
       {status === "finished" && (
-        <div className="stats-overlay">
-          <section className="stats-chart">
-            <section className="stats-header">
-              <div>
-                {renderWpm()}
-                {renderAccuracy()}
-              </div>
-              {Chart()}
+        <CSSTransition
+          in={status === "finished"}
+          timeout={300}
+          classNames="fade"
+          unmountOnExit
+        >
+          <div className="stats-overlay">
+            <section className="stats-chart">
+              <section className="stats-header">
+                <div>
+                  {renderWpm()}
+                  {renderAccuracy()}
+                </div>
+                {Chart()}
+              </section>
+              <section className="stats-footer">
+                {renderLanguage()}
+                {renderRawKpm()}
+                {renderCharStats()}
+                {renderTime()}
+              </section>
+              <section>{renderResetButton()}</section>
             </section>
-            <section className="stats-footer">
-              {renderLanguage()}
-              {renderRawKpm()}
-              {renderCharStats()}
-              {renderTime()}
-            </section>
-            <section>{renderResetButton()}</section>
-          </section>
-        </div>
+          </div>
+        </CSSTransition>
       )}
     </>
   );

@@ -6,6 +6,25 @@ export const GlobalStyles = createGlobalStyle`
 *::before {
 box-sizing: border-box;
 }
+/* custom scrollbar */
+::-webkit-scrollbar {
+width: 20px;
+}
+
+::-webkit-scrollbar-track {
+background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+background-color: #d6dee1;
+border-radius: 20px;
+border: 6px solid transparent;
+background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background-color: #a8bbbf;
+}
 body {
 display: flex;
 flex-direction: column;
@@ -41,15 +60,74 @@ justify-content: center;
 align-items: center;
 z-index: 99;
 background: ${({ theme }) => theme.background};
+}
+.hidden {
+visibility: hidden;
+}
 
+.visible {
+visibility: visible;
+}
+
+
+.title {
+margin: 0;
+color: ${({ theme }) => theme.textTypeBox};
+transform: translateY(-3.8px);
+
+}
+
+.separator {
+  width: 2px;
+  height: 24px; 
+background: ${({ theme }) => theme.textTypeBox};
+  margin: 0 24px;
+}
+.leaderboard-button {
+}
+
+.leaderboard-icon {
+color: ${({ theme }) => theme.title};
+}
+
+.user-info {
+display: flex;
+align-items: center;
+}
+
+.user-icon {
+margin-right: 8px;
+color: ${({ theme }) => theme.textTypeBox};
+}
+
+.username {
+margin: 0;
+font-size: 16px;
+color: ${({ theme }) => theme.textTypeBox};
+}
+.fade-enter {
+opacity: 0;
+}
+.fade-enter-active {
+opacity: 1;
+transition: opacity 300ms;
+}
+.fade-exit {
+opacity: 1;
+}
+.fade-exit-active {
+opacity: 0;
+transition: opacity 300ms;
 }
 .leaderboard-container {
 max-width: 1000px;
 width: 100%;
-background: ${({ theme }) => theme.background};
 }
 .next-btn {
 color: ${({ theme }) => theme.text};
+}
+.leaderboard-title {
+color: ${({ theme }) => theme.textTypeBox};
 }
 .fixed-overlay {
 position: fixed;
@@ -96,9 +174,9 @@ filter: grayscale(30%);
 }
 .header {
 position: relative;
-display: block;
+display: flex;
 align-items: center;
-justify-content: center;
+justify-content: space-between;
 padding-bottom: 2%;
 top: 0;
 left:0;
@@ -109,6 +187,10 @@ z-index: 999;
 .bottom-info {
 color: ${({ theme }) => theme.title};
 margin: 4px;
+}
+.title-and-menu {
+display: flex;
+align-items: baseline;
 }
 small {
 display: block;
@@ -778,13 +860,12 @@ margin-top: 20px;
 .select-chapter-title{
 font-size: 16px;
 }
-.fade-element {
-  opacity: 0;
-  transition: opacity 500ms ease-in;
+.fade-element > * {
+opacity: 0;
+transition: 500ms ease-in-out;
 }
-.fade-element:hover {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
+.fade-element:hover > * {
+opacity: 1;
 }
 .primary-stats-title {
 color: ${({ theme }) => theme.textTypeBox};

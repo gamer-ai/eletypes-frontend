@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import Select from "../utils/Select";
+import { getModeButtonClassName } from "../../utils/"
 import {
   FOCUS_MODE,
   FREE_MODE,
@@ -30,11 +31,12 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import KeyboardAltIcon from "@mui/icons-material/KeyboardAlt";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import EmojiFoodBeverageIcon from "@mui/icons-material/EmojiFoodBeverage";
-import { ReactComponent as DiscordIcon } from "../../assets/Icons/discord.svg";
+import { ReactComponent as DiscordIcon } from "../../assets/icons/discord.svg";
 import { SvgIcon } from "@mui/material";
 import KeyboardAltOutlinedIcon from "@mui/icons-material/KeyboardAltOutlined";
 import SchoolIcon from "@mui/icons-material/School";
 import { SOUND_MODE_TOOLTIP } from "../features/sound/sound";
+
 
 const FooterMenu = ({
   themesOptions,
@@ -65,13 +67,6 @@ const FooterMenu = ({
   const isBottomLogoEnabled = isFocusedMode && !isMusicMode;
   const isTypeTestEnabled = !isCoffeeMode && !isTrainerMode && !isWordsCardMode;
 
-  const getModeButtonClassName = (mode) => {
-    if (mode) {
-      return "zen-button";
-    }
-    return "zen-button-deactive";
-  };
-
   const getGameModeButtonClassName = (currMode, buttonMode) => {
     if (currMode === buttonMode) {
       return "active-game-mode-button";
@@ -83,6 +78,7 @@ const FooterMenu = ({
     <AppBar
       position="static"
       color="transparent"
+      style={{ boxShadow: "none", paddingBlock: "0" }}
       className={`bottomBar ${isFocusedMode && "fade-element"}`}
     >
       <Grid container justifyContent="space-between" alignItems="center">

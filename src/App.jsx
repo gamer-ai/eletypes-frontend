@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { Suspense, useState, useRef, useEffect } from "react";
 import { ThemeProvider } from "styled-components";
-import LeaderboardTable from "./components/common/LeaderboardTable";
 import { defaultTheme, themesOptions } from "./style/theme";
 import { GlobalStyles } from "./style/global";
 import TypeBox from "./components/features/TypeBox/TypeBox";
@@ -40,6 +39,25 @@ function App() {
     }
     return defaultTheme;
   });
+
+  const [isLeadeboardOpen, setIsLeaderboardOpen] = useState(false);
+  const [DinamicLeaderboard, setDinamicLeaderboard] = useState(null);
+
+  const importLeaderboardComponent = async () => {
+    const module = await import('./components/common/LeaderboardTable');
+    const Component = module.default;
+    setDinamicLeaderboard(<Component timer_duration={"30"} theme={theme} isLeadeboardOpen={isLeadeboardOpen} />);
+  };
+
+
+  useEffect(() => {
+
+    if (isLeadeboardOpen) {
+      importLeaderboardComponent();
+    } else {
+      setDinamicLeaderboard(null)
+    }
+  }, [isLeadeboardOpen])
 
   // local persist game mode setting
   const [soundMode, setSoundMode] = useLocalPersistState(false, SOUND_MODE);
@@ -192,10 +210,12 @@ function App() {
         <DynamicBackground theme={theme}></DynamicBackground>
         <div className="canvas">
           <GlobalStyles />
-          <Logo isFocusedMode={isFocusedMode} isMusicMode={isMusicMode}></Logo>
-          <div className="leaderboard-overlay">
-            <LeaderboardTable timer_duration={"30"} theme={theme} />
-          </div>
+          <Logo isFocusedMode={isFocusedMode} theme={theme} isMusicMode={isMusicMode} setIsLeaderboardOpen={setIsLeaderboardOpen} isLeadeboardOpen={isLeadeboardOpen}></Logo>
+          <Suspense>
+            {
+              DinamicLeaderboard && DinamicLeaderboard
+            }
+          </Suspense>
           {isWordGameMode && (
             <TypeBox
               isUltraZenMode={isUltraZenMode}
