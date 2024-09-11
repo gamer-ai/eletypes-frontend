@@ -61,15 +61,11 @@ align-items: center;
 z-index: 99;
 background: ${({ theme }) => theme.background};
 }
-.hidden {
-visibility: hidden;
+.leaderboard-title-and-filter {
+display: flex;
+justify-content: space-between;
+align-items: center;
 }
-
-.visible {
-visibility: visible;
-}
-
-
 .title {
 margin: 0;
 color: ${({ theme }) => theme.textTypeBox};
@@ -105,20 +101,6 @@ margin: 0;
 font-size: 16px;
 color: ${({ theme }) => theme.textTypeBox};
 }
-.fade-enter {
-opacity: 0;
-}
-.fade-enter-active {
-opacity: 1;
-transition: opacity 300ms;
-}
-.fade-exit {
-opacity: 1;
-}
-.fade-exit-active {
-opacity: 0;
-transition: opacity 300ms;
-}
 .leaderboard-container {
 max-width: 1000px;
 width: 100%;
@@ -139,7 +121,7 @@ background: rgba(0, 0, 0, 0.5); /* Dark background with opacity */
 display: flex;
 align-items: center;
 justify-content: center;
-z-index: 9999; /* Ensure the overlay is on top */
+z-index: 8888; /* Ensure the overlay is on top */
 }
 
 .modal-content {

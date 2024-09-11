@@ -7,7 +7,9 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.0.2",
     "@mui/material": "^6.0.2",
-    "@vitejs/plugin-react-swc": "^3.7.0",
+    "@mui/system": "^6.0.2",
+    "@svgr/rollup": "^8.1.0",
+    "axios": "^1.7.7",
     "random-words": "^2.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -17,10 +19,7 @@
     "styled-components": "^6.1.13",
     "use-sound": "^4.0.3",
     "uvcanvas": "^0.2.1",
-    "vite": "^5.4.3",
-    "vite-plugin-svgr": "^4.2.0",
-    "vite-tsconfig-paths": "^5.0.1",
-    "web-vitals": "^4.2.3"
+    "vite": "^5.4.4"
   },
   "scripts": {
     "start": "vite",
@@ -29,14 +28,7 @@
     "predeploy": "npm run build",
     "deploy": "npm run build"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.1",
-    "browserslist-to-esbuild": "^2.1.1"
+    "@vitejs/plugin-react": "^4.3.1"
   }
 }

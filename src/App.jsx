@@ -46,7 +46,7 @@ function App() {
   const importLeaderboardComponent = async () => {
     const module = await import('./components/common/LeaderboardTable');
     const Component = module.default;
-    setDinamicLeaderboard(<Component timer_duration={"30"} theme={theme} isLeadeboardOpen={isLeadeboardOpen} />);
+    setDinamicLeaderboard(<Component theme={theme} />);
   };
 
 
@@ -57,7 +57,7 @@ function App() {
     } else {
       setDinamicLeaderboard(null)
     }
-  }, [isLeadeboardOpen])
+  }, [isLeadeboardOpen, theme])
 
   // local persist game mode setting
   const [soundMode, setSoundMode] = useLocalPersistState(false, SOUND_MODE);
