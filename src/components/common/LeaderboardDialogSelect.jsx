@@ -1,20 +1,24 @@
-import React from 'react';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import FilterListIcon from '@mui/icons-material/FilterList'; // Import the filter icon
+import React from "react";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
-export default function LeaderboardDialogSelect({ setSelections, selections, theme }) {
+export default function LeaderboardDialogSelect({
+  setSelections,
+  selections,
+  theme,
+}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -22,7 +26,7 @@ export default function LeaderboardDialogSelect({ setSelections, selections, the
   };
 
   const handleClose = (_, reason) => {
-    if (reason !== 'backdropClick') {
+    if (reason !== "backdropClick") {
       setOpen(false);
     }
   };
@@ -40,35 +44,40 @@ export default function LeaderboardDialogSelect({ setSelections, selections, the
         m: 1,
         minWidth: 120,
         background: theme.background, // Apply background color from theme
-        '& .MuiInputLabel-root': {
+        "& .MuiInputLabel-root": {
           color: theme.text, // Label text color
         },
-        '& .MuiOutlinedInput-root': {
-          '& fieldset': {
+        "& .MuiOutlinedInput-root": {
+          "& fieldset": {
             borderColor: theme.textTypeBox, // Border color for the input box
           },
-          '&:hover fieldset': {
+          "&:hover fieldset": {
             borderColor: theme.title, // Change border color on hover
           },
-          '&.Mui-focused fieldset': {
+          "&.Mui-focused fieldset": {
             borderColor: theme.title, // Focused border color
+          },
+          "& .MuiSelect-icon": {
+            color: theme.text, // Icon color
           },
         },
       }}
       key={field}
     >
-      <InputLabel style={{ color: theme.text }}>{label}</InputLabel>
+      <InputLabel sx={{ color: theme.text }}>{label}</InputLabel>
       <Select
         sx={{
           background: theme.background, // Select dropdown background
           color: theme.text, // Text color
-          '& .MuiSelect-icon': {
+          "& .MuiSelect-icon": {
             color: theme.text, // Icon color
           },
         }}
         value={value}
         onChange={(event) => handleChange(event, field)}
-        input={<OutlinedInput label={label} />}
+        input={
+          <OutlinedInput sx={{ background: theme.background }} label={label} />
+        }
       >
         {options.map((option) => (
           <MenuItem
@@ -77,7 +86,7 @@ export default function LeaderboardDialogSelect({ setSelections, selections, the
             sx={{
               backgroundColor: theme.background, // Menu item background
               color: theme.text, // Menu item text color
-              '&:hover': {
+              "&:hover": {
                 backgroundColor: theme.textTypeBox, // Background color on hover
               },
             }}
@@ -92,18 +101,18 @@ export default function LeaderboardDialogSelect({ setSelections, selections, the
   // Options for each select field
   const selectOptions = {
     language: [
-      { value: 'english', label: 'English' },
-      { value: 'chinese', label: 'Chinese' },
+      { value: "english", label: "English" },
+      { value: "chinese", label: "Chinese" },
     ],
     difficulty: [
-      { value: 'normal', label: 'Normal' },
-      { value: 'hard', label: 'Hard' },
+      { value: "normal", label: "Normal" },
+      { value: "hard", label: "Hard" },
     ],
     timer: [
-      { value: "15", label: '15 seconds' },
-      { value: "30", label: '30 seconds' },
-      { value: "60", label: '60 seconds' },
-      { value: "90", label: '90 seconds' },
+      { value: "15", label: "15 seconds" },
+      { value: "30", label: "30 seconds" },
+      { value: "60", label: "60 seconds" },
+      { value: "90", label: "90 seconds" },
     ],
   };
 
@@ -114,6 +123,7 @@ export default function LeaderboardDialogSelect({ setSelections, selections, the
         sx={{
           borderRadius: 0,
           bgcolor: theme.background,
+          color: theme.textTypeBox, // Set icon color
         }}
         aria-label="filter"
       >
@@ -122,34 +132,43 @@ export default function LeaderboardDialogSelect({ setSelections, selections, the
             variant="button"
             sx={{
               mr: 1,
-              color: theme.textTypeBox
+              color: theme.textTypeBox,
             }}
           >
             Filter
           </Typography>
-          <FilterListIcon sx={{ color: theme.textTypeBox }} />
+          <FilterListIcon />
         </Box>
       </IconButton>
-      <Dialog disableEscapeKeyDown open={open} onClose={handleClose} >
-        <DialogTitle sx={{ background: theme.background }}>Select Options</DialogTitle>
-        <DialogContent sx={{ background: theme.background }}>
-          <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap', background: theme.background }}>
+      <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
+        <DialogTitle sx={{ background: theme.background, color: theme.text }}>
+          Select Options
+        </DialogTitle>
+        <DialogContent sx={{ background: theme.background, color: theme.text }}>
+          <Box
+            component="form"
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              background: theme.background,
+            }}
+          >
             {Object.keys(selectOptions).map((field) =>
               renderSelectField(
                 field.charAt(0).toUpperCase() + field.slice(1),
                 field,
                 selections[field],
                 selectOptions[field],
-                theme
-              )
+                theme,
+              ),
             )}
           </Box>
         </DialogContent>
         <DialogActions sx={{ background: theme.background }}>
-          <Button onClick={handleClose} sx={{ color: theme.textTypeBox }}>
+          <Button onClick={handleClose} sx={{ color: theme.text }}>
             Cancel
           </Button>
-          <Button onClick={handleClose} sx={{ color: theme.textTypeBox }}>
+          <Button onClick={handleClose} sx={{ color: theme.text }}>
             Ok
           </Button>
         </DialogActions>

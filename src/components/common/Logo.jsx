@@ -1,32 +1,53 @@
 import React from "react";
 import KeyboardAltIcon from "@mui/icons-material/KeyboardAlt";
-import LeaderboardIcon from '@mui/icons-material/Leaderboard';
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import PersonIcon from '@mui/icons-material/Person';
+import AccountMenu from "./AccountMenu";
 import { getModeButtonClassName } from "../../utils";
 
-const Logo = ({ isFocusedMode, theme, isLeadeboardOpen, setIsLeaderboardOpen }) => {
+const Logo = ({
+  isFocusedMode,
+  theme,
+  isAuthenticated,
+  handleOpenLoginModal,
+  username,
+  isLeadeboardOpen,
+  setIsLeaderboardOpen,
+}) => {
   const toggleLeaderboard = () => {
     setIsLeaderboardOpen(!isLeadeboardOpen);
   };
 
   return (
-    <div className={`header ${isFocusedMode ? 'hidden' : 'visible'}`}>
-      <div className="title-and-menu">
+    <div className={`header ${isFocusedMode ? "hidden" : "visible"}`}>
+      <div
+        className="title-and-menu"
+        style={{ opacity: isFocusedMode ? "0" : "1" }}
+      >
         <h3 className="title">
           Ele Types <KeyboardAltIcon fontSize="medium" />
         </h3>
         <div className="separator"></div>
         <Tooltip title="Leaderboard">
-          <IconButton onClick={toggleLeaderboard} className="leaderboard-button">
-            <LeaderboardIcon className={`leaderboard-icon ${getModeButtonClassName(isLeadeboardOpen)}`} fontSize="medium" />
+          <IconButton
+            onClick={toggleLeaderboard}
+            className="leaderboard-button"
+          >
+            <LeaderboardIcon
+              className={`leaderboard-icon ${getModeButtonClassName(isLeadeboardOpen)}`}
+              fontSize="medium"
+            />
           </IconButton>
         </Tooltip>
       </div>
-      <div className="user-info">
-        <PersonIcon className="user-icon" />
-        <h4 className="username">Rendi</h4>
+      <div className="user-info" style={{ opacity: isFocusedMode ? "0" : "1" }}>
+        <AccountMenu
+          handleOpenLoginModal={handleOpenLoginModal}
+          isAuthenticated={isAuthenticated}
+          theme={theme}
+          username={username}
+        />
       </div>
     </div>
   );

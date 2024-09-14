@@ -1,32 +1,34 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
-import LeaderboardDialogSelect from './LeaderboardDialogSelect';
-
-// Function to adjust color brightness
-const adjustColorBrightness = (hex, percent) => {
-  hex = hex.replace(/^#/, '');
-  let r = parseInt(hex.substring(0, 2), 16);
-  let g = parseInt(hex.substring(2, 4), 16);
-  let b = parseInt(hex.substring(4, 6), 16);
-
-  r = Math.min(255, Math.max(0, r + (r * percent / 100)));
-  g = Math.min(255, Math.max(0, g + (g * percent / 100)));
-  b = Math.min(255, Math.max(0, b + (b * percent / 100)));
-
-  const toHex = (c) => c.toString(16).padStart(2, '0');
-
-  return `#${toHex(Math.round(r))}${toHex(Math.round(g))}${toHex(Math.round(b))}`;
-};
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import axios from "axios";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import LeaderboardDialogSelect from "./LeaderboardDialogSelect";
+import { adjustColorBrightness } from "../utils/adjustColorBrightness";
 
 // TableHeader Component
-const TableHeader = ({ backgroundColor }) => (
+const TableHeader = ({ backgroundColor, color }) => (
   <TableHead>
     <TableRow style={{ backgroundColor }}>
-      {['Rank', 'Username', 'Language', 'Difficulty', "Timer", 'WPM', 'Raw WPM', 'Accuracy'].map((header, idx) => (
-        <TableCell key={idx} style={{ backgroundColor }}>
+      {[
+        "Rank",
+        "Username",
+        "Language",
+        "Difficulty",
+        "Timer",
+        "WPM",
+        "Raw WPM",
+        "Accuracy",
+      ].map((header, idx) => (
+        <TableCell key={idx} style={{ backgroundColor, color }}>
           {header}
         </TableCell>
       ))}
@@ -34,18 +36,27 @@ const TableHeader = ({ backgroundColor }) => (
   </TableHead>
 );
 
-const Row = ({ index, row, timer_duration, language, difficulty }) => {
-  const scores = row.high_scores.languages[language]?.difficulties[difficulty]?.scores[timer_duration];
+const Row = ({ index, row, timer_duration, language, difficulty, theme }) => {
+  const scores =
+    row.high_scores.languages[language]?.difficulties[difficulty]?.scores[
+      timer_duration
+    ];
   return (
     <TableRow key={row.id}>
-      <TableCell>{index + 1}</TableCell>
-      <TableCell>{row.username}</TableCell>
-      <TableCell>{language}</TableCell>
-      <TableCell>{difficulty}</TableCell>
-      <TableCell>{timer_duration}</TableCell>
-      <TableCell>{scores?.wpm}</TableCell>
-      <TableCell>{scores?.raw_wpm}</TableCell>
-      <TableCell>{scores?.accuracy.toFixed(2) + '%'}</TableCell>
+      <TableCell style={{ color: theme.textTypeBox }}>{index + 1}</TableCell>
+      <TableCell style={{ color: theme.textTypeBox }}>{row.username}</TableCell>
+      <TableCell style={{ color: theme.textTypeBox }}>{language}</TableCell>
+      <TableCell style={{ color: theme.textTypeBox }}>{difficulty}</TableCell>
+      <TableCell style={{ color: theme.textTypeBox }}>
+        {timer_duration}
+      </TableCell>
+      <TableCell style={{ color: theme.textTypeBox }}>{scores?.wpm}</TableCell>
+      <TableCell style={{ color: theme.textTypeBox }}>
+        {scores?.raw_wpm}
+      </TableCell>
+      <TableCell style={{ color: theme.textTypeBox }}>
+        {scores?.accuracy.toFixed(2) + "%"}
+      </TableCell>
     </TableRow>
   );
 };
@@ -54,7 +65,11 @@ const SkeletonRow = ({ baseColor, highlightColor }) => (
   <TableRow>
     {Array.from({ length: 8 }).map((_, index) => (
       <TableCell key={index}>
-        <Skeleton baseColor={baseColor} highlightColor={highlightColor} width={(index === 1 || index === 2 || index === 3) ? 50 : 20} />
+        <Skeleton
+          baseColor={baseColor}
+          highlightColor={highlightColor}
+          width={index === 1 || index === 2 || index === 3 ? 50 : 20}
+        />
       </TableCell>
     ))}
   </TableRow>
@@ -64,9 +79,9 @@ const LeaderboardTable = ({ theme }) => {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selections, setSelections] = useState({
-    language: 'english',
-    difficulty: 'normal',
-    timer: '15',
+    language: "english",
+    difficulty: "normal",
+    timer: "15",
   });
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -76,24 +91,33 @@ const LeaderboardTable = ({ theme }) => {
     if (!hasMore) return;
     setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8080/get_leaderboard_stats`, {
-        params: {
-          timer_duration: selections.timer,
-          difficulty: selections.difficulty,
-          language: selections.language,
-          page,
-          limit: 10
-        }
-      });
+      const response = await axios.get(
+        `http://localhost:8080/get_leaderboard_stats`,
+        {
+          params: {
+            timer_duration: selections.timer,
+            difficulty: selections.difficulty,
+            language: selections.language,
+            page,
+            limit: 10,
+          },
+        },
+      );
       const data = response.data.leaderboard;
-      setRows(prevRows => {
+      setRows((prevRows) => {
         // Combine previous rows with new data
         const combinedRows = [...prevRows, ...data];
 
         // Sort the combined rows
         const sortedLeaderboard = combinedRows.sort((a, b) => {
-          const aWpm = a.high_scores.languages[selections.language]?.difficulties[selections.difficulty]?.scores[selections.timer]?.wpm || 0;
-          const bWpm = b.high_scores.languages[selections.language]?.difficulties[selections.difficulty]?.scores[selections.timer]?.wpm || 0;
+          const aWpm =
+            a.high_scores.languages[selections.language]?.difficulties[
+              selections.difficulty
+            ]?.scores[selections.timer]?.wpm || 0;
+          const bWpm =
+            b.high_scores.languages[selections.language]?.difficulties[
+              selections.difficulty
+            ]?.scores[selections.timer]?.wpm || 0;
           return bWpm - aWpm;
         });
 
@@ -102,11 +126,17 @@ const LeaderboardTable = ({ theme }) => {
 
       setHasMore(data?.leaderboard.length > 0);
     } catch (error) {
-      console.error('Error fetching leaderboard:', error);
+      console.error("Error fetching leaderboard:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [page, selections.timer, selections.language, selections.difficulty, hasMore]);
+  }, [
+    page,
+    selections.timer,
+    selections.language,
+    selections.difficulty,
+    hasMore,
+  ]);
 
   useEffect(() => {
     loadData();
@@ -121,7 +151,7 @@ const LeaderboardTable = ({ theme }) => {
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !isLoading) {
-        setPage(prevPage => prevPage + 1);
+        setPage((prevPage) => prevPage + 1);
       }
     });
 
@@ -141,27 +171,60 @@ const LeaderboardTable = ({ theme }) => {
 
   return (
     <div className="leaderboard-overlay">
-      <div className="leaderboard-container" style={{ width: '100%' }}>
+      <div
+        className="leaderboard-container"
+        style={{ width: "100%", height: "auto" }}
+      >
         <div className="leaderboard-title-and-filter">
           <h1 className="leaderboard-title">Leaderboard</h1>
-          <LeaderboardDialogSelect setSelections={setSelections} selections={selections} theme={theme} />
+          <LeaderboardDialogSelect
+            setSelections={setSelections}
+            selections={selections}
+            theme={theme}
+          />
         </div>
-        <Paper sx={{ width: '100%', overflow: 'hidden', background: 'transparent', boxShadow: 'none' }}>
-          <TableContainer style={{ maxHeight: 'calc(12 * 48.8px)', background: theme.background }}>
+        <Paper
+          sx={{
+            width: "100%",
+            overflow: "hidden",
+            background: "transparent",
+            boxShadow: "none",
+          }}
+        >
+          <TableContainer
+            style={{
+              maxHeight: "calc(12 * 48px)",
+              background: theme.background,
+            }}
+          >
             <Table stickyHeader aria-label="sticky table">
-              <TableHeader backgroundColor={theme.background} />
+              <TableHeader
+                color={theme.textTypeBox}
+                backgroundColor={theme.background}
+              />
               <TableBody>
                 {rows.map((row, index) => (
-                  <Row key={index} index={index} row={row} language={selections.language} difficulty={selections.difficulty} timer_duration={selections.timer} />
+                  <Row
+                    theme={theme}
+                    key={index}
+                    index={index}
+                    row={row}
+                    language={selections.language}
+                    difficulty={selections.difficulty}
+                    timer_duration={selections.timer}
+                  />
                 ))}
-                {isLoading && (
+                {isLoading &&
                   Array.from({ length: 10 }).map((_, index) => (
-                    <SkeletonRow key={index} baseColor={baseColor} highlightColor={highlightColor} />
-                  ))
-                )}
+                    <SkeletonRow
+                      key={index}
+                      baseColor={baseColor}
+                      highlightColor={highlightColor}
+                    />
+                  ))}
               </TableBody>
             </Table>
-            <div ref={loaderRef} style={{ height: '20px' }} />
+            <div ref={loaderRef} style={{ height: "20px" }} />
           </TableContainer>
         </Paper>
       </div>

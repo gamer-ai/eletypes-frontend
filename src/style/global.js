@@ -1,10 +1,14 @@
 import { createGlobalStyle } from "styled-components";
+import { adjustColorBrightness } from "../components/utils/adjustColorBrightness";
 
 export const GlobalStyles = createGlobalStyle`
 *,
 *::after,
 *::before {
 box-sizing: border-box;
+}
+:root {
+--max-width: 1000px;
 }
 /* custom scrollbar */
 ::-webkit-scrollbar {
@@ -52,6 +56,17 @@ z-index: 1;
 padding: 1rem;
 transition: padding-top .125s;
 }
+.floating-menu {
+  position: fixed; 
+  top: 24px; 
+  left: 50%;
+  transform: translateX(-50%); 
+  z-index: 10; 
+  width: max-content;
+  // padding: 10px 20px;
+  background: ${({ theme }) => adjustColorBrightness(theme.background, -0)};
+  // border-radius: 8px;
+}
 .leaderboard-overlay {
 position: fixed;
 inset:0;
@@ -68,11 +83,10 @@ align-items: center;
 }
 .title {
 margin: 0;
-color: ${({ theme }) => theme.textTypeBox};
+color: ${({ theme }) => theme.title};
 transform: translateY(-3.8px);
 
 }
-
 .separator {
   width: 2px;
   height: 24px; 
@@ -102,7 +116,7 @@ font-size: 16px;
 color: ${({ theme }) => theme.textTypeBox};
 }
 .leaderboard-container {
-max-width: 1000px;
+max-width: var(--max-width);
 width: 100%;
 }
 .next-btn {
@@ -110,6 +124,9 @@ color: ${({ theme }) => theme.text};
 }
 .leaderboard-title {
 color: ${({ theme }) => theme.textTypeBox};
+}
+.css-99wn1p-MuiList-root-MuiMenu-list {
+background: ${({ theme }) => theme.background} !important;
 }
 .fixed-overlay {
 position: fixed;
@@ -210,7 +227,7 @@ position: absolute;
 background: transparent;
 top: 50%;
 width: 100%;
-max-width: 1000px;
+max-width: var(--max-width);
 left: 50%;
 transform: translate(-50%, -50%);
 display: flex;
@@ -244,7 +261,7 @@ gap: 16px;
 
 .stats {
 display: block;
-max-width: 1000px;
+max-width: var(--max-width);
 margin-top: 50px;
 margin-bottom: 20px;
 margin-left: auto;
@@ -259,7 +276,7 @@ justify-content: space-between;
 }
 .wordscard-UI{
 display: block;
-max-width: 1000px;
+max-width: var(--max-width);
 margin-top: 150px;
 margin-bottom: 20px;
 margin-left: auto;
@@ -276,7 +293,7 @@ bottom: 10%;
 }
 .keyboard-stats {
 display: flex;
-max-width: 1000px;
+max-width: var(--max-width);
 margin-top: 50px;
 margin-bottom: 20px;
 margin-left: auto;
@@ -301,7 +318,7 @@ animation: blinkingCursor 2s infinite;;
 }
 .type-box {
 display: block;
-max-width: 1000px;
+max-width: var(--max-width);
 height: 140px;
 overflow: hidden;
 margin-left: auto;
@@ -318,7 +335,7 @@ width: 60%;
 }
 .type-box-chinese {
 display: block;
-max-width: 1000px;
+max-width: var(--max-width);
 height: 240px;
 overflow: hidden;
 margin-left: auto;
@@ -441,8 +458,18 @@ background: ${({ theme }) => theme.background};
 border: none;
 min-width: 5%;
 }
+.wpm-and-timer {
+max-width: var(--max-width);
+margin-inline: auto;
+padding-inline: 8px;
+margin-bottom: 20px;
+}
+.wpm-and-timer > h3 {
+margin: 0;
+}
 .restart-button{
 margin-left: auto;
+margin-top: 20px;
 margin-right: auto;
 width: 8em
 }
@@ -642,7 +669,7 @@ font-size: 16px;
 }
 .type-box-sentence {
 display: block;
-max-width: 1000px;
+max-width: var(--max-width);
 height: 240px;
 overflow: hidden;
 margin-left: auto;

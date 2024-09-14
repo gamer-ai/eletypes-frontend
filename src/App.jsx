@@ -1,4 +1,5 @@
 import React, { Suspense, useState, useRef, useEffect } from "react";
+import LoginModal from "./components/common/login/LoginModal";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme, themesOptions } from "./style/theme";
 import { GlobalStyles } from "./style/global";
@@ -31,7 +32,7 @@ function App() {
     if (stickyTheme !== null) {
       const localTheme = JSON.parse(stickyTheme);
       const upstreamTheme = themesOptions.find(
-        (e) => e.label === localTheme.label
+        (e) => e.label === localTheme.label,
       ).value;
       // we will do a deep equal here. In case we want to support customized local theme.
       const isDeepEqual = localTheme === upstreamTheme;
@@ -40,37 +41,51 @@ function App() {
     return defaultTheme;
   });
 
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+  const handleOpenLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const handleCloseLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
   const [isLeadeboardOpen, setIsLeaderboardOpen] = useState(false);
   const [DinamicLeaderboard, setDinamicLeaderboard] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState({
+    _id: "",
+    username: "",
+    role: "user",
+    createdAt: "",
+  });
 
   const importLeaderboardComponent = async () => {
-    const module = await import('./components/common/LeaderboardTable');
+    const module = await import("./components/common/LeaderboardTable");
     const Component = module.default;
     setDinamicLeaderboard(<Component theme={theme} />);
   };
 
-
   useEffect(() => {
-
     if (isLeadeboardOpen) {
       importLeaderboardComponent();
     } else {
-      setDinamicLeaderboard(null)
+      setDinamicLeaderboard(null);
     }
-  }, [isLeadeboardOpen, theme])
+  }, [isLeadeboardOpen, theme]);
 
   // local persist game mode setting
   const [soundMode, setSoundMode] = useLocalPersistState(false, SOUND_MODE);
 
   const [soundType, setSoundType] = useLocalPersistState(
     DEFAULT_SOUND_TYPE,
-    DEFAULT_SOUND_TYPE_KEY
+    DEFAULT_SOUND_TYPE_KEY,
   );
 
   // local persist game mode setting
   const [gameMode, setGameMode] = useLocalPersistState(
     GAME_MODE_DEFAULT,
-    GAME_MODE
+    GAME_MODE,
   );
 
   const handleGameModeChange = (currGameMode) => {
@@ -79,7 +94,7 @@ function App() {
 
   // localStorage persist focusedMode setting
   const [isFocusedMode, setIsFocusedMode] = useState(
-    localStorage.getItem("focused-mode") === "true"
+    localStorage.getItem("focused-mode") === "true",
   );
 
   // musicMode setting
@@ -87,7 +102,7 @@ function App() {
 
   // ultraZenMode setting
   const [isUltraZenMode, setIsUltraZenMode] = useState(
-    localStorage.getItem("ultra-zen-mode") === "true"
+    localStorage.getItem("ultra-zen-mode") === "true",
   );
 
   // coffeeMode setting
@@ -99,7 +114,7 @@ function App() {
   // words card mode
   const [isWordsCardMode, setIsWordsCardMode] = useLocalPersistState(
     false,
-    "IsInWordsCardMode"
+    "IsInWordsCardMode",
   );
 
   const isWordGameMode =
@@ -207,15 +222,21 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <>
+        <LoginModal open={isLoginModalOpen} onClose={handleCloseLoginModal} />
         <DynamicBackground theme={theme}></DynamicBackground>
         <div className="canvas">
           <GlobalStyles />
-          <Logo isFocusedMode={isFocusedMode} theme={theme} isMusicMode={isMusicMode} setIsLeaderboardOpen={setIsLeaderboardOpen} isLeadeboardOpen={isLeadeboardOpen}></Logo>
-          <Suspense>
-            {
-              DinamicLeaderboard && DinamicLeaderboard
-            }
-          </Suspense>
+          <Logo
+            handleOpenLoginModal={handleOpenLoginModal}
+            theme={theme}
+            isAuthenticated={isAuthenticated}
+            username={user.username}
+            isFocusedMode={isFocusedMode}
+            isMusicMode={isMusicMode}
+            setIsLeaderboardOpen={setIsLeaderboardOpen}
+            isLeadeboardOpen={isLeadeboardOpen}
+          ></Logo>
+          <Suspense>{DinamicLeaderboard && DinamicLeaderboard}</Suspense>
           {isWordGameMode && (
             <TypeBox
               isUltraZenMode={isUltraZenMode}

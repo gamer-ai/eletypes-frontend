@@ -31,12 +31,12 @@ const Stats = ({
 
   useEffect(() => {
     const worker = new Worker(
-      new URL("../../../worker/calculateRawWpmWorker", import.meta.url)
+      new URL("../../../worker/calculateRawWpmWorker", import.meta.url),
     );
 
     worker.postMessage({ rawKeyStrokes, countDownConstant, countDown });
 
-    worker.onmessage = function(e) {
+    worker.onmessage = function (e) {
       setRoundedRawWpm(e.data);
       worker.terminate();
     };
@@ -54,7 +54,7 @@ const Stats = ({
   ];
 
   const [typingTestHistory, setTypingTestHistory] = useState(
-    initialTypingTestHistory
+    initialTypingTestHistory,
   );
 
   const accuracy = Math.round(statsCharCount[0]);
@@ -75,7 +75,7 @@ const Stats = ({
   useEffect(() => {
     if (status === "started" && countDown < countDownConstant) {
       const worker = new Worker(
-        new URL("../../../worker/trackHistoryWorker", import.meta.url)
+        new URL("../../../worker/trackHistoryWorker", import.meta.url),
       );
 
       worker.postMessage({
@@ -87,7 +87,7 @@ const Stats = ({
         incorrectCharsCount,
       });
 
-      worker.onmessage = function(e) {
+      worker.onmessage = function (e) {
         const { newEntry, resetErrors } = e.data;
         setTypingTestHistory((prevTypingTestHistory) => [
           ...prevTypingTestHistory,

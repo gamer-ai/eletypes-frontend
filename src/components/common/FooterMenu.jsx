@@ -1,13 +1,13 @@
 import React from "react";
-import ZoomInMapIcon from "@mui/icons-material/ZoomInMap";
 import { Grid, AppBar } from "@mui/material";
 import { Box } from "@mui/system";
 import { Tooltip } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import Select from "../utils/Select";
-import { getModeButtonClassName } from "../../utils/"
+import { getModeButtonClassName } from "../../utils/";
 import {
   FOCUS_MODE,
   FREE_MODE,
@@ -36,7 +36,6 @@ import { SvgIcon } from "@mui/material";
 import KeyboardAltOutlinedIcon from "@mui/icons-material/KeyboardAltOutlined";
 import SchoolIcon from "@mui/icons-material/School";
 import { SOUND_MODE_TOOLTIP } from "../features/sound/sound";
-
 
 const FooterMenu = ({
   themesOptions,
@@ -166,7 +165,7 @@ const FooterMenu = ({
                 <span
                   className={getGameModeButtonClassName(
                     gameMode,
-                    GAME_MODE_DEFAULT
+                    GAME_MODE_DEFAULT,
                   )}
                 >
                   {WORD_MODE_LABEL}
@@ -176,7 +175,7 @@ const FooterMenu = ({
                 <IconButton onClick={toggleUltraZenMode}>
                   <Tooltip title={ULTRA_ZEN_MODE}>
                     <span className={getModeButtonClassName(isUltraZenMode)}>
-                      <ZoomInMapIcon fontSize="small" />
+                      <VisibilityIcon fontSize="small" />
                     </span>
                   </Tooltip>{" "}
                 </IconButton>
@@ -189,7 +188,7 @@ const FooterMenu = ({
                 <span
                   className={getGameModeButtonClassName(
                     gameMode,
-                    GAME_MODE_SENTENCE
+                    GAME_MODE_SENTENCE,
                   )}
                 >
                   {SENTENCE_MODE_LABEL}
