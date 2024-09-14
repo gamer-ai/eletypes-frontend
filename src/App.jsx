@@ -222,7 +222,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <>
-        <LoginModal open={isLoginModalOpen} onClose={handleCloseLoginModal} />
+        <LoginModal
+          theme={theme}
+          open={isLoginModalOpen}
+          onClose={handleCloseLoginModal}
+        />
         <DynamicBackground theme={theme}></DynamicBackground>
         <div className="canvas">
           <GlobalStyles />

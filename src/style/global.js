@@ -56,17 +56,6 @@ z-index: 1;
 padding: 1rem;
 transition: padding-top .125s;
 }
-.floating-menu {
-  position: fixed; 
-  top: 24px; 
-  left: 50%;
-  transform: translateX(-50%); 
-  z-index: 10; 
-  width: max-content;
-  // padding: 10px 20px;
-  background: ${({ theme }) => adjustColorBrightness(theme.background, -0)};
-  // border-radius: 8px;
-}
 .leaderboard-overlay {
 position: fixed;
 inset:0;

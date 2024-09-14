@@ -5,6 +5,8 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@hcaptcha/react-hcaptcha": "^1.11.0",
+    "@hookform/resolvers": "^3.9.0",
     "@mui/icons-material": "^6.0.2",
     "@mui/material": "^6.0.2",
     "@mui/system": "^6.0.2",
@@ -14,13 +16,15 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-google-recaptcha": "^3.1.0",
+    "react-hook-form": "^7.53.0",
     "react-loading-skeleton": "^3.4.0",
     "react-select": "^5.8.0",
     "recharts": "^2.12.7",
     "styled-components": "^6.1.13",
     "use-sound": "^4.0.3",
     "uvcanvas": "^0.2.1",
-    "vite": "^5.4.4"
+    "vite": "^5.4.4",
+    "zod": "^3.23.8"
   },
   "scripts": {
     "start": "vite",
