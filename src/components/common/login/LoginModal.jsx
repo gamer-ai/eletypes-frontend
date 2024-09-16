@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
+import { toast } from "react-toastify";
+import axios from "axios";
 import {
   Dialog,
   DialogActions,
@@ -20,7 +22,7 @@ const loginSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-const LoginModal = ({ open, onClose, theme }) => {
+const LoginModal = ({ open, setIsAuthenticated, onClose, theme }) => {
   const {
     control,
     handleSubmit,
@@ -32,23 +34,53 @@ const LoginModal = ({ open, onClose, theme }) => {
 
   const [recaptchaValue, setRecaptchaValue] = useState(null);
 
-  const handleLogin = (data) => {
+  const handleLogin = async (data) => {
     if (!recaptchaValue) {
-      alert("Please complete the reCAPTCHA challenge.");
+      toast.error("Please complete the reCAPTCHA challenge.", {
+        className: "custom-toast-error",
+      });
       return;
     }
 
-    // Handle login logic here
-    console.log("Username:", data.username);
-    console.log("Password:", data.password);
-    console.log("reCAPTCHA Token:", recaptchaValue);
+    try {
+      const options = {
+        withCredentials: true,
+      };
 
-    // Clear the form fields after login
-    reset();
-    setRecaptchaValue(null); // Reset reCAPTCHA value
+      const response = await axios.post(
+        "http://localhost:8080/login",
+        {
+          username: data.username,
+          password: data.password,
+          token: recaptchaValue,
+        },
+        options,
+      );
 
-    // Close the modal
-    onClose();
+      setIsAuthenticated(response.status === 200);
+
+      console.log("Login successful:", response.data);
+      toast.success("Login successful!", {
+        className: "custom-toast-success",
+      });
+
+      reset();
+      setRecaptchaValue(null); // Reset reCAPTCHA value
+      onClose();
+    } catch (error) {
+      setIsAuthenticated(false);
+      // Log the entire error object for debugging
+      console.error("Error during login:", error);
+
+      reset();
+
+      // Check if the error response contains a specific message
+      const errorMessage = error.response?.data?.message || error.message;
+
+      toast.error(errorMessage, {
+        className: "custom-toast-error",
+      });
+    }
   };
 
   const onRecaptchaChange = (value) => {
@@ -161,6 +193,7 @@ const LoginModal = ({ open, onClose, theme }) => {
                 <ReCAPTCHA
                   theme="dark"
                   sitekey={import.meta.env.VITE_SITE_KEY}
+                  style={{ width: "100%" }}
                   onChange={onRecaptchaChange}
                 />
               </div>

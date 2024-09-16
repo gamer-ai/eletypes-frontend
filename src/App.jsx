@@ -1,5 +1,8 @@
 import React, { Suspense, useState, useRef, useEffect } from "react";
 import LoginModal from "./components/common/login/LoginModal";
+import axios from "axios";
+import "react-toastify/dist/ReactToastify.css";
+import SignupModal from "./components/common/login/SignupModal";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme, themesOptions } from "./style/theme";
 import { GlobalStyles } from "./style/global";
@@ -42,6 +45,7 @@ function App() {
   });
 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
   const handleOpenLoginModal = () => {
     setIsLoginModalOpen(true);
@@ -50,6 +54,15 @@ function App() {
   const handleCloseLoginModal = () => {
     setIsLoginModalOpen(false);
   };
+
+  const handleOpenSignupModal = () => {
+    setIsSignupModalOpen(true);
+  };
+
+  const handleCloseSignupModal = () => {
+    setIsSignupModalOpen(false);
+  };
+
   const [isLeadeboardOpen, setIsLeaderboardOpen] = useState(false);
   const [DinamicLeaderboard, setDinamicLeaderboard] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -219,6 +232,22 @@ function App() {
     soundType,
   ]);
 
+  useEffect(() => {
+    // Check if user is authenticated on initial load
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/check_auth", {
+          withCredentials: true,
+        });
+        console.log("Response:", response.status);
+        setIsAuthenticated(response.status === 200);
+      } catch (error) {
+        setIsAuthenticated(false);
+      }
+    };
+    checkAuth();
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <>
@@ -226,12 +255,19 @@ function App() {
           theme={theme}
           open={isLoginModalOpen}
           onClose={handleCloseLoginModal}
+          setIsAuthenticated={setIsAuthenticated}
+        />
+        <SignupModal
+          theme={theme}
+          open={isSignupModalOpen}
+          onClose={handleCloseSignupModal}
         />
         <DynamicBackground theme={theme}></DynamicBackground>
         <div className="canvas">
           <GlobalStyles />
           <Logo
             handleOpenLoginModal={handleOpenLoginModal}
+            handleOpenSignupModal={handleOpenSignupModal}
             theme={theme}
             isAuthenticated={isAuthenticated}
             username={user.username}

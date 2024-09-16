@@ -56,6 +56,19 @@ z-index: 1;
 padding: 1rem;
 transition: padding-top .125s;
 }
+.custom-toast-success {
+  background: ${({ theme }) => theme.background};
+color: ${({ theme }) => theme.text};
+}
+
+.custom-toast-error {
+  background: ${({ theme }) => theme.background};
+color: ${({ theme }) => theme.text};
+}
+
+.react-toastify__toast-container {
+   font-family: ${({ theme }) => theme.fontFamily};
+}
 .leaderboard-overlay {
 position: fixed;
 inset:0;

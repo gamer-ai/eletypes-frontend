@@ -1,13 +1,20 @@
-FROM node
+# Use the smallest base image for Node.js
+FROM node:18-alpine
 
-WORKDIR /eletypes_react
+# Set the working directory in the container
+WORKDIR /eletypes-frontend
 
-COPY package*.json ./ 
+# Copy only the package.json and package-lock.json files first to leverage Docker's caching
+COPY package*.json ./
 
-RUN npm install
+# Install dependencies
+RUN npm install 
 
+# Copy the rest of the application code
 COPY . .
 
-EXPOSE 3000
+# Expose the port the app runs on
+EXPOSE 5173
 
-CMD npm start
+# Command to run the application
+CMD ["npm", "start"]

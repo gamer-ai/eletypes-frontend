@@ -11,6 +11,7 @@ const Logo = ({
   theme,
   isAuthenticated,
   handleOpenLoginModal,
+  handleOpenSignupModal,
   username,
   isLeadeboardOpen,
   setIsLeaderboardOpen,
@@ -45,6 +46,7 @@ const Logo = ({
         <AccountMenu
           handleOpenLoginModal={handleOpenLoginModal}
           isAuthenticated={isAuthenticated}
+          handleOpenSignupModal={handleOpenSignupModal}
           theme={theme}
           username={username}
         />

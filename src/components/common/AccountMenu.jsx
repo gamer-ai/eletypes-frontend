@@ -11,6 +11,7 @@ import Divider from "@mui/material/Divider";
 
 export default function AccountMenu({
   isAuthenticated,
+  handleOpenSignupModal,
   handleOpenLoginModal,
   username,
   theme,
@@ -31,8 +32,13 @@ export default function AccountMenu({
     handleOpenLoginModal();
   };
 
+  const handleSignup = () => {
+    handleClose();
+    handleOpenSignupModal();
+  };
+
   return (
-    <React.Fragment>
+    <>
       <Box
         sx={{
           display: "flex",
@@ -57,9 +63,7 @@ export default function AccountMenu({
           >
             <PersonIcon
               sx={{ width: 28, height: 28, color: theme.textTypeBox }}
-            >
-              {isAuthenticated ? username.charAt(0).toUpperCase() : "M"}
-            </PersonIcon>
+            />
           </IconButton>
         </Tooltip>
       </Box>
@@ -68,34 +72,31 @@ export default function AccountMenu({
         id="account-menu"
         open={open}
         onClose={handleClose}
-        onClick={handleClose}
-        slotProps={{
-          paper: {
-            elevation: 0,
-            sx: {
-              backgroundColor: theme.background, // Menu background color from theme
-              color: theme.text, // Menu text color from theme
-              overflow: "visible",
-              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-              mt: 1.5,
-              "& .MuiAvatar-root": {
-                width: 32,
-                height: 32,
-                ml: -0.5,
-                mr: 1,
-              },
-              "&::before": {
-                content: '""',
-                display: "block",
-                position: "absolute",
-                top: 0,
-                right: 14,
-                width: 10,
-                height: 10,
-                bgcolor: theme.background,
-                transform: "translateY(-50%) rotate(45deg)",
-                zIndex: 0,
-              },
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            backgroundColor: theme.background, // Menu background color from theme
+            color: theme.text, // Menu text color from theme
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            mt: 1.5,
+            "& .MuiAvatar-root": {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            "&::before": {
+              content: '""',
+              display: "block",
+              position: "absolute",
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: theme.background,
+              transform: "translateY(-50%) rotate(45deg)",
+              zIndex: 0,
             },
           },
         }}
@@ -103,10 +104,8 @@ export default function AccountMenu({
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         {isAuthenticated ? (
-          <>
+          <span>
             <MenuItem onClick={handleClose} sx={{ cursor: "pointer" }}>
-              {" "}
-              {/* Added cursor pointer */}
               <PersonIcon
                 sx={{ mr: 1.4, color: theme.text }}
                 fontSize="medium"
@@ -115,23 +114,27 @@ export default function AccountMenu({
             </MenuItem>
             <Divider sx={{ backgroundColor: theme.textTypeBox }} />
             <MenuItem onClick={handleClose} sx={{ cursor: "pointer" }}>
-              {" "}
-              {/* Added cursor pointer */}
               <Logout sx={{ mr: 1.4, color: theme.text }} fontSize="medium" />
               Logout
             </MenuItem>
-          </>
+          </span>
         ) : (
-          <MenuItem
-            onClick={handleLogin}
-            sx={{ color: theme.text, cursor: "pointer" }}
-          >
-            {" "}
-            {/* Added cursor pointer */}
-            Login
-          </MenuItem>
+          <span>
+            <MenuItem
+              onClick={handleLogin}
+              sx={{ color: theme.text, cursor: "pointer" }}
+            >
+              Login
+            </MenuItem>
+            <MenuItem
+              onClick={handleSignup}
+              sx={{ color: theme.text, cursor: "pointer" }}
+            >
+              Sign Up
+            </MenuItem>
+          </span>
         )}
       </Menu>
-    </React.Fragment>
+    </>
   );
 }
