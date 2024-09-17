@@ -268,6 +268,7 @@ function App() {
             handleOpenSignupModal={handleOpenSignupModal}
             theme={theme}
             isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
             username={user.username}
             isFocusedMode={isFocusedMode}
             isMusicMode={isMusicMode}

@@ -43,19 +43,11 @@ const LoginModal = ({ open, setIsAuthenticated, onClose, theme, setUser }) => {
     }
 
     try {
-      const options = {
-        withCredentials: true,
-      };
-
-      const response = await axios.post(
-        "http://localhost:8080/login",
-        {
-          username: data.username,
-          password: data.password,
-          token: recaptchaValue,
-        },
-        options,
-      );
+      const response = await axios.post("http://localhost:8080/login", {
+        username: data.username,
+        password: data.password,
+        token: recaptchaValue,
+      });
 
       if (response.status === 200) {
         setUser((prev) => ({ ...prev, username: data.username }));
@@ -63,7 +55,7 @@ const LoginModal = ({ open, setIsAuthenticated, onClose, theme, setUser }) => {
       }
 
       console.log("Login successful:", response.data);
-      toast.success("Login successful!", {
+      toast.success("Login successfully.", {
         className: "custom-toast-success",
       });
 

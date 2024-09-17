@@ -1,6 +1,8 @@
 import React from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import Box from "@mui/material/Box";
+import { toast } from "react-toastify";
+import axios from "axios";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
@@ -11,6 +13,7 @@ import Divider from "@mui/material/Divider";
 
 export default function AccountMenu({
   isAuthenticated,
+  setIsAuthenticated,
   handleOpenSignupModal,
   handleOpenLoginModal,
   username,
@@ -32,9 +35,34 @@ export default function AccountMenu({
     handleOpenLoginModal();
   };
 
+  const handleLogout = () => {
+    handleClose();
+    removeCookie();
+  };
+
   const handleSignup = () => {
     handleClose();
     handleOpenSignupModal();
+  };
+
+  const removeCookie = async () => {
+    try {
+      const response = await axios.delete("http://localhost:8080/logout");
+      if (response.status === 200) {
+        setIsAuthenticated(false);
+        toast.success("Logout successfully.", {
+          className: "custom-toast-success",
+        });
+      }
+
+      console.log(response.data);
+    } catch (error) {
+      setIsAuthenticated(true);
+      toast.error("Failed to logout.", {
+        className: "custom-toast-error",
+      });
+      console.error("Error removing cookie:", error);
+    }
   };
 
   return (
@@ -113,7 +141,7 @@ export default function AccountMenu({
               My Profile
             </MenuItem>
             <Divider sx={{ backgroundColor: theme.textTypeBox }} />
-            <MenuItem onClick={handleClose} sx={{ cursor: "pointer" }}>
+            <MenuItem onClick={handleLogout} sx={{ cursor: "pointer" }}>
               <Logout sx={{ mr: 1.4, color: theme.text }} fontSize="medium" />
               Logout
             </MenuItem>

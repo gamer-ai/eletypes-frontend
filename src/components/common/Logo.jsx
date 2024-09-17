@@ -8,6 +8,7 @@ import { getModeButtonClassName } from "../../utils";
 
 const Logo = ({
   isFocusedMode,
+  setIsAuthenticated,
   theme,
   isAuthenticated,
   handleOpenLoginModal,
@@ -44,6 +45,7 @@ const Logo = ({
       </div>
       <div className="user-info" style={{ opacity: isFocusedMode ? "0" : "1" }}>
         <AccountMenu
+          setIsAuthenticated={setIsAuthenticated}
           handleOpenLoginModal={handleOpenLoginModal}
           isAuthenticated={isAuthenticated}
           handleOpenSignupModal={handleOpenSignupModal}
