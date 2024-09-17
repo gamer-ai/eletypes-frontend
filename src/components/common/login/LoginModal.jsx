@@ -22,7 +22,7 @@ const loginSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-const LoginModal = ({ open, setIsAuthenticated, onClose, theme }) => {
+const LoginModal = ({ open, setIsAuthenticated, onClose, theme, setUser }) => {
   const {
     control,
     handleSubmit,
@@ -57,7 +57,10 @@ const LoginModal = ({ open, setIsAuthenticated, onClose, theme }) => {
         options,
       );
 
-      setIsAuthenticated(response.status === 200);
+      if (response.status === 200) {
+        setUser((prev) => ({ ...prev, username: data.username }));
+        setIsAuthenticated(response.status === 200);
+      }
 
       console.log("Login successful:", response.data);
       toast.success("Login successful!", {
@@ -65,16 +68,15 @@ const LoginModal = ({ open, setIsAuthenticated, onClose, theme }) => {
       });
 
       reset();
-      setRecaptchaValue(null); // Reset reCAPTCHA value
+      setRecaptchaValue(null);
       onClose();
     } catch (error) {
       setIsAuthenticated(false);
-      // Log the entire error object for debugging
+      setUser({ username: "" });
       console.error("Error during login:", error);
 
       reset();
 
-      // Check if the error response contains a specific message
       const errorMessage = error.response?.data?.message || error.message;
 
       toast.error(errorMessage, {

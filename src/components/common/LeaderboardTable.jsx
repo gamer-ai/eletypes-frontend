@@ -14,7 +14,6 @@ import "react-loading-skeleton/dist/skeleton.css";
 import LeaderboardDialogSelect from "./LeaderboardDialogSelect";
 import { adjustColorBrightness } from "../utils/adjustColorBrightness";
 
-// TableHeader Component
 const TableHeader = ({ backgroundColor, color }) => (
   <TableHead>
     <TableRow style={{ backgroundColor }}>
@@ -87,8 +86,9 @@ const LeaderboardTable = ({ theme }) => {
   const [hasMore, setHasMore] = useState(true);
   const loaderRef = useRef(null);
 
-  const loadData = useCallback(async () => {
-    if (!hasMore) return;
+  const loadData = async () => {
+    if (!hasMore || isLoading) return;
+
     setIsLoading(true);
     try {
       const response = await axios.get(
@@ -103,12 +103,17 @@ const LeaderboardTable = ({ theme }) => {
           },
         },
       );
-      const data = response.data.leaderboard;
-      setRows((prevRows) => {
-        // Combine previous rows with new data
-        const combinedRows = [...prevRows, ...data];
 
-        // Sort the combined rows
+      const { leaderboard, total_count } = response.data;
+
+      setRows((prevRows) => {
+        const combinedRows = [...prevRows, ...leaderboard];
+
+        // Check if we have fetched all available data
+        if (combinedRows.length >= total_count) {
+          setHasMore(false);
+        }
+
         const sortedLeaderboard = combinedRows.sort((a, b) => {
           const aWpm =
             a.high_scores.languages[selections.language]?.difficulties[
@@ -123,34 +128,26 @@ const LeaderboardTable = ({ theme }) => {
 
         return sortedLeaderboard;
       });
-
-      setHasMore(data?.leaderboard.length > 0);
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [
-    page,
-    selections.timer,
-    selections.language,
-    selections.difficulty,
-    hasMore,
-  ]);
+  };
 
   useEffect(() => {
     loadData();
-  }, [loadData]);
+  }, [selections, page]);
 
   useEffect(() => {
     setPage(1);
     setRows([]);
     setHasMore(true);
-  }, [selections.timer, selections.language, selections.difficulty]);
+  }, [selections]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !isLoading) {
+      if (entry.isIntersecting && hasMore && !isLoading) {
         setPage((prevPage) => prevPage + 1);
       }
     });
@@ -164,7 +161,7 @@ const LeaderboardTable = ({ theme }) => {
         observer.unobserve(loaderRef.current);
       }
     };
-  }, [isLoading]);
+  }, [isLoading, hasMore]);
 
   const baseColor = adjustColorBrightness(theme.textTypeBox, -40);
   const highlightColor = adjustColorBrightness(theme.textTypeBox, 40);

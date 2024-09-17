@@ -66,11 +66,8 @@ function App() {
   const [isLeadeboardOpen, setIsLeaderboardOpen] = useState(false);
   const [DinamicLeaderboard, setDinamicLeaderboard] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState({
-    _id: "",
+  const [user, setUser] = useLocalPersistState({
     username: "",
-    role: "user",
-    createdAt: "",
   });
 
   const importLeaderboardComponent = async () => {
@@ -256,6 +253,7 @@ function App() {
           open={isLoginModalOpen}
           onClose={handleCloseLoginModal}
           setIsAuthenticated={setIsAuthenticated}
+          setUser={setUser}
         />
         <SignupModal
           theme={theme}
