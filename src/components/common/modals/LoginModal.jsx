@@ -43,11 +43,15 @@ const LoginModal = ({ open, setIsAuthenticated, onClose, theme, setUser }) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/login", {
-        username: data.username,
-        password: data.password,
-        token: recaptchaValue,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/login",
+        {
+          username: data.username,
+          password: data.password,
+          token: recaptchaValue,
+        },
+        { withCredentials: true },
+      );
 
       if (response.status === 200) {
         setUser((prev) => ({ ...prev, username: data.username }));
@@ -123,6 +127,20 @@ const LoginModal = ({ open, setIsAuthenticated, onClose, theme, setUser }) => {
                           color: theme.text,
                           borderColor: theme.textTypeBox,
                         },
+                        sx: {
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: theme.textTypeBox,
+                            },
+                            "&:hover fieldset": {
+                              borderColor: theme.text,
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: theme.textTypeBox,
+                              boxShadow: `0 0 5px ${theme.textTypeBox}`,
+                            },
+                          },
+                        },
                       }}
                     />
                     {errors.username && (
@@ -162,7 +180,20 @@ const LoginModal = ({ open, setIsAuthenticated, onClose, theme, setUser }) => {
                       InputProps={{
                         style: {
                           color: theme.text,
-                          borderColor: theme.textTypeBox,
+                        },
+                        sx: {
+                          "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                              borderColor: theme.textTypeBox,
+                            },
+                            "&:hover fieldset": {
+                              borderColor: theme.text,
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: theme.textTypeBox,
+                              boxShadow: `0 0 5px ${theme.textTypeBox}`,
+                            },
+                          },
                         },
                       }}
                     />

@@ -1,8 +1,9 @@
 import React, { Suspense, useState, useRef, useEffect } from "react";
-import LoginModal from "./components/common/login/LoginModal";
+import LoginModal from "./components/common/modals/LoginModal";
+import UserProfileModal from "./components/common/modals/UserProfileModal";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
-import SignupModal from "./components/common/login/SignupModal";
+import SignupModal from "./components/common/modals/SignupModal";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme, themesOptions } from "./style/theme";
 import { GlobalStyles } from "./style/global";
@@ -45,7 +46,16 @@ function App() {
   });
 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+
+  const handleOpenUserProfileModal = () => {
+    setIsUserProfileModalOpen(true);
+  };
+
+  const handleCloseUserProfileModal = () => {
+    setIsUserProfileModalOpen(false);
+  };
 
   const handleOpenLoginModal = () => {
     setIsLoginModalOpen(true);
@@ -236,7 +246,6 @@ function App() {
         const response = await axios.get("http://localhost:8080/check_auth", {
           withCredentials: true,
         });
-        console.log("Response:", response.status);
         setIsAuthenticated(response.status === 200);
       } catch (error) {
         setIsAuthenticated(false);
@@ -248,6 +257,12 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <>
+        <UserProfileModal
+          theme={theme}
+          open={isUserProfileModalOpen}
+          onClose={handleCloseUserProfileModal}
+          username={user.username}
+        />
         <LoginModal
           theme={theme}
           open={isLoginModalOpen}
@@ -265,6 +280,7 @@ function App() {
           <GlobalStyles />
           <Logo
             handleOpenLoginModal={handleOpenLoginModal}
+            handleOpenUserProfileModal={handleOpenUserProfileModal}
             handleOpenSignupModal={handleOpenSignupModal}
             theme={theme}
             isAuthenticated={isAuthenticated}

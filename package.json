@@ -2,6 +2,7 @@
   "name": "eletype",
   "version": "0.3.4",
   "private": true,
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",

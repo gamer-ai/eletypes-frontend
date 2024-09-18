@@ -17,12 +17,13 @@ export default function AccountMenu({
   handleOpenSignupModal,
   handleOpenLoginModal,
   username,
+  handleOpenUserProfileModal,
   theme,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event) => {
+  const showMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -38,6 +39,11 @@ export default function AccountMenu({
   const handleLogout = () => {
     handleClose();
     removeCookie();
+  };
+
+  const showUserProfile = () => {
+    handleClose();
+    handleOpenUserProfileModal();
   };
 
   const handleSignup = () => {
@@ -82,7 +88,7 @@ export default function AccountMenu({
         )}
         <Tooltip title="Account settings">
           <IconButton
-            onClick={handleClick}
+            onMouseOver={showMenu}
             size="small"
             sx={{ ml: 2, color: theme.textTypeBox, cursor: "pointer" }} // Added cursor pointer
             aria-controls={open ? "account-menu" : undefined}
@@ -133,7 +139,7 @@ export default function AccountMenu({
       >
         {isAuthenticated ? (
           <span>
-            <MenuItem onClick={handleClose} sx={{ cursor: "pointer" }}>
+            <MenuItem onClick={showUserProfile} sx={{ cursor: "pointer" }}>
               <PersonIcon
                 sx={{ mr: 1.4, color: theme.text }}
                 fontSize="medium"

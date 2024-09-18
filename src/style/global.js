@@ -57,17 +57,17 @@ padding: 1rem;
 transition: padding-top .125s;
 }
 .custom-toast-success {
-  background: ${({ theme }) => theme.background};
+background: ${({ theme }) => theme.background};
 color: ${({ theme }) => theme.text};
 }
 
 .custom-toast-error {
-  background: ${({ theme }) => theme.background};
+background: ${({ theme }) => theme.background};
 color: ${({ theme }) => theme.text};
 }
 
 .react-toastify__toast-container {
-   font-family: ${({ theme }) => theme.fontFamily};
+font-family: ${({ theme }) => theme.fontFamily};
 }
 .leaderboard-overlay {
 position: fixed;
@@ -90,10 +90,10 @@ transform: translateY(-3.8px);
 
 }
 .separator {
-  width: 2px;
-  height: 24px; 
+width: 2px;
+height: 24px; 
 background: ${({ theme }) => theme.textTypeBox};
-  margin: 0 24px;
+margin: 0 24px;
 }
 .leaderboard-button {
 }
@@ -449,7 +449,6 @@ border-right: 1px solid ${({ theme }) => theme.stats};
 border-left: 1px solid transparent;
 
 }
-
 .hidden-input{
 opacity:0;
 filter:alpha(opacity=0);
