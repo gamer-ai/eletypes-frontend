@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Tooltip } from "@mui/material";
 import { CHAR_TOOLTIP_TITLE } from "../../../constants/Constants";
+import axios from "axios";
 import {
   Line,
   XAxis,
@@ -22,6 +24,7 @@ const Stats = ({
   language,
   rawKeyStrokes,
   theme,
+  difficulty,
   renderResetButton,
   setIncorrectCharsCount,
   incorrectCharsCount,
@@ -31,7 +34,7 @@ const Stats = ({
 
   useEffect(() => {
     const worker = new Worker(
-      new URL("../../../worker/calculateRawWpmWorker", import.meta.url)
+      new URL("../../../worker/calculateRawWpmWorker", import.meta.url),
     );
 
     worker.postMessage({ rawKeyStrokes, countDownConstant, countDown });
@@ -44,6 +47,17 @@ const Stats = ({
     return () => worker.terminate();
   }, [rawKeyStrokes, countDownConstant, countDown]);
 
+  const getFormattedLanguageLanguageName = (value) => {
+    switch (value) {
+      case "ENGLISH_MODE":
+        return "english";
+      case "CHINESE_MODE":
+        return "chinese";
+      default:
+        return "chinese";
+    }
+  };
+
   const initialTypingTestHistory = [
     {
       wpm: 0,
@@ -54,7 +68,7 @@ const Stats = ({
   ];
 
   const [typingTestHistory, setTypingTestHistory] = useState(
-    initialTypingTestHistory
+    initialTypingTestHistory,
   );
 
   const accuracy = Math.round(statsCharCount[0]);
@@ -66,16 +80,51 @@ const Stats = ({
     error: history.error,
   }));
 
+  const scoreUpdateData = {
+    duration: countDownConstant.toString(),
+    language: getFormattedLanguageLanguageName(language),
+    difficulty,
+    score: {
+      wpm: roundedWpm,
+      raw_wpm: roundedRawWpm,
+      accuracy: statsCharCount[0],
+      date: new Date().toISOString(),
+    },
+  };
+
+  const updateUserScores = async (scoreUpdateData) => {
+    try {
+      await axios.post(
+        "http://localhost:8080/update_user_scores",
+        scoreUpdateData,
+        {
+          withCredentials: true,
+        },
+      );
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || error.message;
+
+      toast.error(errorMessage, {
+        className: "custom-toast-error",
+      });
+
+      console.error("Error updating user scores:", error);
+    }
+  };
+
   useEffect(() => {
     if (status === "started") {
       setTypingTestHistory(initialTypingTestHistory);
+    }
+    if (status === "finished") {
+      updateUserScores(scoreUpdateData);
     }
   }, [status]);
 
   useEffect(() => {
     if (status === "started" && countDown < countDownConstant) {
       const worker = new Worker(
-        new URL("../../../worker/trackHistoryWorker", import.meta.url)
+        new URL("../../../worker/trackHistoryWorker", import.meta.url),
       );
 
       worker.postMessage({
@@ -103,17 +152,6 @@ const Stats = ({
       return () => worker.terminate();
     }
   }, [countDown]);
-
-  const getFormattedLanguageLanguageName = (value) => {
-    switch (value) {
-      case "ENGLISH_MODE":
-        return "eng";
-      case "CHINESE_MODE":
-        return "chn";
-      default:
-        return "eng";
-    }
-  };
 
   const renderCharStats = () => (
     <Tooltip

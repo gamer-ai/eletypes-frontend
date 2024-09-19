@@ -1,4 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { Suspense, useState, useRef, useEffect } from "react";
+import LoginModal from "./components/common/modals/LoginModal";
+import UserProfileModal from "./components/common/modals/UserProfileModal";
+import axios from "axios";
+import "react-toastify/dist/ReactToastify.css";
+import SignupModal from "./components/common/modals/SignupModal";
 import { ThemeProvider } from "styled-components";
 import { defaultTheme, themesOptions } from "./style/theme";
 import { GlobalStyles } from "./style/global";
@@ -31,7 +36,7 @@ function App() {
     if (stickyTheme !== null) {
       const localTheme = JSON.parse(stickyTheme);
       const upstreamTheme = themesOptions.find(
-        (e) => e.label === localTheme.label
+        (e) => e.label === localTheme.label,
       ).value;
       // we will do a deep equal here. In case we want to support customized local theme.
       const isDeepEqual = localTheme === upstreamTheme;
@@ -40,18 +45,67 @@ function App() {
     return defaultTheme;
   });
 
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+
+  const handleOpenUserProfileModal = () => {
+    setIsUserProfileModalOpen(true);
+  };
+
+  const handleCloseUserProfileModal = () => {
+    setIsUserProfileModalOpen(false);
+  };
+
+  const handleOpenLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
+
+  const handleCloseLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
+
+  const handleOpenSignupModal = () => {
+    setIsSignupModalOpen(true);
+  };
+
+  const handleCloseSignupModal = () => {
+    setIsSignupModalOpen(false);
+  };
+
+  const [isLeadeboardOpen, setIsLeaderboardOpen] = useState(false);
+  const [DinamicLeaderboard, setDinamicLeaderboard] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useLocalPersistState({
+    username: "",
+  });
+
+  const importLeaderboardComponent = async () => {
+    const module = await import("./components/common/LeaderboardTable");
+    const Component = module.default;
+    setDinamicLeaderboard(<Component theme={theme} />);
+  };
+
+  useEffect(() => {
+    if (isLeadeboardOpen) {
+      importLeaderboardComponent();
+    } else {
+      setDinamicLeaderboard(null);
+    }
+  }, [isLeadeboardOpen, theme]);
+
   // local persist game mode setting
   const [soundMode, setSoundMode] = useLocalPersistState(false, SOUND_MODE);
 
   const [soundType, setSoundType] = useLocalPersistState(
     DEFAULT_SOUND_TYPE,
-    DEFAULT_SOUND_TYPE_KEY
+    DEFAULT_SOUND_TYPE_KEY,
   );
 
   // local persist game mode setting
   const [gameMode, setGameMode] = useLocalPersistState(
     GAME_MODE_DEFAULT,
-    GAME_MODE
+    GAME_MODE,
   );
 
   const handleGameModeChange = (currGameMode) => {
@@ -60,7 +114,7 @@ function App() {
 
   // localStorage persist focusedMode setting
   const [isFocusedMode, setIsFocusedMode] = useState(
-    localStorage.getItem("focused-mode") === "true"
+    localStorage.getItem("focused-mode") === "true",
   );
 
   // musicMode setting
@@ -68,7 +122,7 @@ function App() {
 
   // ultraZenMode setting
   const [isUltraZenMode, setIsUltraZenMode] = useState(
-    localStorage.getItem("ultra-zen-mode") === "true"
+    localStorage.getItem("ultra-zen-mode") === "true",
   );
 
   // coffeeMode setting
@@ -80,7 +134,7 @@ function App() {
   // words card mode
   const [isWordsCardMode, setIsWordsCardMode] = useLocalPersistState(
     false,
-    "IsInWordsCardMode"
+    "IsInWordsCardMode",
   );
 
   const isWordGameMode =
@@ -185,13 +239,59 @@ function App() {
     soundType,
   ]);
 
+  useEffect(() => {
+    // Check if user is authenticated on initial load
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/check_auth", {
+          withCredentials: true,
+        });
+        setIsAuthenticated(response.status === 200);
+      } catch (error) {
+        setIsAuthenticated(false);
+      }
+    };
+    checkAuth();
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <>
+        <UserProfileModal
+          theme={theme}
+          open={isUserProfileModalOpen}
+          onClose={handleCloseUserProfileModal}
+          username={user.username}
+        />
+        <LoginModal
+          theme={theme}
+          open={isLoginModalOpen}
+          onClose={handleCloseLoginModal}
+          setIsAuthenticated={setIsAuthenticated}
+          setUser={setUser}
+        />
+        <SignupModal
+          theme={theme}
+          open={isSignupModalOpen}
+          onClose={handleCloseSignupModal}
+        />
         <DynamicBackground theme={theme}></DynamicBackground>
         <div className="canvas">
           <GlobalStyles />
-          <Logo isFocusedMode={isFocusedMode} isMusicMode={isMusicMode}></Logo>
+          <Logo
+            handleOpenLoginModal={handleOpenLoginModal}
+            handleOpenUserProfileModal={handleOpenUserProfileModal}
+            handleOpenSignupModal={handleOpenSignupModal}
+            theme={theme}
+            isAuthenticated={isAuthenticated}
+            setIsAuthenticated={setIsAuthenticated}
+            username={user.username}
+            isFocusedMode={isFocusedMode}
+            isMusicMode={isMusicMode}
+            setIsLeaderboardOpen={setIsLeaderboardOpen}
+            isLeadeboardOpen={isLeadeboardOpen}
+          ></Logo>
+          <Suspense>{DinamicLeaderboard && DinamicLeaderboard}</Suspense>
           {isWordGameMode && (
             <TypeBox
               isUltraZenMode={isUltraZenMode}

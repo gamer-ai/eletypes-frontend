@@ -221,9 +221,9 @@ const defaultTheme = darkTheme;
 const themesOptions = [
   { value: darkTheme, label: "Dark" },
   { value: tokyoNightTheme, label: "Tokyo Night" },
+  { value: terminalTheme, label: "Terminal" },
   { value: aluminiumTheme, label: "Aluminium" },
   { value: pianoTheme, label: "Piano" },
-  { value: terminalTheme, label: "Terminal" },
   { value: nintendoTheme, label: "Nintendo" },
   { value: cyberTheme, label: "Cyber" },
   { value: edgeRunnerTheme, label: "Edgerunner" },

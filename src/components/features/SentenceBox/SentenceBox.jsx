@@ -44,7 +44,7 @@ const SentenceBox = ({
   // local persist difficulty
   const [language, setLanguage] = useLocalPersistState(
     ENGLISH_MODE,
-    "sentences-language"
+    "sentences-language",
   );
 
   // tab-enter restart dialog
@@ -135,7 +135,7 @@ const SentenceBox = ({
     setLanguage(newLanguage);
     if (!isRedo) {
       setSentencesDict(
-        sentencesGenerator(newSentencesCountConstant, newLanguage)
+        sentencesGenerator(newSentencesCountConstant, newLanguage),
       );
     }
     setTimeRunning(false);
@@ -352,7 +352,7 @@ const SentenceBox = ({
                   >
                     <span
                       className={getSentencesCountButtonClassName(
-                        DEFAULT_SENTENCES_COUNT
+                        DEFAULT_SENTENCES_COUNT,
                       )}
                     >
                       {DEFAULT_SENTENCES_COUNT}
@@ -365,7 +365,7 @@ const SentenceBox = ({
                   >
                     <span
                       className={getSentencesCountButtonClassName(
-                        TEN_SENTENCES_COUNT
+                        TEN_SENTENCES_COUNT,
                       )}
                     >
                       {TEN_SENTENCES_COUNT}
@@ -378,7 +378,7 @@ const SentenceBox = ({
                   >
                     <span
                       className={getSentencesCountButtonClassName(
-                        FIFTEEN_SENTENCES_COUNT
+                        FIFTEEN_SENTENCES_COUNT,
                       )}
                     >
                       {FIFTEEN_SENTENCES_COUNT}

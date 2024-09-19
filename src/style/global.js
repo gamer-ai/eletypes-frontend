@@ -1,10 +1,33 @@
 import { createGlobalStyle } from "styled-components";
+import { adjustColorBrightness } from "../components/utils/adjustColorBrightness";
 
 export const GlobalStyles = createGlobalStyle`
 *,
 *::after,
 *::before {
 box-sizing: border-box;
+}
+:root {
+--max-width: 1000px;
+}
+/* custom scrollbar */
+::-webkit-scrollbar {
+width: 20px;
+}
+
+::-webkit-scrollbar-track {
+background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+background-color: #d6dee1;
+border-radius: 20px;
+border: 6px solid transparent;
+background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background-color: #a8bbbf;
 }
 body {
 display: flex;
@@ -33,6 +56,80 @@ z-index: 1;
 padding: 1rem;
 transition: padding-top .125s;
 }
+.custom-toast-success {
+background: ${({ theme }) => theme.background};
+color: ${({ theme }) => theme.text};
+}
+
+.custom-toast-error {
+background: ${({ theme }) => theme.background};
+color: ${({ theme }) => theme.text};
+}
+
+.react-toastify__toast-container {
+font-family: ${({ theme }) => theme.fontFamily};
+}
+.leaderboard-overlay {
+position: fixed;
+inset:0;
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 99;
+background: ${({ theme }) => theme.background};
+}
+.leaderboard-title-and-filter {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.title {
+margin: 0;
+color: ${({ theme }) => theme.title};
+transform: translateY(-3.8px);
+
+}
+.separator {
+width: 2px;
+height: 24px; 
+background: ${({ theme }) => theme.textTypeBox};
+margin: 0 24px;
+}
+.leaderboard-button {
+}
+
+.leaderboard-icon {
+color: ${({ theme }) => theme.title};
+}
+
+.user-info {
+display: flex;
+align-items: center;
+}
+
+.user-icon {
+margin-right: 8px;
+color: ${({ theme }) => theme.textTypeBox};
+}
+
+.username {
+margin: 0;
+font-size: 16px;
+color: ${({ theme }) => theme.textTypeBox};
+}
+.leaderboard-container {
+max-width: var(--max-width);
+width: 100%;
+}
+.next-btn {
+color: ${({ theme }) => theme.text};
+}
+.leaderboard-title {
+color: ${({ theme }) => theme.textTypeBox};
+}
+.css-99wn1p-MuiList-root-MuiMenu-list {
+background: ${({ theme }) => theme.background} !important;
+}
 .fixed-overlay {
 position: fixed;
 top: 0;
@@ -43,7 +140,7 @@ background: rgba(0, 0, 0, 0.5); /* Dark background with opacity */
 display: flex;
 align-items: center;
 justify-content: center;
-z-index: 9999; /* Ensure the overlay is on top */
+z-index: 8888; /* Ensure the overlay is on top */
 }
 
 .modal-content {
@@ -78,9 +175,9 @@ filter: grayscale(30%);
 }
 .header {
 position: relative;
-display: block;
+display: flex;
 align-items: center;
-justify-content: center;
+justify-content: space-between;
 padding-bottom: 2%;
 top: 0;
 left:0;
@@ -91,6 +188,10 @@ z-index: 999;
 .bottom-info {
 color: ${({ theme }) => theme.title};
 margin: 4px;
+}
+.title-and-menu {
+display: flex;
+align-items: baseline;
 }
 small {
 display: block;
@@ -128,7 +229,7 @@ position: absolute;
 background: transparent;
 top: 50%;
 width: 100%;
-max-width: 1000px;
+max-width: var(--max-width);
 left: 50%;
 transform: translate(-50%, -50%);
 display: flex;
@@ -162,7 +263,7 @@ gap: 16px;
 
 .stats {
 display: block;
-max-width: 1000px;
+max-width: var(--max-width);
 margin-top: 50px;
 margin-bottom: 20px;
 margin-left: auto;
@@ -177,7 +278,7 @@ justify-content: space-between;
 }
 .wordscard-UI{
 display: block;
-max-width: 1000px;
+max-width: var(--max-width);
 margin-top: 150px;
 margin-bottom: 20px;
 margin-left: auto;
@@ -194,7 +295,7 @@ bottom: 10%;
 }
 .keyboard-stats {
 display: flex;
-max-width: 1000px;
+max-width: var(--max-width);
 margin-top: 50px;
 margin-bottom: 20px;
 margin-left: auto;
@@ -219,7 +320,7 @@ animation: blinkingCursor 2s infinite;;
 }
 .type-box {
 display: block;
-max-width: 1000px;
+max-width: var(--max-width);
 height: 140px;
 overflow: hidden;
 margin-left: auto;
@@ -236,7 +337,7 @@ width: 60%;
 }
 .type-box-chinese {
 display: block;
-max-width: 1000px;
+max-width: var(--max-width);
 height: 240px;
 overflow: hidden;
 margin-left: auto;
@@ -348,7 +449,6 @@ border-right: 1px solid ${({ theme }) => theme.stats};
 border-left: 1px solid transparent;
 
 }
-
 .hidden-input{
 opacity:0;
 filter:alpha(opacity=0);
@@ -359,8 +459,18 @@ background: ${({ theme }) => theme.background};
 border: none;
 min-width: 5%;
 }
+.wpm-and-timer {
+max-width: var(--max-width);
+margin-inline: auto;
+padding-inline: 8px;
+margin-bottom: 20px;
+}
+.wpm-and-timer > h3 {
+margin: 0;
+}
 .restart-button{
 margin-left: auto;
+margin-top: 20px;
 margin-right: auto;
 width: 8em
 }
@@ -560,7 +670,7 @@ font-size: 16px;
 }
 .type-box-sentence {
 display: block;
-max-width: 1000px;
+max-width: var(--max-width);
 height: 240px;
 overflow: hidden;
 margin-left: auto;
@@ -760,13 +870,12 @@ margin-top: 20px;
 .select-chapter-title{
 font-size: 16px;
 }
-.fade-element {
-  opacity: 0;
-  transition: opacity 500ms ease-in;
+.fade-element > * {
+opacity: 0;
+transition: 500ms ease-in-out;
 }
-.fade-element:hover {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
+.fade-element:hover > * {
+opacity: 1;
 }
 .primary-stats-title {
 color: ${({ theme }) => theme.textTypeBox};

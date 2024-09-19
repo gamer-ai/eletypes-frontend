@@ -1140,6 +1140,7 @@ const TypeBox = ({
         )}
         <div className="stats">
           <Stats
+            difficulty={difficulty}
             status={status}
             language={language}
             wpm={wpm}

@@ -1,4 +1,4 @@
-import randomWords from "random-words";
+import { generate as randomWords } from "random-words";
 import {
   COMMON_WORDS,
   COMMON_CHINESE_WORDS,
