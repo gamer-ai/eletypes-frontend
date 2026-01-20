@@ -5,6 +5,8 @@ import {
   RECITE_MODE_TITLE,
   RESTART_BUTTON_TOOLTIP_TITLE_WORDSCARD,
   SELECT_ONE_OR_MORE_CHAPTERS,
+  SELECTIVE_MODE,
+  VOCAB_MODE
 } from "../../../constants/Constants";
 import useLocalPersistState from "../../../hooks/useLocalPersistState";
 import { wordsCardVocabGenerator } from "../../../scripts/wordsGenerator";
@@ -25,6 +27,10 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 const WordsCard = ({ soundType, soundMode }) => {
   // set up game loop status state
   const [status, setStatus] = useState("waiting");
+
+  const [mode, setMode] = useLocalPersistState("vocab", "mode");  // selective, vocab
+
+  const [selectiveWord, setSelectiveWord] = useLocalPersistState("word","");
 
   const [play] = useSound(SOUND_MAP[soundType], { volume: 0.5 });
 
@@ -52,6 +58,19 @@ const WordsCard = ({ soundType, soundMode }) => {
   const handleTabKeyOpen = () => {
     setOpenRestart(true);
   };
+
+  const word = (alphabetSet) => {
+    if(Array.from(alphabetSet).length === 0)
+      return "";
+    const counts = [3, 4, 5];
+    const count = counts[Math.floor(Math.random() * counts.length)];
+    let result = "";
+    for (let i = 0; i < count; i++) {
+      const randomIndex = Math.floor(Math.random() * alphabetSet.size);
+      result += Array.from(alphabetSet)[randomIndex];
+    }
+    return result;
+  }
 
   // localStorage persist theme setting
   const [alphabetSet, setAlphabetSet] = useState(() => {
@@ -125,6 +144,7 @@ const WordsCard = ({ soundType, soundMode }) => {
       setIndex(0);
     }
     setAlphabetSet(newAlphabetSet);
+    setSelectiveWord(() => word(newAlphabetSet));
   };
 
   const updateVocabSource = (source) => {
@@ -223,8 +243,8 @@ const WordsCard = ({ soundType, soundMode }) => {
     return "wordcard-char";
   };
 
-  const currWord = wordsDict[index].key;
-  const currMeaning = wordsDict[index].val;
+  const currWord = mode === "vocab" ? wordsDict[index].key : selectiveWord;
+  const currMeaning = mode === "vocab" ? wordsDict[index].val : "";
   const extra = currInput.slice(currWord.length, currInput.length).split("");
   const currChapterStartIndex =
     DICTIONARY_SOURCE_CATALOG[vocabSource][currChapter][0];
@@ -296,26 +316,30 @@ const WordsCard = ({ soundType, soundMode }) => {
           if (keyCode === 32) {
             e.preventDefault();
           }
-          const nextIndex = index + 1;
-          // to next chapter or back to default
-          if (nextIndex === currChapterCount) {
-            // setCurrChapter("b");
-            if (alphabetSet.size > 1) {
-              const currentAlphabetSetList = [...alphabetSet].sort();
-              const currPosition = currentAlphabetSetList.indexOf(currChapter);
-              if (currPosition === currentAlphabetSetList.length - 1) {
-                setCurrChapter(currentAlphabetSetList[0]);
-              } else {
-                setCurrChapter(currentAlphabetSetList[currPosition + 1]);
+          if (mode === "vocab") {
+            const nextIndex = index + 1;
+            // to next chapter or back to default
+            if (nextIndex === currChapterCount) {
+              // setCurrChapter("b");
+              if (alphabetSet.size > 1) {
+                const currentAlphabetSetList = [...alphabetSet].sort();
+                const currPosition = currentAlphabetSetList.indexOf(currChapter);
+                if (currPosition === currentAlphabetSetList.length - 1) {
+                  setCurrChapter(currentAlphabetSetList[0]);
+                } else {
+                  setCurrChapter(currentAlphabetSetList[currPosition + 1]);
+                }
               }
+              setCurrInput("");
+              hiddenInputRef.current.value = "";
+              setIndex(0);
+              return;
             }
-            setCurrInput("");
-            hiddenInputRef.current.value = "";
-            setIndex(0);
-            return;
-          }
 
-          setIndex(nextIndex);
+            setIndex(nextIndex);
+          } else if (mode === "selective") {
+            setSelectiveWord(() => word(alphabetSet));
+          }
           setCurrInput("");
           hiddenInputRef.current.value = "";
         }
@@ -333,11 +357,19 @@ const WordsCard = ({ soundType, soundMode }) => {
   };
 
   const getChapterClassName = (chapter, currChapter) => {
+    if (mode !== "vocab") {
+      return "active-button";
+    }
     if (chapter === currChapter) {
       return "active-button";
     }
     return "inactive-button";
   };
+
+  const getModeActivation = (type) => {
+    // return "active-button" ;
+    return mode === type ? "active-button" : "inactive-button"
+  }
 
   const getExtraCharClassName = (char) => {
     if (char === " ") {
@@ -367,11 +399,36 @@ const WordsCard = ({ soundType, soundMode }) => {
       audio.play();
     }
   };
+  const getSelected = () => {
+    return (
+      <div className="Catalog-Selected">
+        <div>
+          {
+            alphabetSet.size === 0 ?
+              "Please select keys to practice from selected keys." :
+              'Practice from keys: ' + [...alphabetSet].sort().join(", ").toUpperCase()
+          }
+        </div>
+      </div>
+    );
+  }
+
+  const setSelective = () => {
+    setSelectiveWord(() => word(alphabetSet));
+    setMode("selective")
+  }
 
   return (
     <div className="words-card-container">
       <div className="words-card-catalog">
-        {getSelectedVocabSourceDisplay()}
+        {(() => {
+          switch (mode) {
+            case "vocab":
+              return getSelectedVocabSourceDisplay();
+            default:
+              return getSelected();
+          }
+        })()}
         <div
           className={
             !showCatalog ? "Catalog-Button" : "Catalog-Button-Activated"
@@ -383,24 +440,29 @@ const WordsCard = ({ soundType, soundMode }) => {
         {getCatalogDisplay()}
       </div>
       <div className="words-card-main">
+
         <input
           className="hidden-input"
           ref={hiddenInputRef}
           onBlur={handleInputBlur}
           onChange={handleInputChange}
           onKeyDown={(e) => handleKeyDown(e)}
+          // disabled={mode !== "vocab"}
         ></input>
         <div className="wordcard-meaning-display-field">{currMeaning}</div>
-        <IconButton
-          aria-label="restart"
-          color="secondary"
-          size="medium"
-          onClick={() => {
-            playAudio();
-          }}
-        >
-          <VolumeUpIcon />
-        </IconButton>
+        {
+          mode === "vocab" &&
+          <IconButton
+            aria-label="restart"
+            color="secondary"
+            size="medium"
+            onClick={() => {
+              playAudio();
+            }}
+          >
+            <VolumeUpIcon />
+          </IconButton>
+        }
         <div className="wordcard-word-display-field">
           {currWord.split("").map((char, idx) => (
             <span key={"word" + idx} className={getCharClassName(idx, char)}>
@@ -427,47 +489,57 @@ const WordsCard = ({ soundType, soundMode }) => {
               controlsList="nodownload nofullscreen noremoteplayback"
             />
           </div>
-          <div className="wordscard-UI-info">
-            {"Chapter  " + currChapter.toUpperCase() + ": "} {index + 1} /{" "}
-            {currChapterCount}
-          </div>
+          {
+            mode === "vocab" &&
+            <div className="wordscard-UI-info">
+              {"Chapter  " + currChapter.toUpperCase() + ": "} {index + 1} /{" "}
+              {currChapterCount}
+            </div>
+          }
+          {
+            mode === "selective" &&
+            <p>Selected Keys:</p>
+          }
 
           <div className="restart-button" key="restart-button">
             <Grid container justifyContent="center" alignItems="center">
-              <Box display="flex" flexDirection="row">
-                <IconButton
-                  aria-label="restart"
-                  color="secondary"
-                  size="medium"
-                  onClick={() => {
-                    setIndex(index - 1 >= 0 ? index - 1 : currChapterCount - 1);
-                  }}
-                >
-                  <ArrowBackIosNewIcon />
-                </IconButton>
-                <IconButton
-                  aria-label="restart"
-                  color="secondary"
-                  size="medium"
-                  onClick={() => {
-                    setIndex(0);
-                  }}
-                >
-                  <Tooltip title={RESTART_BUTTON_TOOLTIP_TITLE_WORDSCARD}>
-                    <RestartAltIcon />
-                  </Tooltip>
-                </IconButton>
-                <IconButton
-                  aria-label="restart"
-                  color="secondary"
-                  size="medium"
-                  onClick={() => {
-                    setIndex(index + 1 >= currChapterCount ? 0 : index + 1);
-                  }}
-                >
-                  <ArrowForwardIosIcon />
-                </IconButton>
-              </Box>
+              {
+                mode === "vocab" &&
+                <Box display="flex" flexDirection="row">
+                  <IconButton
+                    aria-label="restart"
+                    color="secondary"
+                    size="medium"
+                    onClick={() => {
+                      setIndex(index - 1 >= 0 ? index - 1 : currChapterCount - 1);
+                    }}
+                  >
+                    <ArrowBackIosNewIcon />
+                  </IconButton>
+                  <IconButton
+                    aria-label="restart"
+                    color="secondary"
+                    size="medium"
+                    onClick={() => {
+                      setIndex(0);
+                    }}
+                  >
+                    <Tooltip title={RESTART_BUTTON_TOOLTIP_TITLE_WORDSCARD}>
+                      <RestartAltIcon />
+                    </Tooltip>
+                  </IconButton>
+                  <IconButton
+                    aria-label="restart"
+                    color="secondary"
+                    size="medium"
+                    onClick={() => {
+                      setIndex(index + 1 >= currChapterCount ? 0 : index + 1);
+                    }}
+                  >
+                    <ArrowForwardIosIcon />
+                  </IconButton>
+                </Box>
+              }
               <Box display="flex" flexDirection="row">
                 {[...alphabetSet].sort().map((chapter) => (
                   <IconButton
@@ -482,16 +554,31 @@ const WordsCard = ({ soundType, soundMode }) => {
                   </IconButton>
                 ))}
               </Box>
-              <Box display="flex" flexDirection="row">
-                <IconButton
-                  onClick={() => {
-                    setHideWord(!hideWord);
-                  }}
-                >
-                  {getEyeIconDisplay()}
-                </IconButton>
-              </Box>
+              {
+                mode === "vocab" &&
+                <Box display="flex" flexDirection="row">
+                  <IconButton
+                    onClick={() => {
+                      setHideWord(!hideWord);
+                    }}
+                  >
+                    {getEyeIconDisplay()}
+                  </IconButton>
+                </Box>
+              }
             </Grid>
+            <Box display="flex" flexDirection="row">
+              <IconButton onClick={() => setMode("vocab")}>
+                <Tooltip title={VOCAB_MODE}>
+                  <span className={getModeActivation("vocab")}>Vocab</span>
+                </Tooltip>
+              </IconButton>
+              <IconButton onClick={setSelective}>
+                <Tooltip title={SELECTIVE_MODE}>
+                  <span className={getModeActivation("selective")}>Selective</span>
+                </Tooltip>
+              </IconButton>
+            </Box>
           </div>
         </div>
       </div>

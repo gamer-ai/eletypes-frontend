@@ -16,6 +16,8 @@ const RESTART_BUTTON_TOOLTIP_TITLE_WORDSCARD =
 const SELECT_ONE_OR_MORE_CHAPTERS =
   "Open to select one or more chapters. Pick the chapters in the typing area.";
 const RECITE_MODE_TITLE = "hide the word (默写模式)";
+const VOCAB_MODE = "Learn typing from the word cards (词汇模式)";
+const SELECTIVE_MODE = "Selectively practice from chosen keys (选择模式)";
 const DEFAULT_DIFFICULTY_TOOLTIP_TITLE =
   "normal mode generates random words from top 1000 most frequently used words in English dataset.";
 const HARD_DIFFICULTY_TOOLTIP_TITLE =
@@ -134,4 +136,6 @@ export {
   NUMBER_ADDON_KEY,
   SYMBOL_ADDON_KEY,
   ULTRA_ZEN_MODE,
+  VOCAB_MODE,
+  SELECTIVE_MODE
 };
