@@ -145,6 +145,8 @@ const WordsCard = ({ soundType, soundMode }) => {
     }
     setAlphabetSet(newAlphabetSet);
     setSelectiveWord(() => word(newAlphabetSet));
+    setCurrInput("");
+    hiddenInputRef.current.value = "";
   };
 
   const updateVocabSource = (source) => {
