@@ -50,7 +50,8 @@ To join the community, please go to the website and hit "discord" icon.
     - Caret mode: a pacing caret, advancing character by character, which aligns normal typing habit.
 
 #### 2. Words Card (for English learners)
-
+This word card mode has further two types **Vocab Mode** and **Selective Mode**.
+- **`Vocab Mode`** 
   - Vocabulary Source
     - GRE vocab
     - TOEFL
@@ -59,6 +60,11 @@ To join the community, please go to the website and hit "discord" icon.
   - Multi Chapters Selection
   - Words Card Navigation UI
   - Recite Mode (word visibility off while phrase shown)
+- **`Selective Mode`**
+  - Provide focused typing practice with selected keys.
+  - Enables targeted improvement.
+  - Can practicing keys from the `home-row`, `top-row`, and `bottom-row`, either individually or in any combination, based on learning needs.
+
   
 #### 3. Coffee Mode
 
