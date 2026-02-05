@@ -3,20 +3,24 @@ import { SOUND_MAP } from "../sound/sound";
 import { useState, useEffect, useRef } from "react";
 import { getRandomWord, initData, isWordPresent } from "./util";
 import useLocalPersistState from "../../../hooks/useLocalPersistState";
-import { Box, Grid, Tooltip } from "@mui/material";
+import { Box, Dialog, DialogActions, DialogTitle, Grid, Tooltip, Button } from "@mui/material";
 import IconButton from "../../utils/IconButton";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import { HINT_BUTTON_TOOLTIP_TITLE, HINT_LIMIT, RESET_BUTTON_TOOLTIP_TITLE } from "../../../constants/Constants";
 import LinearProgress from "@mui/material/LinearProgress";
+import RestoreIcon from '@mui/icons-material/Restore';
 
 
 const GameComponent = ({ soundType, soundMode }) => {
   const [play] = useSound(SOUND_MAP[soundType], { volume: 0.5 });
   //easy, medium, hard
   const [difficulty, setDifficulty] = useLocalPersistState("easy", "game-difficulty");
-
   const [guessWord, setGuessWord] = useLocalPersistState("","guessWord");
+  const [progress, setProgress] = useState(100); // Progress bar value
+  const [timer, setTimer] = useState(null); // Timer reference
+  const [gameOverDialogOpen, setGameOverDialogOpen] = useState(false); // State for game over dialog
+  const [guessedWordsCount, setGuessedWordsCount] = useState(0); 
 
   // set up game loop status state
   const [status, setStatus] = useState("waiting");
@@ -32,8 +36,38 @@ const GameComponent = ({ soundType, soundMode }) => {
     }
     if (status !== "started") {
       setStatus("started");
+      startTimer();
     }
   };
+
+  const restartGame = () => {
+    setStatus("waiting");
+    setCurrInput("");
+    setProgress(100); // Reset progress bar
+    setVisibleIndex([]);
+    requestWord();
+    hiddenInputRef.current.value = "";
+    clearInterval(timer); // Clear the timer
+    setTimer(null)
+    setGameOverDialogOpen(false); // Close the game over dialog
+  };
+  const startTimer = () => {
+    clearInterval(timer); // Clear any existing timer
+    const newTimer = setInterval(() => {
+      setProgress((prev) => {
+        if (prev <= 0) {
+          clearInterval(newTimer);
+          setStatus("finished"); // End the game when the timer reaches 0
+          return 0;
+        }
+        return prev - 1; // Decrease progress by 1% every second
+      });
+    }, 1000);
+    setTimer(newTimer);
+  };
+
+
+
   const currWord = guessWord;
   const handleInputBlur = (event) => {
     hiddenInputRef.current && hiddenInputRef.current.focus();
@@ -53,6 +87,12 @@ const GameComponent = ({ soundType, soundMode }) => {
       // Call requestWord whenever difficulty changes
       requestWord();
     }, [difficulty]);
+    // Show game over dialog when the game ends
+  useEffect(() => {
+    if (status === "finished") {
+      setGameOverDialogOpen(true); // Open the game over dialog
+    }
+  }, [status]);
 
   useEffect(() => {
       hiddenInputRef.current.value = "";
@@ -114,10 +154,9 @@ const GameComponent = ({ soundType, soundMode }) => {
   };
 
   const handleReset = () => {
-    setStatus("waiting");
-    setCurrInput("");
     requestWord();
     hiddenInputRef.current.value = "";
+    setProgress((prev) => Math.min(prev - 2, 100)); // Increase progress by 2% for reset
   }
 
   const requestWord = () => {
@@ -148,6 +187,7 @@ const GameComponent = ({ soundType, soundMode }) => {
     }
     newVisibleIndex.push(random);
     setVisibleIndex(newVisibleIndex);
+    setProgress((prev) => Math.min(prev - 1, 100)); // Increase progress by 1% for hint
   }
   const getModeActivation = (type) => {
     // return "active-button" ;
@@ -183,8 +223,10 @@ const GameComponent = ({ soundType, soundMode }) => {
         if (guessWord === currInput || isWordPresent(currInput)) {
           e.preventDefault();
           requestWord();
+          setProgress((prev) => Math.min(prev + 2, 100));
           setCurrInput("");
           hiddenInputRef.current.value = "";
+          setGuessedWordsCount((prev) => prev + 1); // Increment guessed words count
         }
         return;
       }
@@ -242,6 +284,16 @@ const GameComponent = ({ soundType, soundMode }) => {
                       <RestartAltIcon />
                     </Tooltip>
                   </IconButton>
+                  <IconButton
+                  aria-label="restart-game"
+                  color="primary"
+                  size="medium"
+                  onClick={restartGame}
+                >
+                  <Tooltip title={"Restart Game"}>
+                    <RestoreIcon />
+                  </Tooltip>
+                </IconButton>
                 </Box>
                 <Box>
                   <IconButton onClick={() => setDifficulty("easy")}>
@@ -260,18 +312,28 @@ const GameComponent = ({ soundType, soundMode }) => {
                     </Tooltip>
                   </IconButton>
                 </Box>
-                <Box>
-                  <Box width="100%" mt={2} title="Progress Bar">
-                    <LinearProgress
-                      variant="determinate"
-                      value={100}
-                    />
-                  </Box>
+                <Box p={2}>
+                  <p className="inactive-button">You guessed {guessedWordsCount} words correctly!</p>
                 </Box>
+                  
             </Grid>
           </div>
         </div>
+        <Box width="100%" mt={2} title="Progress Bar">
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+            />
+        </Box>
       </div>
+      <Dialog open={gameOverDialogOpen} onClose={() => setGameOverDialogOpen(false)}>
+        <DialogTitle>Game Over</DialogTitle>
+        <DialogActions>
+          <Button onClick={restartGame} color="primary">
+            Restart Game
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
