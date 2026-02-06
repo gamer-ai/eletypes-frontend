@@ -328,6 +328,11 @@ const GameComponent = ({ soundType, soundMode }) => {
       </div>
       <Dialog open={gameOverDialogOpen} onClose={() => setGameOverDialogOpen(false)}>
         <DialogTitle>Game Over</DialogTitle>
+        <DialogActions style={{ flexDirection: "column" }}>
+          <p style={{ marginBottom: "10px" }}>
+          The word was: <strong>{currWord}</strong>
+          </p>
+      </DialogActions>
         <DialogActions>
           <Button onClick={restartGame} color="primary">
             Restart Game
