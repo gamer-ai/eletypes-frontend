@@ -21,6 +21,7 @@ const GameComponent = ({ soundType, soundMode }) => {
   const [timer, setTimer] = useState(null); // Timer reference
   const [gameOverDialogOpen, setGameOverDialogOpen] = useState(false); // State for game over dialog
   const [guessedWordsCount, setGuessedWordsCount] = useState(0); 
+  const [highScore, setHighScore] = useLocalPersistState(0, "highscore"); // High score tracker
 
   // set up game loop status state
   const [status, setStatus] = useState("waiting");
@@ -45,12 +46,17 @@ const GameComponent = ({ soundType, soundMode }) => {
     setCurrInput("");
     setProgress(100); // Reset progress bar
     setVisibleIndex([]);
+    setGuessedWordsCount(0); // Reset guessed words count
     requestWord();
-    hiddenInputRef.current.value = "";
+    if (hiddenInputRef.current) {
+      hiddenInputRef.current.value = "";
+      hiddenInputRef.current.focus(); // Refocus the input field
+  }
     clearInterval(timer); // Clear the timer
-    setTimer(null)
+    setTimer(null);
     setGameOverDialogOpen(false); // Close the game over dialog
   };
+
   const startTimer = () => {
     clearInterval(timer); // Clear any existing timer
     const newTimer = setInterval(() => {
@@ -65,8 +71,6 @@ const GameComponent = ({ soundType, soundMode }) => {
     }, 1000);
     setTimer(newTimer);
   };
-
-
 
   const currWord = guessWord;
   const handleInputBlur = (event) => {
@@ -104,37 +108,48 @@ const GameComponent = ({ soundType, soundMode }) => {
       setVisibleIndex([random]);
     }, [guessWord]);
 
+  useEffect(() => {
+    // Reset guessed words count and request a new word when difficulty changes
+    setGuessedWordsCount(0);
+    requestWord();
+  }, [difficulty]);
+
   const allVisibleRevealed = () => {
     for (let i = 0; i < currWord.length; i++) {
       if ((i === 0 || visibleIndex.includes(i)) && currInput[i] !== currWord[i]) {
         return false;
       }
     }
-    return true;
+    return isWordPresent(currInput);
   }
 
   const getCharClassName = (idx, char) => {
-    if (currWord.length <= currInput.length) {
-      if (currInput.length === currWord.length ) {
-        if(allVisibleRevealed() && isWordPresent(currInput))
-          return "correct-wordcard-char";
-        return "wordcard-error-char";
-      }
-      return "wordcard-error-char";
+    const wordClass = ["wordcard-error-char", "correct-wordcard-char", "wordcard-char", "error-wordcard-space-char"];
+    
+    // case 1. If the input is longer than or equal to the word length, all chars are wrong.
+    if(currInput.length > currWord.length){
+      return wordClass[0];  // error char
     }
+
+    // Case 2: If the input length equal to the word length.
+    if (currWord.length === currInput.length) {
+      // if all visible chars are correct and the word is valid, show correct char, otherwise show error char.
+      return allVisibleRevealed() ? wordClass[1] : wordClass[0];
+    }
+
+    // Case 3: If the input length is less than the word length, check the visible chars. If the char is visible and not correct, show error char. If the char is typed but not visible, show correct char if it's correct, otherwise show error char. If the char is not typed, show default char.
     if(idx === 0 || visibleIndex.includes(idx)){
       if(currInput[idx] && char !== currInput[idx]){
-        return "wordcard-error-char";
+        return wordClass[0]; // error char
       }
     }
     if (idx < currInput.length) {
-      if (char === " ") {
-        return "error-wordcard-space-char";
-      }
-      return "correct-wordcard-char";
+      // if the char is space, show error space char, otherwise show correct char
+      return char === " " ? wordClass[3] : wordClass[1]; 
     }
-    return "wordcard-char";
+    return wordClass[2]; // default char
   };
+  
   const getExtraCharClassName = (char) => {
     if (char === " ") {
       return "wordcard-error-char-space-char";
@@ -154,6 +169,9 @@ const GameComponent = ({ soundType, soundMode }) => {
   };
 
   const handleReset = () => {
+    if (status !== "started") {
+      start(); // Start the game if it's not already started
+    }
     requestWord();
     hiddenInputRef.current.value = "";
     setProgress((prev) => Math.min(prev - 2, 100)); // Increase progress by 2% for reset
@@ -177,6 +195,9 @@ const GameComponent = ({ soundType, soundMode }) => {
     return visibleIndex.length > HINT_LIMIT || visibleIndex.length + 2 === currWord.length;
   }
   const handleHint = () => {
+    if (status !== "started") {
+      start(); // Start the game if it's not already started
+    }
     if (visibleIndex.length > HINT_LIMIT || visibleIndex.length === currWord.length - 2) {
       return;
     }
@@ -220,13 +241,17 @@ const GameComponent = ({ soundType, soundMode }) => {
     // Handle word completion
     if (currInput.length >= guessWord.length) {
       if (keyCode === 13 || keyCode === 32) {
-        if (guessWord === currInput || isWordPresent(currInput)) {
+        if (guessWord === currInput || (currWord.length === currInput.length && allVisibleRevealed())) {
           e.preventDefault();
           requestWord();
           setProgress((prev) => Math.min(prev + 2, 100));
           setCurrInput("");
           hiddenInputRef.current.value = "";
-          setGuessedWordsCount((prev) => prev + 1); // Increment guessed words count
+          setGuessedWordsCount((prev) => {
+            const newCount = prev + 1;
+            setHighScore((highScore) => Math.max(highScore, newCount)); // Update high score if needed
+            return newCount;
+          });
         }
         return;
       }
@@ -314,6 +339,7 @@ const GameComponent = ({ soundType, soundMode }) => {
                 </Box>
                 <Box p={2}>
                   <p className="inactive-button">You guessed {guessedWordsCount} words correctly!</p>
+                  <p className="inactive-button">High Score: {highScore}</p>
                 </Box>
                   
             </Grid>
@@ -328,6 +354,11 @@ const GameComponent = ({ soundType, soundMode }) => {
       </div>
       <Dialog open={gameOverDialogOpen} onClose={() => setGameOverDialogOpen(false)}>
         <DialogTitle>Game Over</DialogTitle>
+        <DialogActions style={{ flexDirection: "column" }}>
+          <p style={{ marginBottom: "10px" }}>
+          The word was: <strong>{currWord}</strong>
+          </p>
+      </DialogActions>
         <DialogActions>
           <Button onClick={restartGame} color="primary">
             Restart Game

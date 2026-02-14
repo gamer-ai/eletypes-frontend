@@ -1,5 +1,6 @@
 const result = {};
 // Parse CET4Words
+const guessedWords = new Set(); // New set to track guessed words
 
 function initData(){
     ParseCET4Words();
@@ -50,38 +51,35 @@ function isWordPresent(word) {
     if (!word) return false;
     const firstChar = word[0].toLowerCase();
     const len = word.length;
-    return result[firstChar]?.[len]?.has(word) || false;
+    return result[firstChar]?.[len]?.has(word)  || guessedWords.has(word) || false;
 }
 
 // Function to get a random word from the result
 function getRandomWord(min, max) {
 
-    // Pick a random first character
-    const randomFirstChar = String.fromCharCode(Math.floor(Math.random() * 26) + 97);
-    // Check if the character exists in the result
-    if (!result[randomFirstChar]) {
-        return getRandomWord(min, max); // Retry if no words exist for the character
-    }
+    // Flatten all words into a single array
+    const allWords = [];
+    Object.values(result).forEach(lengthsObj => {
+        Object.values(lengthsObj).forEach(wordsSet => {
+            allWords.push(...Array.from(wordsSet));
+        });
+    });
+    // Filter words based on the length constraints
+    const filteredWords = allWords.filter(word => word.length >= min && word.length <= max);
 
-    const lengths = Object.keys(result[randomFirstChar]);
-    const randomLength = lengths[Math.floor(Math.random() * lengths.length)];
+    // Pick a random word from the filtered list
+    const randomIndex = Math.floor(Math.random() * filteredWords.length);
+    const word = filteredWords[randomIndex];
 
-    // Get a random word from the set
-    const wordsSet = result[randomFirstChar][randomLength];
-    const wordsArray = Array.from(wordsSet); // Convert Set to Array temporarily
-    if (wordsArray.length === 0) {
-        delete result[randomFirstChar][randomLength]; // Remove empty length set
-        if (Object.keys(result[randomFirstChar]).length === 0) {
-            delete result[randomFirstChar]; // Remove empty character entry
-        }
-        return getRandomWord(min, max); // Retry if no words are available
-    }
-    const word = wordsArray[Math.floor(Math.random() * wordsArray.length)]
-    if (word.length >= min && word.length <= max) {
-        wordsSet.delete(word); // Remove the guessed word from the set
-        return word;
-    }
-    return getRandomWord(min, max);
+    // Remove the selected word from the result structure
+    const firstChar = word.charAt(0).toLowerCase();
+    const len = word.length;
+    result[firstChar][len].delete(word);
+
+    // Add the word to guessedWords
+    guessedWords.add(word);
+
+    return word;
 }
 
 export { isWordPresent, result, getRandomWord, initData };
