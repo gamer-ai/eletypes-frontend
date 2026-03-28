@@ -30,7 +30,7 @@ const WordsCard = ({ soundType, soundMode }) => {
 
   const [mode, setMode] = useLocalPersistState("vocab", "mode");  // selective, vocab
 
-  const [selectiveWord, setSelectiveWord] = useLocalPersistState("word","");
+  const [selectiveWord, setSelectiveWord] = useLocalPersistState("","word");
 
   const [play] = useSound(SOUND_MAP[soundType], { volume: 0.5 });
 
@@ -493,18 +493,17 @@ const WordsCard = ({ soundType, soundMode }) => {
               controlsList="nodownload nofullscreen noremoteplayback"
             />
           </div>
-          {
-            mode === "vocab" &&
-            <div className="wordscard-UI-info">
-              {"Chapter  " + currChapter.toUpperCase() + ": "} {index + 1} /{" "}
-              {currChapterCount}
-            </div>
-          }
-          {
-            mode === "selective" &&
-            <p>Selected Keys:</p>
-          }
-
+            {
+              mode === "vocab" &&
+              <div className="wordscard-UI-info">
+                {"Chapter  " + currChapter.toUpperCase() + ": "} {index + 1} /{" "}
+                {currChapterCount}
+              </div>
+            }
+            {
+              mode === "selective" &&
+              <p>Selected Keys:</p>
+            }
           <div className="restart-button" key="restart-button">
             <Grid container justifyContent="center" alignItems="center">
               {
@@ -571,7 +570,7 @@ const WordsCard = ({ soundType, soundMode }) => {
                 </Box>
               }
             </Grid>
-            <Box display="flex" flexDirection="row">
+            <Box display="flex" flexDirection="row" className="center-row">
               <IconButton onClick={() => setMode("vocab")}>
                 <Tooltip title={VOCAB_MODE}>
                   <span className={getModeActivation("vocab")}>Vocab</span>
