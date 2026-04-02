@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import SelfImprovementIcon from "@mui/icons-material/SelfImprovement";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import Select from "../utils/Select";
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import {
   FOCUS_MODE,
   FREE_MODE,
@@ -18,6 +19,7 @@ import {
   TRAINER_MODE,
   WORDS_CARD_MODE,
   ULTRA_ZEN_MODE,
+  GAME_MODE,
 } from "../../constants/Constants";
 import { Link } from "@mui/material";
 import SupportMe from "../features/SupportMe";
@@ -49,21 +51,20 @@ const FooterMenu = ({
   toggleMusicMode,
   toggleUltraZenMode,
   isUltraZenMode,
-  toggleCoffeeMode,
   isMusicMode,
   isFocusedMode,
   isCoffeeMode,
   gameMode,
   handleGameModeChange,
   isTrainerMode,
-  toggleTrainerMode,
   isWordsCardMode,
   isWordGameMode,
-  toggleWordsCardMode,
+  isGameMode,
+  toggleMode
 }) => {
   const isSiteInfoDisabled = isMusicMode || isFocusedMode;
   const isBottomLogoEnabled = isFocusedMode && !isMusicMode;
-  const isTypeTestEnabled = !isCoffeeMode && !isTrainerMode && !isWordsCardMode;
+  const isTypeTestEnabled = !isCoffeeMode && !isTrainerMode && !isWordsCardMode && !isGameMode;
 
   const getModeButtonClassName = (mode) => {
     if (mode) {
@@ -96,7 +97,6 @@ const FooterMenu = ({
             onChange={handleThemeChange}
             menuPlacement="top"
           ></Select>
-
           <IconButton onClick={toggleFocusedMode}>
             <Tooltip title={FOCUS_MODE}>
               <span className={getModeButtonClassName(isFocusedMode)}>
@@ -122,7 +122,7 @@ const FooterMenu = ({
               menuPlacement="top"
             ></Select>
           )}
-          <IconButton onClick={toggleWordsCardMode}>
+          <IconButton onClick={()=> {toggleMode("wordsCard")}}>
             <Tooltip
               title={
                 <span style={{ whiteSpace: "pre-line" }}>
@@ -135,7 +135,7 @@ const FooterMenu = ({
               </span>
             </Tooltip>
           </IconButton>
-          <IconButton onClick={toggleCoffeeMode}>
+          <IconButton onClick={() => toggleMode("coffee")}>
             <Tooltip
               title={
                 <span style={{ whiteSpace: "pre-line" }}>{FREE_MODE}</span>
@@ -146,7 +146,7 @@ const FooterMenu = ({
               </span>
             </Tooltip>
           </IconButton>
-          <IconButton onClick={toggleTrainerMode}>
+          <IconButton onClick={() => toggleMode("trainer")}>
             <Tooltip title={TRAINER_MODE}>
               <span className={getModeButtonClassName(isTrainerMode)}>
                 <KeyboardAltOutlinedIcon fontSize="medium"></KeyboardAltOutlinedIcon>
@@ -159,6 +159,15 @@ const FooterMenu = ({
                 <MusicNoteIcon fontSize="medium"></MusicNoteIcon>
               </span>
             </Tooltip>{" "}
+          </IconButton>
+          <IconButton onClick={()=> toggleMode("game")}>
+              <Tooltip title={
+                  <span style={{ whiteSpace: "pre-line" }}>{GAME_MODE}</span>
+              }>
+                <span className={getModeButtonClassName(isGameMode)}>
+                  <SportsEsportsIcon fontSize="medium"></SportsEsportsIcon>
+                </span>
+              </Tooltip>
           </IconButton>
           {isTypeTestEnabled && (
             <>

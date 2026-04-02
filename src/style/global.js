@@ -368,6 +368,15 @@ width: 8em
 transform:scale(1.18);
 transition:0.3s;
 }
+.restart-button-game{
+margin-left: auto;
+margin-right: auto;
+width: 11em
+}
+.restart-button-game button:hover{
+transform:scale(1.18);
+transition:0.3s;
+}
 .alert{
 opacity: 0.3;
 background-image: ${({ theme }) => theme.gradient};
@@ -687,8 +696,18 @@ transform: translate(0);
 .CorrectKeyDowns{
 color: inherit;
 }
+.center-row{
+display: flex;
+justify-content: center;
+}
 .IncorrectKeyDowns{
 color: red;
+}
+.game-card-container{
+display: flex;
+justify-content: center;
+width: 100%;
+height: 100%;
 }
 .words-card-container{
 display: block;

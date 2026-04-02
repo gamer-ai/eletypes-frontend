@@ -23,6 +23,7 @@ import {
   DEFAULT_SOUND_TYPE_KEY,
 } from "./components/features/sound/sound";
 import DynamicBackground from "./components/common/DynamicBackground";
+import GameComponent from "./components/features/game";
 
 function App() {
   // localStorage persist theme setting
@@ -82,9 +83,18 @@ function App() {
     false,
     "IsInWordsCardMode"
   );
+  const [isGameMode, setIsGameMode] = useLocalPersistState(
+    false,
+    "IsInGameMode"
+  );
 
   const isWordGameMode =
     gameMode === GAME_MODE_DEFAULT &&
+    !isCoffeeMode &&
+    !isTrainerMode &&
+    !isWordsCardMode && !isGameMode;
+  const isInGameMode =
+    gameMode === GAME_MODE &&
     !isCoffeeMode &&
     !isTrainerMode &&
     !isWordsCardMode;
@@ -92,7 +102,8 @@ function App() {
     gameMode === GAME_MODE_SENTENCE &&
     !isCoffeeMode &&
     !isTrainerMode &&
-    !isWordsCardMode;
+    !isWordsCardMode &&
+    !isGameMode;
 
   const handleThemeChange = (e) => {
     window.localStorage.setItem("theme", JSON.stringify(e.value));
@@ -119,22 +130,11 @@ function App() {
     setIsUltraZenMode(!isUltraZenMode);
   };
 
-  const toggleCoffeeMode = () => {
-    setIsCoffeeMode(!isCoffeeMode);
-    setIsTrainerMode(false);
-    setIsWordsCardMode(false);
-  };
-
-  const toggleTrainerMode = () => {
-    setIsTrainerMode(!isTrainerMode);
-    setIsCoffeeMode(false);
-    setIsWordsCardMode(false);
-  };
-
-  const toggleWordsCardMode = () => {
-    setIsTrainerMode(false);
-    setIsCoffeeMode(false);
-    setIsWordsCardMode(!isWordsCardMode);
+  const toggleMode = (mode) => {
+    setIsTrainerMode( mode === "trainer" && !isTrainerMode);
+    setIsCoffeeMode( mode === "coffee" && !isCoffeeMode);
+    setIsWordsCardMode( mode === "wordsCard" && !isWordsCardMode);
+    setIsGameMode( mode === "game" && !isGameMode);
   };
 
   useEffect(() => {
@@ -159,6 +159,9 @@ function App() {
   const focusSentenceInput = () => {
     sentenceInputRef.current && sentenceInputRef.current.focus();
   };
+  const focusGameInput = () => {
+    textInputRef.current && textInputRef.current.focus();
+  };
 
   useEffect(() => {
     if (isWordGameMode) {
@@ -173,6 +176,10 @@ function App() {
       focusTextArea();
       return;
     }
+    if (isInGameMode) {
+      focusGameInput();
+      return;
+    }
     return;
   }, [
     theme,
@@ -183,6 +190,7 @@ function App() {
     isSentenceGameMode,
     soundMode,
     soundType,
+    isInGameMode
   ]);
 
   return (
@@ -204,6 +212,20 @@ function App() {
               handleInputFocus={() => focusTextInput()}
             ></TypeBox>
           )}
+          {
+            isGameMode && (
+              <GameComponent
+                isUltraZenMode={isUltraZenMode}
+                textInputRef={textInputRef}
+                isFocusedMode={isFocusedMode}
+                soundMode={soundMode}
+                theme={theme}
+                soundType={soundType}
+                key="type-box"
+                handleInputFocus={() => focusTextInput()}
+              ></GameComponent>
+            )
+          }
           {isSentenceGameMode && (
             <SentenceBox
               sentenceInputRef={sentenceInputRef}
@@ -244,7 +266,6 @@ function App() {
               handleThemeChange={handleThemeChange}
               toggleFocusedMode={toggleFocusedMode}
               toggleMusicMode={toggleMusicMode}
-              toggleCoffeeMode={toggleCoffeeMode}
               isCoffeeMode={isCoffeeMode}
               isMusicMode={isMusicMode}
               isUltraZenMode={isUltraZenMode}
@@ -252,9 +273,9 @@ function App() {
               gameMode={gameMode}
               handleGameModeChange={handleGameModeChange}
               isTrainerMode={isTrainerMode}
-              toggleTrainerMode={toggleTrainerMode}
               isWordsCardMode={isWordsCardMode}
-              toggleWordsCardMode={toggleWordsCardMode}
+              isGameMode={isGameMode}
+              toggleMode={toggleMode}
             ></FooterMenu>
           </div>
           <MusicPlayerSnackbar
