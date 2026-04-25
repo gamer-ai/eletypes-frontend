@@ -28,6 +28,7 @@
     "seedrandom": "^3.0.5",
     "styled-components": "^5.3.5",
     "three": "^0.160.0",
+    "three-bvh-csg": "^0.0.17",
     "use-sound": "^4.0.1",
     "uvcanvas": "^0.2.1",
     "vite-plugin-pwa": "^1.2.0",
