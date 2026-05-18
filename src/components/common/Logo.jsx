@@ -12,11 +12,30 @@ import ProfileModal from "./ProfileModal";
 const BANNER_DISMISS_KEY = "eletypes-banner-dismissed";
 // Bump when the active banner set changes so previously-dismissed users see
 // the new headline.
-const BANNER_VERSION = "banners-v5";
+const BANNER_VERSION = "banners-v6";
 
 // Banner items shown in the header ticker. Old items kept in ALL_NEWS_KEYS
 // for the profile modal so the news log doesn't lose history.
 export const BANNER_KEYS = [
+  {
+    id: "creator-recruit",
+    bannerTextKey: "banner_creator_recruit",
+    fullTextKey: "banner_creator_recruit_full",
+    // No top-level external link — clicking the short banner just opens
+    // the News tab where the full text includes the actual form CTA.
+    // Deliberately doesn't name or link the destination product brand;
+    // the pitch reads as "eletypes is building a content aggregator",
+    // and creator outreach happens purely through the recruitment form.
+    highlights: [
+      // Internal target — clicking opens the Profile modal on the
+      // Creators tab, which carries the full pitch + FAQ + an explicit
+      // CTA out to the Tencent Survey. We deliberately route through
+      // the in-app pitch first rather than jumping straight to the
+      // external form, so creators see context before deciding.
+      { placeholder: "提交友链申请", link: "profile-tab:creators" },
+      { placeholder: "submit your link", link: "profile-tab:creators" },
+    ],
+  },
   {
     id: "customization",
     bannerTextKey: "banner_customization",
@@ -105,7 +124,33 @@ const renderHighlighted = (text, highlights, theme) => {
       parts.push(<span key={key++}>{remaining.slice(0, earliestIdx)}</span>);
     }
     const label = matchedHighlight.placeholder;
-    if (matchedHighlight.link) {
+    // A "profile-tab:<id>" pseudo-URL opens the Profile modal on the
+    // named tab instead of navigating out. Useful for in-app CTAs
+    // (e.g., the creator-recruit banner) where the destination is a
+    // pitch page that lives inside this app, not an external link.
+    // Rendered as <a href="#"> with a click handler rather than
+    // <button> so the element flows inline inside the banner's flex
+    // container exactly like the external-link case (button caused
+    // a 3-line break because of its default inline-block layout).
+    if (typeof matchedHighlight.link === "string" && matchedHighlight.link.startsWith("profile-tab:")) {
+      const tab = matchedHighlight.link.slice("profile-tab:".length);
+      parts.push(
+        <a
+          key={key++}
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            window.dispatchEvent(
+              new CustomEvent("eletypes-open-profile", { detail: { tab } })
+            );
+          }}
+          style={{ color: theme.stats, textDecoration: "underline", fontWeight: 600, cursor: "pointer" }}
+        >
+          {label}
+        </a>
+      );
+    } else if (matchedHighlight.link) {
       parts.push(
         <a key={key++} href={matchedHighlight.link} target="_blank" rel="noopener noreferrer"
           style={{ color: theme.stats, textDecoration: "underline", fontWeight: 600 }}>

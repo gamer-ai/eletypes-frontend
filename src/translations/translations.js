@@ -19,6 +19,9 @@ export const translations = {
     banner_customization: "New: {Custom Themes} & {Custom Words} — make typing feel like yours.",
     banner_customization_full:
       "From the colors to the words on screen — now yours to shape. {Custom Themes} and {Custom Words}, and if you happen to make keyboard videos, one more way to make them feel a little more like yours. Or maybe, like me, you just love pretty colors.",
+    banner_creator_recruit: "Creators — {submit your link}, let your videos and reviews reach more people!",
+    banner_creator_recruit_full:
+      "Creators — {submit your link} and share your videos and reviews with the keyboard community here. Your content shows up as title, thumbnail, and a link back to your channel, so your views and audience stay yours.",
 
     // Footer tooltips
     focus_mode: "Focus mode",
@@ -369,6 +372,41 @@ export const translations = {
     theme_manager_use_this: "Use this theme",
     theme_manager_note: "Themes are saved locally in your browser.",
 
+    // Creators tab (friend-link submission)
+    tab_creators: "Creators",
+    creators_title: "For Creators",
+    creators_subtitle:
+      "We're building a creator-friendly content sharing page for video creators — collecting early interest from creators ahead of launch. Stay tuned.",
+    creators_ic_badge: "In Development · Gathering Interest",
+    creators_why_1_title: "Reach more keyboard fans",
+    creators_why_1_body:
+      "Your videos and reviews get displayed to eletypes' keyboard-loving audience, with title + thumbnail + a link straight back to your channel.",
+    creators_why_2_title: "Title + thumbnail + link only",
+    creators_why_2_body:
+      "eletypes doesn't host your text or videos — only the title, thumbnail, and a link back to your original page on B站 / Zhihu / 小红书. Once you're in, your content surfaces on relevant keyboard, keycap, and switch pages, helping players discover you as the original creator.",
+    creators_why_3_title: "30 seconds, reviewed by hand",
+    creators_why_3_body:
+      "The form just asks for your channel link, platform, and a way to reach you. We review by hand to keep the bar on quality and topic fit.",
+    creators_cta: "Open the submission form →",
+    creators_cta_sub:
+      "Form is hosted on Tencent Survey (国内畅通). You may need to sign in with WeChat to fill it out. Reviewed within 1–3 days.",
+    creators_faq_heading: "FAQ",
+    creators_faq_1_q: "I'm not a creator — can I recommend someone else?",
+    creators_faq_1_a:
+      "Not at the moment. We respect each creator and feel it's more appropriate for the creator themselves to reach out.",
+    creators_faq_2_q: "Will my content be embedded or hosted here?",
+    creators_faq_2_a:
+      "No. We only show your title, thumbnail, and a link back to your original page. Views and audience stay yours.",
+    creators_faq_3_q: "Is there a fee?",
+    creators_faq_3_a:
+      "No. eletypes is an open-source project, and we hope the spirit of open source can benefit every enthusiast who gathers here.",
+    creators_faq_4_q: "What are the requirements?",
+    creators_faq_4_a:
+      "You don't need to be a big-name creator or have a large following. If anything, we're more interested in helping creators who actually need a channel. We also won't ask you to link back to eletypes from your end — not necessary.",
+    creators_faq_5_q: "When does this launch?",
+    creators_faq_5_a:
+      "Limited by maintainer bandwidth. We'll look at how many creators actually want in, then pick a sensible time to launch. Development takes time too — for now we're just gathering interest, thanks for being patient.",
+
     // Custom Words
     tab_word_lists: "Word Lists",
     custom_words_editor_title: "Custom Word List",
@@ -454,6 +492,9 @@ export const translations = {
     banner_customization: "新功能：{自定义主题} 与 {自定义词组} — 打字体验由你定义。",
     banner_customization_full:
       "从配色到屏幕上出现的词，都可以由你定义。{自定义主题}与{自定义词组} —— 如果你恰好是位键盘博主，或许能让视频更接近你心里的样子；或者，你只是像我一样，单纯喜欢漂亮的色彩。",
+    banner_creator_recruit: "创作者们,{提交友链申请},让你的视频、测评被更多人看到!",
+    banner_creator_recruit_full:
+      "创作者们 —— {提交友链申请},把你的视频和测评分享给更多键盘爱好者。我们以标题、封面、跳回你频道的链接的形式展示,不影响原本的播放和阅读。",
 
     // Footer tooltips
     focus_mode: "专注模式",
@@ -799,6 +840,37 @@ export const translations = {
     theme_manager_note: "主题保存在浏览器本地。",
 
     // Custom Words
+    tab_creators: "创作者",
+    creators_title: "创作者入驻",
+    creators_subtitle:
+      "我们正在开发一个对视频创作者友好的资讯分享页面,正在提前收集博主们的意向。敬请期待。",
+    creators_ic_badge: "开发中 · 意向收集中",
+    creators_why_1_title: "让更多键盘玩家看到你的作品",
+    creators_why_1_body:
+      "你的视频和测评会在 eletypes 的键盘爱好者用户群体中展示,以标题、封面、跳回你原频道的链接的形式出现。",
+    creators_why_2_title: "只展示标题 + 封面 + 跳转链接",
+    creators_why_2_body:
+      "eletypes 不搬运正文和视频,只展示标题、封面、跳回 B 站 / 知乎 / 小红书 等原站的链接。入驻后你的内容会出现在相关键盘、键帽、轴体等页面中,帮助玩家发现原作者。",
+    creators_why_3_title: "30 秒填写,人工审核",
+    creators_why_3_body:
+      "表单里只问你的频道链接、平台、联系方式。我们人工审核,只看一条:是否与键盘相关。",
+    creators_cta: "打开入驻表单 →",
+    creators_cta_sub:
+      "表单托管在腾讯问卷,国内畅通。您可能需要登录微信填写问卷。1-3 天内审核。",
+    creators_faq_heading: "常见问题",
+    creators_faq_1_q: "我不是博主,只是想推荐别人?",
+    creators_faq_1_a: "暂时不开通他人推荐。我们尊重每位创作者,觉得由创作者本人来沟通更合适。",
+    creators_faq_2_q: "我的内容会被嵌入或托管在这里吗?",
+    creators_faq_2_a: "不会。我们只展示标题、封面、跳回你原页面的链接,流量和受众都还在你账户里。",
+    creators_faq_3_q: "是否收费?",
+    creators_faq_3_a: "不收费。eletypes 是一个开源项目,我们希望开源的精神能惠及每一位聚集到这里的爱好者。",
+    creators_faq_4_q: "有什么门槛吗?",
+    creators_faq_4_a:
+      "不需要你是大 V,也不要求粉丝数 —— 相反,我们更想帮到那些需要曝光渠道的创作者。我们也不会要求你回链 eletypes,因为不需要。",
+    creators_faq_5_q: "什么时候会上线?",
+    creators_faq_5_a:
+      "作者能力有限,会先看实际有意向的博主数量,再选择合适的时间上线。开发也需要一些时间,所以现阶段先收集意向,谢谢理解。",
+
     tab_word_lists: "词组",
     custom_words_editor_title: "自定义词组",
     custom_words_editor_subtitle:

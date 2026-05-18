@@ -103,6 +103,12 @@ const TAB_NEWS = "news";
 const TAB_SITE = "site";
 const TAB_THEMES = "themes";
 const TAB_WORDS = "wordlists";
+const TAB_CREATORS = "creators";
+
+// External survey URL for friend-link submissions. Lives in this module so
+// both the tab CTA and the (optionally) banner-driven highlight point at the
+// same URL — swap once and everything updates.
+const CREATOR_FORM_URL = "https://wj.qq.com/s2/26719983/89d7/";
 
 const ProfileModal = ({
   open,
@@ -339,6 +345,12 @@ const ProfileModal = ({
             onClick={() => setActiveTab(TAB_WORDS)}
           >
             {t("tab_word_lists")}
+          </button>
+          <button
+            style={tabStyle(activeTab === TAB_CREATORS)}
+            onClick={() => setActiveTab(TAB_CREATORS)}
+          >
+            {t("tab_creators")}
           </button>
           <button
             style={tabStyle(activeTab === TAB_SITE)}
@@ -958,6 +970,179 @@ const ProfileModal = ({
             <p style={{ color: theme.textTypeBox, fontSize: 11, opacity: 0.6, marginTop: 18, marginBottom: 0 }}>
               {t("custom_words_manager_note")}
             </p>
+          </div>
+        )}
+
+        {/* Creators / friend-link submission tab. Mirrors the layout of the
+            customize-wiki-news /creator page (3 numbered why-rows + FAQ +
+            CTA) but lives inside the eletypes Profile modal so creators can
+            discover it without leaving the main app. The CTA opens a
+            Tencent Survey for the actual submission. */}
+        {activeTab === TAB_CREATORS && (
+          <div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                flexWrap: "wrap",
+                margin: "0 0 4px",
+              }}
+            >
+              <h2
+                style={{
+                  color: theme.title,
+                  margin: 0,
+                  fontSize: 22,
+                  fontWeight: 600,
+                }}
+              >
+                {t("creators_title")}
+              </h2>
+              {/* Interest-check chip — signals to creators that this is a
+                  pre-launch interest pool, not a fully running aggregator.
+                  Borrows the amber "preview" treatment from the customize-
+                  wiki-news site so the early-stage signal is consistent. */}
+              <span
+                style={{
+                  display: "inline-block",
+                  padding: "3px 10px",
+                  border: "1px solid rgba(255, 195, 99, 0.45)",
+                  background: "rgba(255, 195, 99, 0.08)",
+                  color: "#ffc363",
+                  borderRadius: 999,
+                  fontSize: 10,
+                  fontWeight: 500,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                }}
+              >
+                {t("creators_ic_badge")}
+              </span>
+            </div>
+            <p style={{ color: theme.textTypeBox, fontSize: 13, opacity: 0.75, margin: "0 0 24px" }}>
+              {t("creators_subtitle")}
+            </p>
+
+            {[1, 2, 3].map((n) => (
+              <div
+                key={n}
+                style={{ display: "flex", gap: 14, marginBottom: 18, alignItems: "flex-start" }}
+              >
+                <span
+                  style={{
+                    flexShrink: 0,
+                    width: 30,
+                    height: 30,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: `${theme.stats}1f`,
+                    border: `1px solid ${theme.stats}55`,
+                    borderRadius: "50%",
+                    color: theme.stats,
+                    fontFamily: "monospace",
+                    fontSize: 11,
+                    fontWeight: 500,
+                  }}
+                >
+                  {String(n).padStart(2, "0")}
+                </span>
+                <div style={{ flex: 1 }}>
+                  <h3
+                    style={{
+                      margin: "4px 0 4px",
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: theme.text,
+                    }}
+                  >
+                    {t(`creators_why_${n}_title`)}
+                  </h3>
+                  <p style={{ margin: 0, fontSize: 13, lineHeight: 1.7, color: theme.textTypeBox, opacity: 0.85 }}>
+                    {t(`creators_why_${n}_body`)}
+                  </p>
+                </div>
+              </div>
+            ))}
+
+            <div
+              style={{
+                textAlign: "center",
+                padding: "20px 0 8px",
+                borderTop: `1px solid ${theme.textTypeBox}20`,
+                borderBottom: `1px solid ${theme.textTypeBox}20`,
+                margin: "20px 0 14px",
+              }}
+            >
+              <a
+                href={CREATOR_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-block",
+                  padding: "10px 28px",
+                  background: `${theme.stats}1c`,
+                  border: `1px solid ${theme.stats}`,
+                  borderRadius: 6,
+                  color: theme.stats,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  textDecoration: "none",
+                  fontFamily: theme.fontFamily,
+                }}
+              >
+                {t("creators_cta")}
+              </a>
+              <p style={{ margin: "10px 0 0", fontSize: 11, opacity: 0.55, color: theme.textTypeBox }}>
+                {t("creators_cta_sub")}
+              </p>
+            </div>
+
+            <h4
+              style={{
+                margin: "20px 0 12px",
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: theme.textTypeBox,
+                opacity: 0.65,
+              }}
+            >
+              {t("creators_faq_heading")}
+            </h4>
+            {[1, 2, 3, 4, 5].map((n) => (
+              <details
+                key={n}
+                style={{
+                  padding: "10px 0",
+                  borderBottom: `1px solid ${theme.textTypeBox}15`,
+                }}
+              >
+                <summary
+                  style={{
+                    fontSize: 13,
+                    cursor: "pointer",
+                    color: theme.text,
+                    listStyle: "none",
+                  }}
+                >
+                  {t(`creators_faq_${n}_q`)}
+                </summary>
+                <p
+                  style={{
+                    margin: "8px 0 4px 0",
+                    fontSize: 13,
+                    lineHeight: 1.7,
+                    color: theme.textTypeBox,
+                    opacity: 0.85,
+                  }}
+                >
+                  {t(`creators_faq_${n}_a`)}
+                </p>
+              </details>
+            ))}
           </div>
         )}
 
