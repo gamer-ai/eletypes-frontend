@@ -48,7 +48,7 @@ const ChineseModeWords = ({
           theme={theme}
         />
       )}
-      <div className="words">
+      <div className="words notranslate" translate="no">
         {currentWords.map((word, i) => {
           const opacityValue = isUltraZenMode ? getWordOpacity(i) : 1;
 

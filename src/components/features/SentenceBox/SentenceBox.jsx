@@ -277,7 +277,7 @@ const SentenceBox = ({
     <div onClick={handleInputFocus}>
       <div className="type-box-sentence">
         <Stack spacing={2}>
-          <div className="sentence-display-field">
+          <div className="sentence-display-field notranslate" translate="no">
             {currSentence.split("").map((char, idx) => (
               <span key={"word" + idx} className={getCharClassName(idx, char)}>
                 {char}
@@ -297,7 +297,7 @@ const SentenceBox = ({
             onChange={handleChange}
           />
           {status !== "finished" && (
-            <span className="next-sentence-display">
+            <span className="next-sentence-display notranslate" translate="no">
               {"->"} {sentences[currSentenceIndex + 1] ?? "Press ↵ to finish."}
             </span>
           )}
