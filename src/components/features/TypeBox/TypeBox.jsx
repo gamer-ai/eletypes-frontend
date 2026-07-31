@@ -36,6 +36,7 @@ import {
   COUNT_DOWN_60,
   COUNT_DOWN_30,
   COUNT_DOWN_15,
+  COUNT_DOWN_INF,
   DEFAULT_WORDS_COUNT,
   DEFAULT_DIFFICULTY,
   HARD_DIFFICULTY,
@@ -220,7 +221,9 @@ const TypeBox = ({
   );
 
   // set up timer state
-  const [countDown, setCountDown] = useState(countDownConstant);
+  const [countDown, setCountDown] = useState(
+    countDownConstant === COUNT_DOWN_INF ? 0 : countDownConstant
+  );
   const [intervalId, setIntervalId] = useState(null);
 
   // set up game loop status state
@@ -368,7 +371,7 @@ const TypeBox = ({
     setNumberAddOn(newNumberAddOn);
     setSymbolAddOn(newSymbolAddOn);
     setCountDownConstant(newCountDown);
-    setCountDown(newCountDown);
+    setCountDown(newCountDown === COUNT_DOWN_INF ? 0 : newCountDown);
     setDifficulty(difficulty);
     setLanguage(language);
     clearInterval(intervalId);
@@ -409,6 +412,9 @@ const TypeBox = ({
       setStatus("started");
       let intervalId = setInterval(() => {
         setCountDown((prevCountdown) => {
+          if (countDownConstant === COUNT_DOWN_INF) {
+            return prevCountdown + 1;
+          }
           if (prevCountdown === 0) {
             clearInterval(intervalId);
             // current total extra inputs char count
@@ -500,10 +506,17 @@ const TypeBox = ({
     if (wpmKeyStrokes !== 0) {
       if (!wpmWorkerRef.current) return; // Ensure worker is initialized
 
+      let workerCountDownConstant = countDownConstant;
+      let workerCountDown = countDown;
+      if (countDownConstant === COUNT_DOWN_INF) {
+        workerCountDownConstant = countDown;
+        workerCountDown = 0;
+      }
+
       wpmWorkerRef.current.postMessage({
         wpmKeyStrokes,
-        countDownConstant,
-        countDown,
+        countDownConstant: workerCountDownConstant,
+        countDown: workerCountDown,
       });
 
       wpmWorkerRef.current.onmessage = (event) => {
@@ -977,6 +990,24 @@ const TypeBox = ({
                   <span className={getTimerButtonClassName(COUNT_DOWN_15)}>
                     {COUNT_DOWN_15}
                   </span>
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    reset(
+                      COUNT_DOWN_INF,
+                      difficulty,
+                      language,
+                      numberAddOn,
+                      symbolAddOn,
+                      false
+                    );
+                  }}
+                >
+                  <Tooltip title={t("infinite_timer_tooltip")}>
+                    <span className={getTimerButtonClassName(COUNT_DOWN_INF)}>
+                      &#8734;
+                    </span>
+                  </Tooltip>
                 </IconButton>
               </>
             )}

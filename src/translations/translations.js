@@ -64,6 +64,9 @@ export const translations = {
     pacing_pulse_tooltip:
       'type the word with a pulse "____", this helps improving wpm and your speed typing pace habit.',
 
+    infinite_timer_tooltip:
+      "No timer mode — type freely, the test never ends. Time counts up instead of down.",
+
     // Restart dialog
     press: "press",
     to_redo: "to redo",
@@ -532,6 +535,9 @@ export const translations = {
     pacing_caret_tooltip: '使用光标 "|" 逐字符输入。',
     pacing_pulse_tooltip:
       '使用脉冲 "____" 输入，有助于提高打字速度。',
+
+    infinite_timer_tooltip:
+      "不计时模式 — 自由打字，测试永不结束，时间改为正向计时。",
 
     // Restart dialog
     press: "按",

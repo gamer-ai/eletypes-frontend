@@ -15,6 +15,7 @@ import Leaderboard from "../Leaderboard/Leaderboard";
 import { addScore } from "../../../services/scoreHistory";
 import { evaluateBadges } from "../../../services/badges";
 import { useLocale } from "../../../context/LocaleContext";
+import { COUNT_DOWN_INF } from "../../../constants/Constants";
 const Stats = ({
   status,
   wpm,
@@ -40,12 +41,25 @@ const Stats = ({
   const [roundedRawWpm, setRoundedRawWpm] = useState(0);
   const roundedWpm = Math.round(wpm);
 
+  const isInfiniteMode = countDownConstant === COUNT_DOWN_INF;
+
   useEffect(() => {
     const worker = new Worker(
       new URL("../../../worker/calculateRawWpmWorker", import.meta.url)
     );
 
-    worker.postMessage({ rawKeyStrokes, countDownConstant, countDown });
+    let workerCountDownConstant = countDownConstant;
+    let workerCountDown = countDown;
+    if (isInfiniteMode) {
+      workerCountDownConstant = countDown;
+      workerCountDown = 0;
+    }
+
+    worker.postMessage({
+      rawKeyStrokes,
+      countDownConstant: workerCountDownConstant,
+      countDown: workerCountDown,
+    });
 
     worker.onmessage = function (e) {
       setRoundedRawWpm(e.data);
@@ -53,7 +67,7 @@ const Stats = ({
     };
 
     return () => worker.terminate();
-  }, [rawKeyStrokes, countDownConstant, countDown]);
+  }, [rawKeyStrokes, countDownConstant, countDown, isInfiniteMode]);
 
   const initialTypingTestHistory = [
     {
@@ -78,8 +92,9 @@ const Stats = ({
   // spike forever, so the submitted average stayed inflated. Correct-char
   // count comes from history{} which only marks a char true after a real
   // compare in getCharClassName, so mash+backspace contributes nothing.
-  const finalWpm =
-    (wpmKeyStrokes / 5) * (60 / Math.max(countDownConstant, 1));
+  const finalWpm = isInfiniteMode
+    ? (wpmKeyStrokes / 5) * (60 / Math.max(countDown + 1, 1))
+    : (wpmKeyStrokes / 5) * (60 / Math.max(countDownConstant, 1));
 
   const data = typingTestHistory.map((history) => ({
     wpm: history.wpm,
@@ -259,7 +274,9 @@ const Stats = ({
   const renderTime = () => (
     <div>
       <p className="stats-title">{t("time_label")}</p>
-      <h2 className="stats-value">{countDownConstant} s</h2>
+      <h2 className="stats-value">
+        {isInfiniteMode ? "\u221E" : `${countDownConstant} s`}
+      </h2>
     </div>
   );
 
