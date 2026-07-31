@@ -48,6 +48,10 @@ import {
   PACING_PULSE,
   NUMBER_ADDON_KEY,
   SYMBOL_ADDON_KEY,
+  HINT_MODE_BOTH,
+  HINT_MODE_PINYIN_ONLY,
+  HINT_MODE_CHINESE_ONLY,
+  HINT_MODE_KEY,
 } from "../../../constants/Constants";
 import { SOUND_MAP } from "../sound/sound";
 import SocialLinksModal from "../../common/SocialLinksModal";
@@ -113,6 +117,13 @@ const TypeBox = ({
     false,
     SYMBOL_ADDON_KEY
   );
+
+  const [hintMode, setHintMode] = useLocalPersistState(
+    HINT_MODE_BOTH,
+    HINT_MODE_KEY
+  );
+  const cycleHintMode = () =>
+    setHintMode((m) => (m + 1) % (HINT_MODE_CHINESE_ONLY + 1));
 
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
@@ -1279,6 +1290,37 @@ const TypeBox = ({
                   </Tooltip>
                 </IconButton>
               )}
+              {effectiveLanguage === CHINESE_MODE && (
+                <IconButton onClick={cycleHintMode}>
+                  <Tooltip
+                    title={
+                      hintMode === HINT_MODE_BOTH
+                        ? t("hint_mode_tooltip_both")
+                        : hintMode === HINT_MODE_PINYIN_ONLY
+                        ? t("hint_mode_tooltip_pinyin_only")
+                        : t("hint_mode_tooltip_chinese_only")
+                    }
+                  >
+                    <span
+                      className="active-button"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        minWidth: 18,
+                        fontSize: 13,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {hintMode === HINT_MODE_BOTH
+                        ? t("hint_mode_label_both")
+                        : hintMode === HINT_MODE_PINYIN_ONLY
+                        ? t("hint_mode_label_pinyin_only")
+                        : t("hint_mode_label_chinese_only")}
+                    </span>
+                  </Tooltip>
+                </IconButton>
+              )}
               <IconButton onClick={() => setLeaderboardOpen(true)}>
                 <Tooltip title={t("stats_tooltip")}>
                   <span
@@ -1375,6 +1417,7 @@ const TypeBox = ({
             getExtraCharsDisplay={getExtraCharsDisplay}
             pacingStyle={pacingStyle}
             theme={theme}
+            hintMode={hintMode}
           />
         )}
         <div className="stats">

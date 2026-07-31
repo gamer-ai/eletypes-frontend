@@ -1,5 +1,10 @@
 import React, { memo, useCallback, useRef, useMemo } from "react";
 import SmoothCaret from "../features/TypeBox/SmoothCaret";
+import {
+  HINT_MODE_BOTH,
+  HINT_MODE_PINYIN_ONLY,
+  HINT_MODE_CHINESE_ONLY,
+} from "../../constants/Constants";
 
 const ChineseModeWords = ({
   currentWords,
@@ -15,6 +20,7 @@ const ChineseModeWords = ({
   getExtraCharsDisplay,
   pacingStyle,
   theme,
+  hintMode = HINT_MODE_BOTH,
 }) => {
   const containerRef = useRef(null);
 
@@ -28,6 +34,9 @@ const ChineseModeWords = ({
     (index) => Math.max(1 - Math.abs(index - currWordIndex) * 0.1, 0.1),
     [currWordIndex]
   );
+
+  const hideChinese = hintMode === HINT_MODE_PINYIN_ONLY;
+  const hidePinyin = hintMode === HINT_MODE_CHINESE_ONLY;
 
   return (
     <div
@@ -63,10 +72,15 @@ const ChineseModeWords = ({
               <span
                 className={getChineseWordKeyClassName(i)}
                 ref={wordSpanRefs[i]}
+                style={hideChinese ? { display: "none" } : undefined}
               >
                 {wordsKey[i]}
               </span>
-              <span className={getChineseWordClassName(i)} ref={charWordRefs[i]}>
+              <span
+                className={getChineseWordClassName(i)}
+                ref={charWordRefs[i]}
+                style={hidePinyin ? { visibility: "hidden" } : undefined}
+              >
                 {word.split("").map((char, idx) => (
                   <span
                     key={`word${i}_${idx}`}
