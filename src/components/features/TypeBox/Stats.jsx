@@ -23,6 +23,7 @@ const Stats = ({
   statsCharCount,
   language,
   rawKeyStrokes,
+  wpmKeyStrokes,
   theme,
   renderResetButton,
   setIncorrectCharsCount,
@@ -77,9 +78,11 @@ const Stats = ({
   // spike forever, so the submitted average stayed inflated. Correct-char
   // count comes from history{} which only marks a char true after a real
   // compare in getCharClassName, so mash+backspace contributes nothing.
-  const correctChars = statsCharCount[1] || 0;
+  // This anti-cheat method is inconsistent with the leaderboard stats
+  // calculation, so revert to the old version. Monkeytype also counts
+  // space keystrokes toward WPM.
   const finalWpm =
-    (correctChars / 5) * (60 / Math.max(countDownConstant, 1));
+    (wpmKeyStrokes / 5) * (60 / Math.max(countDownConstant, 1));
 
   const data = typingTestHistory.map((history) => ({
     wpm: history.wpm,
