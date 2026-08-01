@@ -91,6 +91,13 @@ const TypeBox = ({
     "pacing-style"
   );
 
+  // Chinese-mode display toggle: "both" | "hanzi" | "pinyin". Controls
+  // whether the Chinese characters and/or the pinyin hint are visible.
+  const [chineseDisplayMode, setChineseDisplayMode] = useLocalPersistState(
+    "both",
+    "chinese-display-mode"
+  );
+
   // local persist difficulty
   const [difficulty, setDifficulty] = useLocalPersistState(
     DEFAULT_DIFFICULTY,
@@ -1292,6 +1299,32 @@ const TypeBox = ({
                   </Tooltip>
                 </IconButton>
               )}
+              {effectiveLanguage === CHINESE_MODE && (
+                <IconButton
+                  onClick={() => {
+                    setChineseDisplayMode((prev) =>
+                      prev === "both"
+                        ? "hanzi"
+                        : prev === "hanzi"
+                        ? "pinyin"
+                        : "both"
+                    );
+                  }}
+                >
+                  <Tooltip title={t("chinese_display_mode_tooltip")}>
+                    <span
+                      className="active-button"
+                      style={{ display: "inline-flex", alignItems: "center" }}
+                    >
+                      {chineseDisplayMode === "both"
+                        ? "双"
+                        : chineseDisplayMode === "hanzi"
+                        ? "字"
+                        : "pin"}
+                    </span>
+                  </Tooltip>
+                </IconButton>
+              )}
               <IconButton onClick={() => setLeaderboardOpen(true)}>
                 <Tooltip title={t("stats_tooltip")}>
                   <span
@@ -1379,6 +1412,7 @@ const TypeBox = ({
             currWordIndex={currWordIndex}
             currCharIndex={currCharIndex}
             wordsKey={wordsKey}
+            chineseDisplayMode={chineseDisplayMode}
             isUltraZenMode={isUltraZenMode}
             status={status}
             wordSpanRefs={wordSpanRefs}

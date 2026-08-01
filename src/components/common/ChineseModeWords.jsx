@@ -5,8 +5,9 @@ const ChineseModeWords = ({
   currentWords,
   currWordIndex,
   currCharIndex,
-  isUltraZenMode,
   wordsKey,
+  chineseDisplayMode,
+  isUltraZenMode,
   status,
   wordSpanRefs,
   getChineseWordKeyClassName,
@@ -17,6 +18,16 @@ const ChineseModeWords = ({
   theme,
 }) => {
   const containerRef = useRef(null);
+
+  // Hide with visibility (not display) so the layout box is preserved:
+  // SmoothCaret measures the char spans' getBoundingClientRect and the
+  // scroll logic reads the first span's offsets, both of which collapse
+  // to zero when the element is display:none. Also theme-independent.
+  // Note: in the dataset wordsKey is the hanzi, word (val) is the pinyin.
+  const pinyinStyle =
+    chineseDisplayMode === "hanzi" ? { visibility: "hidden" } : undefined;
+  const hanziStyle =
+    chineseDisplayMode === "pinyin" ? { visibility: "hidden" } : undefined;
 
   // Separate refs for character spans (used by SmoothCaret)
   const charWordRefs = useMemo(
@@ -63,10 +74,15 @@ const ChineseModeWords = ({
               <span
                 className={getChineseWordKeyClassName(i)}
                 ref={wordSpanRefs[i]}
+                style={hanziStyle}
               >
                 {wordsKey[i]}
               </span>
-              <span className={getChineseWordClassName(i)} ref={charWordRefs[i]}>
+              <span
+                className={getChineseWordClassName(i)}
+                ref={charWordRefs[i]}
+                style={pinyinStyle}
+              >
                 {word.split("").map((char, idx) => (
                   <span
                     key={`word${i}_${idx}`}

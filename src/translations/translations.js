@@ -59,6 +59,7 @@ export const translations = {
     chinese_mode_tooltip: "Chinese Pinyin Mode",
     restart_tooltip: "[Tab] + [Enter] to quickly restart",
     redo_tooltip: "[Tab] + [Space] to quickly redo",
+    chinese_display_mode_tooltip: "Hide pinyin/characters to improve typing speed.",
     pacing_caret_tooltip:
       'type the word with a caret "|", character by character.',
     pacing_pulse_tooltip:
@@ -529,6 +530,7 @@ export const translations = {
     chinese_mode_tooltip: "中文拼音模式",
     restart_tooltip: "[Tab] + [Enter] 快速重新开始",
     redo_tooltip: "[Tab] + [Space] 快速重做",
+    chinese_display_mode_tooltip: "隐藏拼音/文字，有助于提高打字速度。",
     pacing_caret_tooltip: '使用光标 "|" 逐字符输入。',
     pacing_pulse_tooltip:
       '使用脉冲 "____" 输入，有助于提高打字速度。',
