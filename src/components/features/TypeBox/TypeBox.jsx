@@ -49,10 +49,6 @@ import {
   PACING_PULSE,
   NUMBER_ADDON_KEY,
   SYMBOL_ADDON_KEY,
-  HINT_MODE_BOTH,
-  HINT_MODE_PINYIN_ONLY,
-  HINT_MODE_CHINESE_ONLY,
-  HINT_MODE_KEY,
 } from "../../../constants/Constants";
 import { SOUND_MAP } from "../sound/sound";
 import SocialLinksModal from "../../common/SocialLinksModal";
@@ -125,13 +121,6 @@ const TypeBox = ({
     false,
     SYMBOL_ADDON_KEY
   );
-
-  const [hintMode, setHintMode] = useLocalPersistState(
-    HINT_MODE_BOTH,
-    HINT_MODE_KEY
-  );
-  const cycleHintMode = () =>
-    setHintMode((m) => (m + 1) % (HINT_MODE_CHINESE_ONLY + 1));
 
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
@@ -240,9 +229,7 @@ const TypeBox = ({
   );
 
   // set up timer state
-  const [countDown, setCountDown] = useState(
-    countDownConstant === COUNT_DOWN_INF ? 0 : countDownConstant
-  );
+  const [countDown, setCountDown] = useState(countDownConstant);
   const [intervalId, setIntervalId] = useState(null);
   // Infinite mode has no countdown; track elapsed seconds for WPM math
   // and chart sampling instead.
@@ -394,7 +381,7 @@ const TypeBox = ({
     setNumberAddOn(newNumberAddOn);
     setSymbolAddOn(newSymbolAddOn);
     setCountDownConstant(newCountDown);
-    setCountDown(newCountDown === COUNT_DOWN_INF ? 0 : newCountDown);
+    setCountDown(newCountDown);
     setDifficulty(difficulty);
     setLanguage(language);
     clearInterval(intervalId);
@@ -535,17 +522,10 @@ const TypeBox = ({
     if (wpmKeyStrokes !== 0) {
       if (!wpmWorkerRef.current) return; // Ensure worker is initialized
 
-      let workerCountDownConstant = countDownConstant;
-      let workerCountDown = countDown;
-      if (countDownConstant === COUNT_DOWN_INF) {
-        workerCountDownConstant = countDown;
-        workerCountDown = 0;
-      }
-
       wpmWorkerRef.current.postMessage({
         wpmKeyStrokes,
-        countDownConstant: workerCountDownConstant,
-        countDown: workerCountDown,
+        countDownConstant,
+        countDown,
       });
 
       wpmWorkerRef.current.onmessage = (event) => {
@@ -1442,7 +1422,6 @@ const TypeBox = ({
             getExtraCharsDisplay={getExtraCharsDisplay}
             pacingStyle={pacingStyle}
             theme={theme}
-            hintMode={hintMode}
           />
         )}
         <div className="stats">

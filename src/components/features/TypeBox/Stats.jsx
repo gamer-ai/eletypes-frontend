@@ -15,7 +15,6 @@ import Leaderboard from "../Leaderboard/Leaderboard";
 import { addScore } from "../../../services/scoreHistory";
 import { evaluateBadges } from "../../../services/badges";
 import { useLocale } from "../../../context/LocaleContext";
-import { COUNT_DOWN_INF } from "../../../constants/Constants";
 const Stats = ({
   status,
   wpm,
