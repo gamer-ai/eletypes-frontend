@@ -15,12 +15,13 @@ import Leaderboard from "../Leaderboard/Leaderboard";
 import { addScore } from "../../../services/scoreHistory";
 import { evaluateBadges } from "../../../services/badges";
 import { useLocale } from "../../../context/LocaleContext";
-import { COUNT_DOWN_INF } from "../../../constants/Constants";
 const Stats = ({
   status,
   wpm,
   countDown,
   countDownConstant,
+  isInfiniteMode,
+  elapsedSeconds,
   statsCharCount,
   language,
   rawKeyStrokes,
@@ -41,24 +42,22 @@ const Stats = ({
   const [roundedRawWpm, setRoundedRawWpm] = useState(0);
   const roundedWpm = Math.round(wpm);
 
-  const isInfiniteMode = countDownConstant === COUNT_DOWN_INF;
+  // In infinite mode countDown never decrements; translate the elapsed-time
+  // counter into the equivalent remaining-countdown value the workers expect
+  // (elapsed = countDownConstant - countDown + 1).
+  const effectiveCountDown = isInfiniteMode
+    ? countDownConstant - elapsedSeconds
+    : countDown;
 
   useEffect(() => {
     const worker = new Worker(
       new URL("../../../worker/calculateRawWpmWorker", import.meta.url)
     );
 
-    let workerCountDownConstant = countDownConstant;
-    let workerCountDown = countDown;
-    if (isInfiniteMode) {
-      workerCountDownConstant = countDown;
-      workerCountDown = 0;
-    }
-
     worker.postMessage({
       rawKeyStrokes,
-      countDownConstant: workerCountDownConstant,
-      countDown: workerCountDown,
+      countDownConstant,
+      countDown: effectiveCountDown,
     });
 
     worker.onmessage = function (e) {
@@ -67,7 +66,7 @@ const Stats = ({
     };
 
     return () => worker.terminate();
-  }, [rawKeyStrokes, countDownConstant, countDown, isInfiniteMode]);
+  }, [rawKeyStrokes, countDownConstant, effectiveCountDown]);
 
   const initialTypingTestHistory = [
     {
@@ -92,9 +91,11 @@ const Stats = ({
   // spike forever, so the submitted average stayed inflated. Correct-char
   // count comes from history{} which only marks a char true after a real
   // compare in getCharClassName, so mash+backspace contributes nothing.
-  const finalWpm = isInfiniteMode
-    ? (wpmKeyStrokes / 5) * (60 / Math.max(countDown + 1, 1))
-    : (wpmKeyStrokes / 5) * (60 / Math.max(countDownConstant, 1));
+  // This anti-cheat method is inconsistent with the leaderboard stats
+  // calculation, so revert to the old version. Monkeytype also counts
+  // space keystrokes toward WPM.
+  const finalWpm =
+    (wpmKeyStrokes / 5) * (60 / Math.max(countDownConstant, 1));
 
   const data = typingTestHistory.map((history) => ({
     wpm: history.wpm,
@@ -110,18 +111,23 @@ const Stats = ({
   }, [status]);
 
   useEffect(() => {
-    if (status === "started" && countDown < countDownConstant) {
+    if (
+      status === "started" &&
+      (isInfiniteMode ? elapsedSeconds > 0 : countDown < countDownConstant)
+    ) {
       const worker = new Worker(
         new URL("../../../worker/trackHistoryWorker", import.meta.url)
       );
 
       worker.postMessage({
-        countDown,
+        countDown: effectiveCountDown,
         countDownConstant,
         typingTestHistory,
         roundedWpm,
         roundedRawWpm,
         incorrectCharsCount,
+        isInfiniteMode,
+        elapsedSeconds,
       });
 
       worker.onmessage = function (e) {
@@ -139,7 +145,7 @@ const Stats = ({
       // Clean up the worker on component unmount
       return () => worker.terminate();
     }
-  }, [countDown]);
+  }, [countDown, elapsedSeconds, status, isInfiniteMode]);
 
   const modeParams = useMemo(
     () => ({
@@ -275,7 +281,7 @@ const Stats = ({
     <div>
       <p className="stats-title">{t("time_label")}</p>
       <h2 className="stats-value">
-        {isInfiniteMode ? "\u221E" : `${countDownConstant} s`}
+        {isInfiniteMode ? "∞" : `${countDownConstant} s`}
       </h2>
     </div>
   );
@@ -346,7 +352,7 @@ const Stats = ({
     <>
       {status !== "finished" && (
         <>
-          <h3>{countDown} s</h3>
+          <h3>{isInfiniteMode ? "∞" : `${countDown} s`}</h3>
           <h3>{t("wpm_label")}: {Math.round(wpm)}</h3>
         </>
       )}

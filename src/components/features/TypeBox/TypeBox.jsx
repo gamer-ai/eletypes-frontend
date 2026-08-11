@@ -25,6 +25,7 @@ import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import SettingsIcon from "@mui/icons-material/Settings";
+import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 import useLocalPersistState from "../../../hooks/useLocalPersistState";
 import CapsLockSnackbar from "../CapsLockSnackbar";
 import Stats from "./Stats";
@@ -36,7 +37,7 @@ import {
   COUNT_DOWN_60,
   COUNT_DOWN_30,
   COUNT_DOWN_15,
-  COUNT_DOWN_INF,
+  COUNT_DOWN_INFINITE,
   DEFAULT_WORDS_COUNT,
   DEFAULT_DIFFICULTY,
   HARD_DIFFICULTY,
@@ -48,10 +49,6 @@ import {
   PACING_PULSE,
   NUMBER_ADDON_KEY,
   SYMBOL_ADDON_KEY,
-  HINT_MODE_BOTH,
-  HINT_MODE_PINYIN_ONLY,
-  HINT_MODE_CHINESE_ONLY,
-  HINT_MODE_KEY,
 } from "../../../constants/Constants";
 import { SOUND_MAP } from "../sound/sound";
 import SocialLinksModal from "../../common/SocialLinksModal";
@@ -94,6 +91,13 @@ const TypeBox = ({
     "pacing-style"
   );
 
+  // Chinese-mode display toggle: "both" | "hanzi" | "pinyin". Controls
+  // whether the Chinese characters and/or the pinyin hint are visible.
+  const [chineseDisplayMode, setChineseDisplayMode] = useLocalPersistState(
+    "both",
+    "chinese-display-mode"
+  );
+
   // local persist difficulty
   const [difficulty, setDifficulty] = useLocalPersistState(
     DEFAULT_DIFFICULTY,
@@ -117,13 +121,6 @@ const TypeBox = ({
     false,
     SYMBOL_ADDON_KEY
   );
-
-  const [hintMode, setHintMode] = useLocalPersistState(
-    HINT_MODE_BOTH,
-    HINT_MODE_KEY
-  );
-  const cycleHintMode = () =>
-    setHintMode((m) => (m + 1) % (HINT_MODE_CHINESE_ONLY + 1));
 
   // Caps Lock
   const [capsLocked, setCapsLocked] = useState(false);
@@ -232,10 +229,12 @@ const TypeBox = ({
   );
 
   // set up timer state
-  const [countDown, setCountDown] = useState(
-    countDownConstant === COUNT_DOWN_INF ? 0 : countDownConstant
-  );
+  const [countDown, setCountDown] = useState(countDownConstant);
   const [intervalId, setIntervalId] = useState(null);
+  // Infinite mode has no countdown; track elapsed seconds for WPM math
+  // and chart sampling instead.
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const isInfiniteMode = countDownConstant === COUNT_DOWN_INFINITE;
 
   // set up game loop status state
   const [status, setStatus] = useState("waiting");
@@ -382,13 +381,14 @@ const TypeBox = ({
     setNumberAddOn(newNumberAddOn);
     setSymbolAddOn(newSymbolAddOn);
     setCountDownConstant(newCountDown);
-    setCountDown(newCountDown === COUNT_DOWN_INF ? 0 : newCountDown);
+    setCountDown(newCountDown);
     setDifficulty(difficulty);
     setLanguage(language);
     clearInterval(intervalId);
     setWpm(0);
     setRawKeyStrokes(0);
     setWpmKeyStrokes(0);
+    setElapsedSeconds(0);
     setCurrInput("");
     setPrevInput("");
     setIntervalId(null);
@@ -421,65 +421,70 @@ const TypeBox = ({
 
     if (status !== "started") {
       setStatus("started");
-      let intervalId = setInterval(() => {
-        setCountDown((prevCountdown) => {
-          if (countDownConstant === COUNT_DOWN_INF) {
-            return prevCountdown + 1;
-          }
-          if (prevCountdown === 0) {
-            clearInterval(intervalId);
-            // current total extra inputs char count
-            const currCharExtraCount = Object.values(history)
-              .filter((e) => typeof e === "number")
-              .reduce((a, b) => a + b, 0);
+      let intervalId;
+      if (isInfiniteMode) {
+        // Untimed practice: count up instead of down, never finish.
+        intervalId = setInterval(() => {
+          setElapsedSeconds((prev) => prev + 1);
+        }, 1000);
+      } else {
+        intervalId = setInterval(() => {
+          setCountDown((prevCountdown) => {
+            if (prevCountdown === 0) {
+              clearInterval(intervalId);
+              // current total extra inputs char count
+              const currCharExtraCount = Object.values(history)
+                .filter((e) => typeof e === "number")
+                .reduce((a, b) => a + b, 0);
 
-            // current correct inputs char count
-            const currCharCorrectCount = Object.values(history).filter(
-              (e) => e === true
-            ).length;
+              // current correct inputs char count
+              const currCharCorrectCount = Object.values(history).filter(
+                (e) => e === true
+              ).length;
 
-            // current correct inputs char count
-            const currCharIncorrectCount = Object.values(history).filter(
-              (e) => e === false
-            ).length;
+              // current correct inputs char count
+              const currCharIncorrectCount = Object.values(history).filter(
+                (e) => e === false
+              ).length;
 
-            // current missing inputs char count
-            const currCharMissingCount = Object.values(history).filter(
-              (e) => e === undefined
-            ).length;
+              // current missing inputs char count
+              const currCharMissingCount = Object.values(history).filter(
+                (e) => e === undefined
+              ).length;
 
-            // current total advanced char counts
-            const currCharAdvancedCount =
-              currCharCorrectCount +
-              currCharMissingCount +
-              currCharIncorrectCount;
+              // current total advanced char counts
+              const currCharAdvancedCount =
+                currCharCorrectCount +
+                currCharMissingCount +
+                currCharIncorrectCount;
 
-            // When total inputs char count is 0,
-            // that is to say, both currCharCorrectCount and currCharAdvancedCount are 0,
-            // accuracy turns out to be 0 but NaN.
-            const accuracy =
-              currCharCorrectCount === 0
-                ? 0
-                : (currCharCorrectCount / currCharAdvancedCount) * 100;
+              // When total inputs char count is 0,
+              // that is to say, both currCharCorrectCount and currCharAdvancedCount are 0,
+              // accuracy turns out to be 0 but NaN.
+              const accuracy =
+                currCharCorrectCount === 0
+                  ? 0
+                  : (currCharCorrectCount / currCharAdvancedCount) * 100;
 
-            setStatsCharCount([
-              accuracy,
-              currCharCorrectCount,
-              currCharIncorrectCount,
-              currCharMissingCount,
-              currCharAdvancedCount,
-              currCharExtraCount,
-            ]);
+              setStatsCharCount([
+                accuracy,
+                currCharCorrectCount,
+                currCharIncorrectCount,
+                currCharMissingCount,
+                currCharAdvancedCount,
+                currCharExtraCount,
+              ]);
 
-            checkPrev();
-            setStatus("finished");
+              checkPrev();
+              setStatus("finished");
 
-            return countDownConstant;
-          } else {
-            return prevCountdown - 1;
-          }
-        });
-      }, 1000);
+              return countDownConstant;
+            } else {
+              return prevCountdown - 1;
+            }
+          });
+        }, 1000);
+      }
       setIntervalId(intervalId);
     }
   };
@@ -517,17 +522,10 @@ const TypeBox = ({
     if (wpmKeyStrokes !== 0) {
       if (!wpmWorkerRef.current) return; // Ensure worker is initialized
 
-      let workerCountDownConstant = countDownConstant;
-      let workerCountDown = countDown;
-      if (countDownConstant === COUNT_DOWN_INF) {
-        workerCountDownConstant = countDown;
-        workerCountDown = 0;
-      }
-
       wpmWorkerRef.current.postMessage({
         wpmKeyStrokes,
-        countDownConstant: workerCountDownConstant,
-        countDown: workerCountDown,
+        countDownConstant,
+        countDown,
       });
 
       wpmWorkerRef.current.onmessage = (event) => {
@@ -598,7 +596,13 @@ const TypeBox = ({
 
     // Update stats when typing unless there is no effective WPM
     if (wpmKeyStrokes !== 0) {
-      calculateWpm(wpmKeyStrokes, countDownConstant, countDown);
+      // In infinite mode countDown never decrements, so translate the
+      // elapsed-time counter into the equivalent remaining-countdown value
+      // the WPM worker expects (elapsed = countDownConstant - countDown + 1).
+      const effectiveCountDown = isInfiniteMode
+        ? countDownConstant - elapsedSeconds
+        : countDown;
+      calculateWpm(wpmKeyStrokes, countDownConstant, effectiveCountDown);
     }
 
     // start the game by typing any thing
@@ -1005,7 +1009,7 @@ const TypeBox = ({
                 <IconButton
                   onClick={() => {
                     reset(
-                      COUNT_DOWN_INF,
+                      COUNT_DOWN_INFINITE,
                       difficulty,
                       language,
                       numberAddOn,
@@ -1014,11 +1018,16 @@ const TypeBox = ({
                     );
                   }}
                 >
-                  <Tooltip title={t("infinite_timer_tooltip")}>
-                    <span className={getTimerButtonClassName(COUNT_DOWN_INF)}>
-                      &#8734;
-                    </span>
-                  </Tooltip>
+                  {/* Center the icon inside the span: MUI SvgIcon is
+                      inline-block and baseline-aligned by default, which
+                      would push the infinity symbol above the number labels
+                      of the sibling timer buttons. */}
+                  <span
+                    className={getTimerButtonClassName(COUNT_DOWN_INFINITE)}
+                    style={{ display: "inline-flex", alignItems: "center" }}
+                  >
+                    <AllInclusiveIcon sx={{ fontSize: 18 }} />
+                  </span>
                 </IconButton>
               </>
             )}
@@ -1291,32 +1300,27 @@ const TypeBox = ({
                 </IconButton>
               )}
               {effectiveLanguage === CHINESE_MODE && (
-                <IconButton onClick={cycleHintMode}>
-                  <Tooltip
-                    title={
-                      hintMode === HINT_MODE_BOTH
-                        ? t("hint_mode_tooltip_both")
-                        : hintMode === HINT_MODE_PINYIN_ONLY
-                        ? t("hint_mode_tooltip_pinyin_only")
-                        : t("hint_mode_tooltip_chinese_only")
-                    }
-                  >
+                <IconButton
+                  onClick={() => {
+                    setChineseDisplayMode((prev) =>
+                      prev === "both"
+                        ? "hanzi"
+                        : prev === "hanzi"
+                        ? "pinyin"
+                        : "both"
+                    );
+                  }}
+                >
+                  <Tooltip title={t("chinese_display_mode_tooltip")}>
                     <span
                       className="active-button"
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        minWidth: 18,
-                        fontSize: 13,
-                        fontWeight: 600,
-                      }}
+                      style={{ display: "inline-flex", alignItems: "center" }}
                     >
-                      {hintMode === HINT_MODE_BOTH
-                        ? t("hint_mode_label_both")
-                        : hintMode === HINT_MODE_PINYIN_ONLY
-                        ? t("hint_mode_label_pinyin_only")
-                        : t("hint_mode_label_chinese_only")}
+                      {chineseDisplayMode === "both"
+                        ? "双"
+                        : chineseDisplayMode === "hanzi"
+                        ? "字"
+                        : "pin"}
                     </span>
                   </Tooltip>
                 </IconButton>
@@ -1408,6 +1412,7 @@ const TypeBox = ({
             currWordIndex={currWordIndex}
             currCharIndex={currCharIndex}
             wordsKey={wordsKey}
+            chineseDisplayMode={chineseDisplayMode}
             isUltraZenMode={isUltraZenMode}
             status={status}
             wordSpanRefs={wordSpanRefs}
@@ -1417,7 +1422,6 @@ const TypeBox = ({
             getExtraCharsDisplay={getExtraCharsDisplay}
             pacingStyle={pacingStyle}
             theme={theme}
-            hintMode={hintMode}
           />
         )}
         <div className="stats">
@@ -1430,6 +1434,8 @@ const TypeBox = ({
             theme={theme}
             countDown={countDown}
             countDownConstant={countDownConstant}
+            isInfiniteMode={isInfiniteMode}
+            elapsedSeconds={elapsedSeconds}
             statsCharCount={statsCharCount}
             rawKeyStrokes={rawKeyStrokes}
             wpmKeyStrokes={wpmKeyStrokes}

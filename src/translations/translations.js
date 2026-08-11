@@ -59,23 +59,11 @@ export const translations = {
     chinese_mode_tooltip: "Chinese Pinyin Mode",
     restart_tooltip: "[Tab] + [Enter] to quickly restart",
     redo_tooltip: "[Tab] + [Space] to quickly redo",
+    chinese_display_mode_tooltip: "Hide pinyin/characters to improve typing speed.",
     pacing_caret_tooltip:
       'type the word with a caret "|", character by character.',
     pacing_pulse_tooltip:
       'type the word with a pulse "____", this helps improving wpm and your speed typing pace habit.',
-
-    infinite_timer_tooltip:
-      "No timer mode — type freely, the test never ends. Time counts up instead of down.",
-
-    hint_mode_label_both: "both",
-    hint_mode_label_pinyin_only: "pinyin",
-    hint_mode_label_chinese_only: "hanzi",
-    hint_mode_tooltip_both:
-      "Chinese hint: showing both hanzi and pinyin. Click to hide hanzi.",
-    hint_mode_tooltip_pinyin_only:
-      "Chinese hint: hanzi hidden, pinyin only. Click to hide pinyin.",
-    hint_mode_tooltip_chinese_only:
-      "Chinese hint: pinyin hidden, hanzi only (blind pinyin typing). Click to show both.",
 
     // Restart dialog
     press: "press",
@@ -542,22 +530,10 @@ export const translations = {
     chinese_mode_tooltip: "中文拼音模式",
     restart_tooltip: "[Tab] + [Enter] 快速重新开始",
     redo_tooltip: "[Tab] + [Space] 快速重做",
+    chinese_display_mode_tooltip: "隐藏拼音/文字，有助于提高打字速度。",
     pacing_caret_tooltip: '使用光标 "|" 逐字符输入。',
     pacing_pulse_tooltip:
       '使用脉冲 "____" 输入，有助于提高打字速度。',
-
-    infinite_timer_tooltip:
-      "不计时模式 — 自由打字，测试永不结束，时间改为正向计时。",
-
-    hint_mode_label_both: "双语",
-    hint_mode_label_pinyin_only: "仅拼",
-    hint_mode_label_chinese_only: "仅中",
-    hint_mode_tooltip_both:
-      "中文提示：同时显示汉字和拼音。点击隐藏汉字。",
-    hint_mode_tooltip_pinyin_only:
-      "中文提示：仅显示拼音，汉字已隐藏。点击隐藏拼音。",
-    hint_mode_tooltip_chinese_only:
-      "中文提示：仅显示汉字，拼音已隐藏（看汉字打拼音）。点击恢复全部显示。",
 
     // Restart dialog
     press: "按",

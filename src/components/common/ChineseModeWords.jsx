@@ -1,17 +1,13 @@
 import React, { memo, useCallback, useRef, useMemo } from "react";
 import SmoothCaret from "../features/TypeBox/SmoothCaret";
-import {
-  HINT_MODE_BOTH,
-  HINT_MODE_PINYIN_ONLY,
-  HINT_MODE_CHINESE_ONLY,
-} from "../../constants/Constants";
 
 const ChineseModeWords = ({
   currentWords,
   currWordIndex,
   currCharIndex,
-  isUltraZenMode,
   wordsKey,
+  chineseDisplayMode,
+  isUltraZenMode,
   status,
   wordSpanRefs,
   getChineseWordKeyClassName,
@@ -20,9 +16,18 @@ const ChineseModeWords = ({
   getExtraCharsDisplay,
   pacingStyle,
   theme,
-  hintMode = HINT_MODE_BOTH,
 }) => {
   const containerRef = useRef(null);
+
+  // Hide with visibility (not display) so the layout box is preserved:
+  // SmoothCaret measures the char spans' getBoundingClientRect and the
+  // scroll logic reads the first span's offsets, both of which collapse
+  // to zero when the element is display:none. Also theme-independent.
+  // Note: in the dataset wordsKey is the hanzi, word (val) is the pinyin.
+  const pinyinStyle =
+    chineseDisplayMode === "hanzi" ? { visibility: "hidden" } : undefined;
+  const hanziStyle =
+    chineseDisplayMode === "pinyin" ? { visibility: "hidden" } : undefined;
 
   // Separate refs for character spans (used by SmoothCaret)
   const charWordRefs = useMemo(
@@ -34,9 +39,6 @@ const ChineseModeWords = ({
     (index) => Math.max(1 - Math.abs(index - currWordIndex) * 0.1, 0.1),
     [currWordIndex]
   );
-
-  const hideChinese = hintMode === HINT_MODE_PINYIN_ONLY;
-  const hidePinyin = hintMode === HINT_MODE_CHINESE_ONLY;
 
   return (
     <div
@@ -72,14 +74,14 @@ const ChineseModeWords = ({
               <span
                 className={getChineseWordKeyClassName(i)}
                 ref={wordSpanRefs[i]}
-                style={hideChinese ? { display: "none" } : undefined}
+                style={hanziStyle}
               >
                 {wordsKey[i]}
               </span>
               <span
                 className={getChineseWordClassName(i)}
                 ref={charWordRefs[i]}
-                style={hidePinyin ? { visibility: "hidden" } : undefined}
+                style={pinyinStyle}
               >
                 {word.split("").map((char, idx) => (
                   <span
