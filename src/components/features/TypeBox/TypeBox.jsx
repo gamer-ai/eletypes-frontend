@@ -1416,6 +1416,7 @@ const TypeBox = ({
             isUltraZenMode={isUltraZenMode}
             status={status}
             wordSpanRefs={wordSpanRefs}
+            startIndex={startIndex}
             getChineseWordKeyClassName={getChineseWordKeyClassName}
             getChineseWordClassName={getChineseWordClassName}
             getCharClassName={getCharClassName}
