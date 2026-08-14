@@ -267,7 +267,11 @@ const TypeBox = ({
   const [currChar, setCurrChar] = useState("");
 
   useEffect(() => {
-    if (currWordIndex === DEFAULT_WORDS_COUNT - 1) {
+    // Extend the word list whenever the user reaches the last word of the
+    // current batch. Compare against the live list length (200 -> 400 ->
+    // 600, ...) rather than the fixed DEFAULT_WORDS_COUNT - 1, which only
+    // ever matched the first batch and made continuation one-time only.
+    if (wordsDict.length > 0 && currWordIndex === wordsDict.length - 1) {
       if (customWordsOverride?.parsed?.length) {
         const generatedCustom = customWordsGenerator(
           customWordsOverride.parsed,
