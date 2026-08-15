@@ -266,6 +266,13 @@ const TypeBox = ({
   const keyString = currWordIndex + "." + currCharIndex;
   const [currChar, setCurrChar] = useState("");
 
+  // Sliding window over the (growable) word list. Declared before the
+  // extension/scroll effect below because that effect re-scrolls whenever
+  // the window changes; keeping the state here avoids TDZ access.
+  const baseChunkSize = 120;
+  const [startIndex, setStartIndex] = useState(0);
+  const [visibleWordsCount, setVisibleWordsCount] = useState(baseChunkSize);
+
   useEffect(() => {
     // Extend the word list whenever the user reaches the last word of the
     // current batch. Compare against the live list length (200 -> 400 ->
@@ -328,6 +335,14 @@ const TypeBox = ({
   }, [
     currWordIndex,
     wordSpanRefs,
+    // The rendered slice is windowed by startIndex/visibleWordsCount. When
+    // the window advances (e.g. right after a 200-word batch is appended),
+    // the current word is re-parented at a different offsetTop inside the
+    // same scroll container, so the scroll position must be recalculated.
+    // Without these deps the old scrollTop is kept until the next keystroke,
+    // which can leave the active word outside the visible 3-row viewport.
+    startIndex,
+    visibleWordsCount,
     difficulty,
     language,
     effectiveLanguage,
@@ -1345,10 +1360,6 @@ const TypeBox = ({
       </div>
     );
   };
-
-  const baseChunkSize = 120;
-  const [startIndex, setStartIndex] = useState(0);
-  const [visibleWordsCount, setVisibleWordsCount] = useState(baseChunkSize);
 
   // Reset startIndex when status changes
   useEffect(() => {
