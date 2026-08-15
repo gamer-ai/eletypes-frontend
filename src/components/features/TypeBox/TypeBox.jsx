@@ -420,7 +420,16 @@ const TypeBox = ({
     setWordsInCorrect(new Set());
     textInputRef.current.focus();
     // console.log("fully reset waiting for next inputs");
-    wordSpanRefs[0].current.scrollIntoView();
+    const firstWordElement = wordSpanRefs[0]?.current;
+    if (effectiveLanguage === CHINESE_MODE) {
+      // In Chinese mode the ref is attached to the pinyin span, which is the
+      // second line of each word block. Scrolling the pinyin itself into view
+      // would push the hanzi line above the clipped type-box viewport, so
+      // scroll the whole hanzi + pinyin block instead.
+      firstWordElement?.parentElement?.scrollIntoView();
+    } else {
+      firstWordElement?.scrollIntoView();
+    }
   };
 
   const start = () => {
