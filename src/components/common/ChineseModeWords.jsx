@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useRef, useMemo } from "react";
+import React, { memo, useCallback, useRef } from "react";
 import SmoothCaret from "../features/TypeBox/SmoothCaret";
 
 const ChineseModeWords = ({
@@ -10,6 +10,7 @@ const ChineseModeWords = ({
   isUltraZenMode,
   status,
   wordSpanRefs,
+  startIndex,
   getChineseWordKeyClassName,
   getChineseWordClassName,
   getCharClassName,
@@ -29,14 +30,11 @@ const ChineseModeWords = ({
   const hanziStyle =
     chineseDisplayMode === "pinyin" ? { visibility: "hidden" } : undefined;
 
-  // Separate refs for character spans (used by SmoothCaret)
-  const charWordRefs = useMemo(
-    () => currentWords.map(() => React.createRef()),
-    [currentWords]
-  );
-
+  // The full-length wordSpanRefs (attached to each pinyin span below) serves
+  // both the TypeBox scroll anchoring and the SmoothCaret measurement.
   const getWordOpacity = useCallback(
-    (index) => Math.max(1 - Math.abs(index - currWordIndex) * 0.1, 0.1),
+    (globalIndex) =>
+      Math.max(1 - Math.abs(globalIndex - currWordIndex) * 0.1, 0.1),
     [currWordIndex]
   );
 
@@ -52,46 +50,47 @@ const ChineseModeWords = ({
       {pacingStyle === "caret" && (
         <SmoothCaret
           containerRef={containerRef}
-          wordSpanRefs={charWordRefs}
+          wordSpanRefs={wordSpanRefs}
           currWordIndex={currWordIndex}
           currCharIndex={currCharIndex}
+          startIndex={startIndex}
           status={status}
           theme={theme}
         />
       )}
       <div className="words notranslate" translate="no">
         {currentWords.map((word, i) => {
-          const opacityValue = isUltraZenMode ? getWordOpacity(i) : 1;
+          const globalIndex = startIndex + i;
+          const opacityValue = isUltraZenMode ? getWordOpacity(globalIndex) : 1;
 
           return (
             <div
-              key={i}
+              key={globalIndex}
               style={{
                 opacity: opacityValue,
                 transition: "500ms",
               }}
             >
               <span
-                className={getChineseWordKeyClassName(i)}
-                ref={wordSpanRefs[i]}
+                className={getChineseWordKeyClassName(globalIndex)}
                 style={hanziStyle}
               >
-                {wordsKey[i]}
+                {wordsKey[globalIndex]}
               </span>
               <span
-                className={getChineseWordClassName(i)}
-                ref={charWordRefs[i]}
+                className={getChineseWordClassName(globalIndex)}
+                ref={wordSpanRefs[globalIndex]}
                 style={pinyinStyle}
               >
                 {word.split("").map((char, idx) => (
                   <span
-                    key={`word${i}_${idx}`}
-                    className={getCharClassName(i, idx, char, word)}
+                    key={`word${globalIndex}_${idx}`}
+                    className={getCharClassName(globalIndex, idx, char, word)}
                   >
                     {char}
                   </span>
                 ))}
-                {getExtraCharsDisplay(word, i)}
+                {getExtraCharsDisplay(word, globalIndex)}
               </span>
             </div>
           );

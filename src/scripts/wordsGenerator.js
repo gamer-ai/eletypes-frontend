@@ -1,4 +1,4 @@
-import randomWords, { wordList as hardWordList } from "random-words";
+import { wordList as hardWordList } from "random-words";
 import {
   COMMON_WORDS,
   COMMON_CHINESE_WORDS,
@@ -6,6 +6,7 @@ import {
 } from "../constants/WordsMostCommon";
 import {
   DEFAULT_DIFFICULTY,
+  HARD_DIFFICULTY,
   ENGLISH_MODE,
   CHINESE_MODE,
   DEFAULT_WORDS_COUNT,
@@ -20,6 +21,65 @@ import {
   DICTIONARY_SOURCE_CATALOG,
 } from "../constants/DictionaryConstants";
 
+// hard — select from random-words wordList with seeded RNG for determinism
+const HARD_ENGLISH_WORDS = hardWordList.filter((w) => w.length <= 7);
+
+// Draw indices against bank.length - 1 so the bound always stays in sync
+// with the selected word bank. Previously each mode had its own hardcoded
+// range (e.g. Chinese idioms drew 0..5000 against a 1500-entry list), which
+// silently shrank generated batches when the range exceeded the bank size.
+// Swapping a word list now only requires updating this map — nothing else.
+const WORD_BANK_BY_MODE = {
+  [ENGLISH_MODE]: {
+    [DEFAULT_DIFFICULTY]: COMMON_WORDS,
+    [HARD_DIFFICULTY]: HARD_ENGLISH_WORDS,
+  },
+  [CHINESE_MODE]: {
+    [DEFAULT_DIFFICULTY]: COMMON_CHINESE_WORDS,
+    [HARD_DIFFICULTY]: COMMON_CHINESE_IDIOMS_WORDS,
+  },
+};
+
+const generateWordsFromBank = (bank, count, numberAddOn, symbolAddOn, rng) => {
+  const wordList = [];
+  const bankLength = bank.length;
+  for (let i = 0; i < count; i++) {
+    const rand = randomIntFromRange(0, bankLength - 1, rng);
+    const entry = bank[rand];
+    // guard against sparse banks — the draw range stays within bank.length,
+    // so this only fires when a bank entry itself is missing/empty
+    if (!entry) {
+      continue;
+    }
+    // banks store either { key, val } objects (vocab JSON) or plain strings
+    // (random-words wordList) — normalize both to { key, val }
+    let wordCandidateKey =
+      typeof entry === "string" ? entry : entry.key;
+    let wordCandidateVal =
+      typeof entry === "string" ? entry : entry.val;
+    if (!wordCandidateKey || !wordCandidateVal) {
+      continue;
+    }
+    if (numberAddOn) {
+      const generatedNumber = generateRandomNumChras(1, 2, rng);
+      wordCandidateKey = wordCandidateKey + generatedNumber;
+      wordCandidateVal = wordCandidateVal + generatedNumber;
+    }
+    if (symbolAddOn) {
+      const generatedSymbol = generateRandomSymbolChras(1, 1, rng);
+      wordCandidateKey = wordCandidateKey + generatedSymbol;
+      wordCandidateVal = wordCandidateVal + generatedSymbol;
+    }
+
+    wordList.push({
+      key: wordCandidateKey,
+      val: wordCandidateVal,
+    });
+  }
+
+  return wordList;
+};
+
 const wordsGenerator = (
   wordsCount,
   difficulty,
@@ -29,37 +89,13 @@ const wordsGenerator = (
   rng
 ) => {
   if (languageMode === ENGLISH_MODE) {
-    if (difficulty === DEFAULT_DIFFICULTY) {
-      const EnglishWordList = [];
-      for (let i = 0; i < DEFAULT_WORDS_COUNT; i++) {
-        const rand = randomIntFromRange(0, 550, rng);
-        let wordCandidate = COMMON_WORDS[rand].val;
-        if (numberAddOn) {
-          wordCandidate = wordCandidate + generateRandomNumChras(1, 2, rng);
-        }
-        if (symbolAddOn) {
-          wordCandidate = wordCandidate + generateRandomSymbolChras(1, 1, rng);
-        }
-        EnglishWordList.push({ key: wordCandidate, val: wordCandidate });
-      }
-      return EnglishWordList;
-    }
-
-    // hard — select from random-words wordList with seeded RNG for determinism
-    const filteredHardWords = hardWordList.filter((w) => w.length <= 7);
-    const words = [];
-    for (let i = 0; i < wordsCount; i++) {
-      const rand = randomIntFromRange(0, filteredHardWords.length - 1, rng);
-      let wordCandidate = filteredHardWords[rand];
-      if (numberAddOn) {
-        wordCandidate = wordCandidate + generateRandomNumChras(1, 2, rng);
-      }
-      if (symbolAddOn) {
-        wordCandidate = wordCandidate + generateRandomSymbolChras(1, 1, rng);
-      }
-      words.push({ key: wordCandidate, val: wordCandidate });
-    }
-    return words;
+    return generateWordsFromBank(
+      WORD_BANK_BY_MODE[ENGLISH_MODE][difficulty],
+      wordsCount,
+      numberAddOn,
+      symbolAddOn,
+      rng
+    );
   }
   return ["something", "went", "wrong"];
 };
@@ -72,61 +108,13 @@ const chineseWordsGenerator = (
   rng
 ) => {
   if (languageMode === CHINESE_MODE) {
-    if (difficulty === DEFAULT_DIFFICULTY) {
-      const ChineseWordList = [];
-      for (let i = 0; i < DEFAULT_WORDS_COUNT; i++) {
-        const rand = randomIntFromRange(0, 5000, rng);
-        if (COMMON_CHINESE_WORDS[rand] && COMMON_CHINESE_WORDS[rand].val) {
-          let wordCandidateKey = COMMON_CHINESE_WORDS[rand].key;
-          let wordCandidateVal = COMMON_CHINESE_WORDS[rand].val;
-          if (numberAddOn) {
-            const generatedNumber = generateRandomNumChras(1, 2, rng);
-            wordCandidateKey = wordCandidateKey + generatedNumber;
-            wordCandidateVal = wordCandidateVal + generatedNumber;
-          }
-          if (symbolAddOn) {
-            const generatedSymbol = generateRandomSymbolChras(1, 1, rng);
-            wordCandidateKey = wordCandidateKey + generatedSymbol;
-            wordCandidateVal = wordCandidateVal + generatedSymbol;
-          }
-
-          ChineseWordList.push({
-            key: wordCandidateKey,
-            val: wordCandidateVal,
-          });
-        }
-      }
-
-      return ChineseWordList;
-    }
-
-    const ChineseIdiomsList = [];
-    for (let i = 0; i < DEFAULT_WORDS_COUNT; i++) {
-      const rand = randomIntFromRange(0, 5000, rng);
-      if (
-        COMMON_CHINESE_IDIOMS_WORDS[rand] &&
-        COMMON_CHINESE_IDIOMS_WORDS[rand].val
-      ) {
-        let wordCandidateKey = COMMON_CHINESE_IDIOMS_WORDS[rand].key;
-        let wordCandidateVal = COMMON_CHINESE_IDIOMS_WORDS[rand].val;
-        if (numberAddOn) {
-          const generatedNumber = generateRandomNumChras(1, 2, rng);
-          wordCandidateKey = wordCandidateKey + generatedNumber;
-          wordCandidateVal = wordCandidateVal + generatedNumber;
-        }
-        if (symbolAddOn) {
-          const generatedSymbol = generateRandomSymbolChras(1, 1, rng);
-          wordCandidateKey = wordCandidateKey + generatedSymbol;
-          wordCandidateVal = wordCandidateVal + generatedSymbol;
-        }
-        ChineseIdiomsList.push({
-          key: wordCandidateKey,
-          val: wordCandidateVal,
-        });
-      }
-    }
-
-    return ChineseIdiomsList;
+    return generateWordsFromBank(
+      WORD_BANK_BY_MODE[CHINESE_MODE][difficulty],
+      DEFAULT_WORDS_COUNT,
+      numberAddOn,
+      symbolAddOn,
+      rng
+    );
   }
 };
 

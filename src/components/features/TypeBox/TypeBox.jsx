@@ -266,8 +266,19 @@ const TypeBox = ({
   const keyString = currWordIndex + "." + currCharIndex;
   const [currChar, setCurrChar] = useState("");
 
+  // Sliding window over the (growable) word list. Declared before the
+  // extension/scroll effect below because that effect re-scrolls whenever
+  // the window changes; keeping the state here avoids TDZ access.
+  const baseChunkSize = 120;
+  const [startIndex, setStartIndex] = useState(0);
+  const [visibleWordsCount, setVisibleWordsCount] = useState(baseChunkSize);
+
   useEffect(() => {
-    if (currWordIndex === DEFAULT_WORDS_COUNT - 1) {
+    // Extend the word list whenever the user reaches the last word of the
+    // current batch. Compare against the live list length (200 -> 400 ->
+    // 600, ...) rather than the fixed DEFAULT_WORDS_COUNT - 1, which only
+    // ever matched the first batch and made continuation one-time only.
+    if (wordsDict.length > 0 && currWordIndex === wordsDict.length - 1) {
       if (customWordsOverride?.parsed?.length) {
         const generatedCustom = customWordsGenerator(
           customWordsOverride.parsed,
@@ -324,6 +335,14 @@ const TypeBox = ({
   }, [
     currWordIndex,
     wordSpanRefs,
+    // The rendered slice is windowed by startIndex/visibleWordsCount. When
+    // the window advances (e.g. right after a 200-word batch is appended),
+    // the current word is re-parented at a different offsetTop inside the
+    // same scroll container, so the scroll position must be recalculated.
+    // Without these deps the old scrollTop is kept until the next keystroke,
+    // which can leave the active word outside the visible 3-row viewport.
+    startIndex,
+    visibleWordsCount,
     difficulty,
     language,
     effectiveLanguage,
@@ -401,7 +420,16 @@ const TypeBox = ({
     setWordsInCorrect(new Set());
     textInputRef.current.focus();
     // console.log("fully reset waiting for next inputs");
-    wordSpanRefs[0].current.scrollIntoView();
+    const firstWordElement = wordSpanRefs[0]?.current;
+    if (effectiveLanguage === CHINESE_MODE) {
+      // In Chinese mode the ref is attached to the pinyin span, which is the
+      // second line of each word block. Scrolling the pinyin itself into view
+      // would push the hanzi line above the clipped type-box viewport, so
+      // scroll the whole hanzi + pinyin block instead.
+      firstWordElement?.parentElement?.scrollIntoView();
+    } else {
+      firstWordElement?.scrollIntoView();
+    }
   };
 
   const start = () => {
@@ -1342,10 +1370,6 @@ const TypeBox = ({
     );
   };
 
-  const baseChunkSize = 120;
-  const [startIndex, setStartIndex] = useState(0);
-  const [visibleWordsCount, setVisibleWordsCount] = useState(baseChunkSize);
-
   // Reset startIndex when status changes
   useEffect(() => {
     setStartIndex(0);
@@ -1416,6 +1440,7 @@ const TypeBox = ({
             isUltraZenMode={isUltraZenMode}
             status={status}
             wordSpanRefs={wordSpanRefs}
+            startIndex={startIndex}
             getChineseWordKeyClassName={getChineseWordKeyClassName}
             getChineseWordClassName={getChineseWordClassName}
             getCharClassName={getCharClassName}
