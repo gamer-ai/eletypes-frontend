@@ -19,6 +19,7 @@ import { computeBounds, buildKeyIndex, isAccentKey, extractKeys, parseLegendPosi
 import { DEFAULT_SHELL } from "./schema/shellProfile";
 import { createKeycapFromSpec } from "./KeycapGeometry";
 import { extrudeCaseProfile, computeMountSurface, extrudeEdgeStrip } from "./CaseEditor/extrudeProfile";
+import { carveCaseTop } from "./CaseEditor/carveTopCSG";
 import { resolveRenderStyle } from "./schema/types/renderStyle";
 import { Text } from "@react-three/drei";
 
@@ -161,10 +162,30 @@ const KeyboardModel = forwardRef(({
   }, [caseProfile]);
 
   // ─── Profile-based case geometry ───
+  // When caseProfile.topFrame is set, run CSG subtraction to bake the
+  // cutouts directly into the case body — single mesh, no plate-on-top.
+  // CSG is expensive (~50–200ms for 80 keys), but only runs when layout
+  // / profile / topFrame change (memoised).
   const profileCaseGeo = useMemo(() => {
     if (!profileScale) return null;
-    return extrudeCaseProfile(profileScale.points, caseW * extrudeWidth, caseD, profileScale.maxHeight);
-  }, [profileScale, caseW, caseD, extrudeWidth]);
+    const base = extrudeCaseProfile(
+      profileScale.points,
+      caseW * extrudeWidth,
+      caseD,
+      profileScale.maxHeight,
+    );
+    if (!caseProfile?.topFrame) return base;
+    const carved = carveCaseTop({
+      caseGeo: base,
+      caseProfile,
+      keys,
+      bounds,
+      caseD,
+      extrudeWidth,
+      mountOffset,
+    });
+    return carved || base;
+  }, [profileScale, caseW, caseD, extrudeWidth, caseProfile, keys, bounds, mountOffset]);
 
   // ─── Colored edge strip geometries ───
   const edgeStrips = useMemo(() => {
@@ -230,6 +251,10 @@ const KeyboardModel = forwardRef(({
         const t = (z + hd) / caseD;
         surfaceY = backTopY + t * (frontTopY - backTopY) + PLATE_Y;
       }
+      // Keys stay on the original mount surface — the carved cut goes
+      // DOWN into the case AROUND/BELOW them. Cap bottoms peek into the
+      // groove from above, exposing the cutout floor between keys (real
+      // plate look). Don't subtract cutDepth from surfaceY here.
 
       // Compute tilt angle for the key to sit flush on the surface
       let tiltAngleX = 0;
@@ -585,20 +610,21 @@ const KeyboardModel = forwardRef(({
 
   // Build a case/plate material — same mode switch as keycaps but keeps the
   // metallic PBR defaults for `pbr` mode since the case should look shiny.
-  const buildCaseMaterial = (mode, gm, { roughness, metalness, envMap }) => {
+  const buildCaseMaterial = (mode, gm, { roughness, metalness, envMap }, colorOverride) => {
+    const col = colorOverride || caseColor;
     if (mode === "cel-hard") {
-      return new THREE.MeshToonMaterial({ color: caseColor, gradientMap: gm, side: THREE.DoubleSide });
+      return new THREE.MeshToonMaterial({ color: col, gradientMap: gm, side: THREE.DoubleSide });
     }
     if (mode === "lofi-flat") {
-      return new THREE.MeshBasicMaterial({ color: caseColor, side: THREE.DoubleSide });
+      return new THREE.MeshBasicMaterial({ color: col, side: THREE.DoubleSide });
     }
     if (mode === "blueprint") {
-      return new THREE.MeshBasicMaterial({ color: caseColor, side: THREE.DoubleSide, wireframe: true });
+      return new THREE.MeshBasicMaterial({ color: col, side: THREE.DoubleSide, wireframe: true });
     }
     if (mode === "x-ray") {
       const opacity = resolvedCaseRS.xray.opacity;
       return new THREE.MeshBasicMaterial({
-        color: caseColor, side: THREE.DoubleSide,
+        color: col, side: THREE.DoubleSide,
         transparent: true, opacity,
         wireframe: !!resolvedCaseRS.xray.wireframe,
         depthWrite: false,
@@ -606,8 +632,8 @@ const KeyboardModel = forwardRef(({
     }
     if (mode === "neon") {
       return new THREE.MeshStandardMaterial({
-        color: caseColor,
-        emissive: caseColor,
+        color: col,
+        emissive: col,
         emissiveIntensity: resolvedCaseRS.neon.emissiveIntensity,
         roughness: resolvedCaseRS.neon.roughness,
         metalness: resolvedCaseRS.neon.metalness,
@@ -615,7 +641,7 @@ const KeyboardModel = forwardRef(({
       });
     }
     return new THREE.MeshStandardMaterial({
-      color: caseColor, roughness, metalness, envMapIntensity: envMap, side: THREE.DoubleSide,
+      color: col, roughness, metalness, envMapIntensity: envMap, side: THREE.DoubleSide,
     });
   };
 
@@ -634,6 +660,155 @@ const KeyboardModel = forwardRef(({
     () => buildCaseMaterial(casePrimary, caseGradientMap, { roughness: 0.35, metalness: 0.85, envMap: 0.6 }),
     [casePrimary, caseGradientMap, caseColor, caseProfile]
   );
+  // Cutout / mount-plate interior material — used as the second slot in
+  // the carved case mesh's material array. Falls back to caseColor when
+  // topFrame.color isn't set, so unconfigured cutouts blend into the case.
+  // Slightly higher roughness + lower envMap to read like a metal plate
+  // recessed inside a polished case. Backlight (if enabled) adds emissive
+  // properties so the cutout glows like a real switch LED.
+  const cutoutColor = caseProfile?.topFrame?.color;
+  const backlight = caseProfile?.topFrame?.backlight;
+  const cutoutMat = useMemo(() => {
+    const mat = buildCaseMaterial(
+      casePrimary,
+      caseGradientMap,
+      { roughness: 0.55, metalness: 0.6, envMap: 0.4 },
+      cutoutColor,
+    );
+    // Backlight = the visible light leaking out of the cap-to-plate gap
+    // around each key. The bright LED look comes from the bulb spheres +
+    // PointLights; cutout emissive is just a dim "lit plate" environment
+    // tint so the carved interior reads as colored, not glaring.
+    if (backlight && backlight.enabled !== false && mat.emissive) {
+      mat.emissive = new THREE.Color(backlight.color || "#ffffff");
+      const baseI = backlight.intensity ?? 0.8;
+      const bloom = backlight.bloom ?? 0;
+      mat.emissiveIntensity = baseI * (1 + bloom) * 0.35;
+    }
+    return mat;
+  }, [casePrimary, caseGradientMap, cutoutColor, caseColor, caseProfile, backlight]);
+
+  // ─── LED positions — at the CENTER OF EACH CAP'S BOTTOM EDGE, i.e.,
+  // in the cap-plate gap (mountSurfaceY + half PLATE_Y). From oblique
+  // viewing angles the bulb peeks out through the gap; the PointLight
+  // co-located here illuminates BOTH the cap's underside (above) AND
+  // the cutout floor (below) — same light source for both visuals.
+  const ledLightPositions = useMemo(() => {
+    if (!backlight || backlight.enabled === false) return [];
+    if (!keys.length) return [];
+    return keys.map((key) => {
+      const x = (key.x + (key.w || 1) / 2) - centerX + (mountOffset.x || 0);
+      const z = (key.y + (key.h || 1) / 2) - centerZ + (mountOffset.z || 0);
+      const zForSlope = (key.y + (key.h || 1) / 2) - centerZ;
+      const surfaceY = mountSurface ? mountSurface.getY(zForSlope) : 0;
+      // Cap base sits at surfaceY + PLATE_Y. Half-way between mount plate
+      // and cap base lands the LED in the visible cap-to-plate gap.
+      const y = surfaceY + PLATE_Y * 0.5;
+      return { x, y, z };
+    });
+  }, [keys, centerX, centerZ, mountOffset, mountSurface, backlight]);
+  const ledLightRefs = useRef([]);
+
+  // ─── Visible LED bulbs — small emissive spheres at each light position.
+  // Sphere radius bigger than the gap so the bottom protrudes into the
+  // cutout AND the top peeks past cap edges from oblique angles. The
+  // sphere center sits in the cap-plate gap; from above the cap covers
+  // it, but most camera angles see at least the rim.
+  const ledMeshRef = useRef(null);
+  const ledGeometry = useMemo(() => new THREE.SphereGeometry(0.06, 12, 8), []);
+  const ledBulbMat = useMemo(() => {
+    if (!backlight || backlight.enabled === false) return null;
+    return new THREE.MeshStandardMaterial({
+      color: 0x000000,
+      emissive: new THREE.Color(backlight.color || "#ffffff"),
+      emissiveIntensity: (backlight.intensity ?? 0.8) * (1 + (backlight.bloom ?? 0)) * 1.5,
+      vertexColors: true, // enable instanceColor for per-key wave
+      toneMapped: false,
+    });
+  }, [backlight]);
+  useEffect(() => {
+    if (!ledMeshRef.current || !ledLightPositions.length) return;
+    const m = new THREE.Matrix4();
+    for (let i = 0; i < ledLightPositions.length; i++) {
+      m.makeTranslation(ledLightPositions[i].x, ledLightPositions[i].y, ledLightPositions[i].z);
+      ledMeshRef.current.setMatrixAt(i, m);
+    }
+    ledMeshRef.current.instanceMatrix.needsUpdate = true;
+  }, [ledLightPositions]);
+
+  // Animated patterns drive emissive intensity / color each frame. For
+  // "wave" we'd need per-cutout material indices; until that lands, wave
+  // falls back to a slow global hue cycle so the visual still moves.
+  const _hslColor = useMemo(() => new THREE.Color(), []);
+  useFrame(({ clock }) => {
+    if (!backlight || backlight.enabled === false) return;
+    if (!cutoutMat?.emissive) return;
+    const pattern = backlight.pattern || "solid";
+    const speed = backlight.speed ?? 1.0;
+    const t = clock.getElapsedTime() * speed;
+    const baseI = backlight.intensity ?? 0.8;
+    const bloom = backlight.bloom ?? 0;
+    const peak = baseI * (1 + bloom);
+
+    // Helper to update emissive cutout material + every PointLight + every
+    // bulb mesh at once. With ONE light per key (~80 lights) each one's
+    // intensity is small (0.18×) so the cumulative scene illumination
+    // stays balanced. Bulb visible-emissive intensity is set via the
+    // material once (the per-instance color is what's animated).
+    const apply = (color, intensity) => {
+      cutoutMat.emissive.copy(color);
+      cutoutMat.emissiveIntensity = intensity * 0.35; // ambient tint, not glare
+      if (ledBulbMat?.emissive) {
+        ledBulbMat.emissive.copy(color);
+        ledBulbMat.emissiveIntensity = intensity * 1.5;
+      }
+      const perLightI = intensity * 0.5;
+      for (const ref of ledLightRefs.current) {
+        if (!ref) continue;
+        ref.color.copy(color);
+        ref.intensity = perLightI;
+      }
+    };
+
+    if (pattern === "solid") {
+      // Static — only run once on first frame to sync lights with the
+      // material's static config (which the useMemo above already set).
+      const col = new THREE.Color(backlight.color || "#ffffff");
+      apply(col, peak);
+      return;
+    }
+    if (pattern === "breathe") {
+      const i = peak * (0.3 + 0.7 * (0.5 + 0.5 * Math.sin(t * 1.5)));
+      const col = new THREE.Color(backlight.color || "#ffffff");
+      apply(col, i);
+    } else if (pattern === "rainbow") {
+      _hslColor.setHSL((t * 0.15) % 1.0, 1.0, 0.55);
+      apply(_hslColor, peak);
+    } else if (pattern === "wave") {
+      // Per-key colors — each PointLight + bulb gets a phase-shifted hue
+      // based on its world X position. Color travels left→right over time.
+      const perLightI = peak * 0.5;
+      const bulbMesh = ledMeshRef.current;
+      const _bulbColor = _hslColor; // reuse temp
+      for (let i = 0; i < ledLightRefs.current.length; i++) {
+        const ref = ledLightRefs.current[i];
+        const pos = ledLightPositions[i];
+        if (!ref || !pos) continue;
+        const phase = pos.x * 0.18 - t * 0.5;
+        const hue = ((phase % 1) + 1) % 1;
+        _bulbColor.setHSL(hue, 1.0, 0.55);
+        ref.color.copy(_bulbColor);
+        ref.intensity = perLightI;
+        if (bulbMesh) bulbMesh.setColorAt(i, _bulbColor);
+      }
+      if (bulbMesh?.instanceColor) bulbMesh.instanceColor.needsUpdate = true;
+      // Cutout emissive uses an averaged hue so the gap glow doesn't strobe.
+      _hslColor.setHSL((t * 0.1) % 1.0, 0.85, 0.55);
+      cutoutMat.emissive.copy(_hslColor);
+      cutoutMat.emissiveIntensity = peak * 0.35;
+    }
+    invalidate();
+  });
 
   // Case outline — for cel-hard we want a constant-thickness silhouette that
   // doesn't blow up with the case's scale. Classic Blinn back-face trick:
@@ -806,10 +981,19 @@ const KeyboardModel = forwardRef(({
           body's depth test punches out the interior. */}
       {profileCaseGeo ? (
         <React.Fragment key={`case-profile-${caseProfileKey}`}>
-          <mesh position={[0, 0, caseCenterZ]}>
-            <primitive object={profileCaseGeo} attach="geometry" />
-            <primitive object={caseMat} attach="material" />
-          </mesh>
+          {/* When CSG-carved, the geometry has groups: 0 = original case
+              faces, 1 = cutout interior (walls + floor). Pass [caseMat,
+              cutoutMat] so each group renders with its own color. */}
+          {caseProfile?.topFrame ? (
+            <mesh position={[0, 0, caseCenterZ]} material={[caseMat, cutoutMat]}>
+              <primitive object={profileCaseGeo} attach="geometry" />
+            </mesh>
+          ) : (
+            <mesh position={[0, 0, caseCenterZ]}>
+              <primitive object={profileCaseGeo} attach="geometry" />
+              <primitive object={caseMat} attach="material" />
+            </mesh>
+          )}
           {caseOutlineActive && caseOutlineMaterial && (
             <mesh position={[0, 0, caseCenterZ]} renderOrder={-1}>
               <primitive object={profileCaseGeo} attach="geometry" />
@@ -844,6 +1028,33 @@ const KeyboardModel = forwardRef(({
           )}
         </React.Fragment>
       )}
+
+      {/* LED bulbs — one tiny emissive sphere per key, sitting in the
+          cap-plate gap. Acts as a visible "lit LED dot" peeking out from
+          oblique angles. */}
+      {backlight?.enabled !== false && ledBulbMat && ledLightPositions.length > 0 && (
+        <instancedMesh
+          ref={ledMeshRef}
+          args={[ledGeometry, ledBulbMat, ledLightPositions.length]}
+          frustumCulled={false}
+        />
+      )}
+
+      {/* Backlight scene lights — one PointLight per key, co-located with
+          its bulb. Lights both the cap underside (above) and the cutout
+          floor (below). distance ≈ 0.6u keeps each light localized so
+          the per-key gradient is visible on the plate. */}
+      {ledLightPositions.map((p, i) => (
+        <pointLight
+          key={`led-${i}`}
+          ref={(el) => { ledLightRefs.current[i] = el; }}
+          position={[p.x, p.y, p.z]}
+          color={backlight?.color || "#ffffff"}
+          intensity={(backlight?.intensity ?? 0.8) * (1 + (backlight?.bloom ?? 0)) * 0.5}
+          distance={1.2}
+          decay={1.5}
+        />
+      ))}
 
       {/* Colored edge accent strips */}
       {edgeStrips.map((strip, i) => (

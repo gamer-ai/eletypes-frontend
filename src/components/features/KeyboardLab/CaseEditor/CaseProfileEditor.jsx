@@ -69,21 +69,37 @@ const CaseProfileEditor = ({ theme, onChange, initialProfile, extrudeWidth, onEx
   const [points, setPoints] = useState(initialProfile?.points || PROFILE_PRESETS.wedge.points);
   const [mountEdge, setMountEdge] = useState(initialProfile?.mountEdge || PROFILE_PRESETS.wedge.mountEdge);
   const [coloredEdges, setColoredEdges] = useState(initialProfile?.coloredEdges || []);
+  // Pass-through: editor doesn't expose UI for topFrame yet, but it must
+  // preserve the field so it survives the onChange round-trip — otherwise
+  // the resolved profile's cutouts get silently stripped on every edit.
+  const [topFrame, setTopFrame] = useState(initialProfile?.topFrame || null);
   const [dragging, setDragging] = useState(null);
   const [selectedPoint, setSelectedPoint] = useState(null);
   const [hoveredPoint, setHoveredPoint] = useState(null);
   const [hoveredEdge, setHoveredEdge] = useState(null);
 
-  // Sync from parent when initialProfile changes (e.g., loading a saved design)
+  // Sync from parent when initialProfile changes (e.g., loading a saved design).
+  // Hash the WHOLE profile, not just points — otherwise async-loaded topFrame
+  // / coloredEdges arrive with the same points, the sync skips, and the
+  // editor's emit-effect immediately strips the new fields with its stale
+  // local state. Whole-profile hashing still breaks the user-edit loop
+  // because after the editor emits, parent's profile === editor's local
+  // state, so the hash matches and we don't re-sync.
   const lastLoadedRef = useRef(null);
   useEffect(() => {
     if (!initialProfile?.points) return;
-    const key = JSON.stringify(initialProfile.points);
+    const key = JSON.stringify({
+      points: initialProfile.points,
+      mountEdge: initialProfile.mountEdge,
+      coloredEdges: initialProfile.coloredEdges,
+      topFrame: initialProfile.topFrame,
+    });
     if (key !== lastLoadedRef.current) {
       lastLoadedRef.current = key;
       setPoints(initialProfile.points.map(p => ({ ...p })));
       if (initialProfile.mountEdge) setMountEdge([...initialProfile.mountEdge]);
       setColoredEdges(initialProfile.coloredEdges || []);
+      setTopFrame(initialProfile.topFrame || null);
       setSelectedPoint(null);
     }
   }, [initialProfile]);
@@ -121,8 +137,12 @@ const CaseProfileEditor = ({ theme, onChange, initialProfile, extrudeWidth, onEx
 
   // Emit profile changes
   useEffect(() => {
-    if (onChange) onChange({ points, mountEdge, coloredEdges });
-  }, [points, mountEdge, coloredEdges, onChange]);
+    if (onChange) {
+      const next = { points, mountEdge, coloredEdges };
+      if (topFrame) next.topFrame = topFrame;
+      onChange(next);
+    }
+  }, [points, mountEdge, coloredEdges, topFrame, onChange]);
 
 
   // ─── Drag handling ───

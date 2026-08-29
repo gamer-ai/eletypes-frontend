@@ -22,6 +22,26 @@ export const CYBERBOARD_WEDGE_PROFILE = {
       { from: 4, to: 0, color: "#36223a" },
       { from: 3, to: 4, color: "#483232" },
     ],
+    // Plate-style — one cutout per key. switchHoleSize is a scale on the
+    // key footprint: 1.05 = hole 5% larger than key, so a thin rim of
+    // recessed plate surface shows around each cap from above. color picks
+    // the visible plate tone — dark gunmetal contrasts the lavender case.
+    // backlight adds an emissive LED glow to the plate; the cap-to-plate
+    // gap reads as light bleeding up around each key.
+    topFrame: {
+      cutoutMode: "plate",
+      switchHoleSize: 1.05,
+      cutDepth: 0.1,
+      color: "#1a1a20",
+      backlight: {
+        enabled: true,
+        color: "#ff44aa",
+        intensity: 1.0,
+        pattern: "wave",
+        speed: 0.8,
+        bloom: 0.5,
+      },
+    },
   },
   mount: {
     offset: { x: 0.1, y: 0, z: 0.7 },

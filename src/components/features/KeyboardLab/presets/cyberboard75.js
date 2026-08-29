@@ -13,11 +13,12 @@
 import { createPreset } from "../schema/boardLayout";
 
 const R0 = 0, R1 = 1.25, R2 = 2.25, R3 = 3.25, R4 = 4.25, R5 = 5.25;
-// Nav column shifted left 0.5 so Home/End/PgUp/PgDn line up with the right
-// arrow (which itself moved left 0.25 on top of the AltRight removal). Delete
-// stays one column to its left.
-const RC_LEFT = 14;    // Delete position
-const RC = 15;         // Right column (Home, End, PgUp, PgDn) — aligned with ArrowRight
+// Every inter-group gap in the F-row is the same: 0.24u (= 3× the cap-to-
+// cap gap of 0.08). Groups: Esc | F1-F4 | F5-F8 | F9-F12 | Del-Home.
+// Right column / arrow cluster land at 14.96 (only 0.04u left of the
+// original 15, so wide keys keep close-to-standard widths).
+const RC_LEFT = 13.96;   // Delete position
+const RC = 14.96;        // Right column (Home, End, PgUp, PgDn) — aligned with ArrowRight
 
 export default createPreset({
   name: "Cyberboard R2 75%",
@@ -37,18 +38,18 @@ export default createPreset({
   keys: [
     // ══ Row 0: Function row — Delete shifted left, Home at corner ══
     { id: "Escape",  keyName: "Escape",  label: "Esc",  x: 0,        y: R0, w: 1,    kind: "accent", cluster: "fn-row" },
-    { id: "F1",      keyName: "F1",      label: "F1",   x: 1.5,      y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
-    { id: "F2",      keyName: "F2",      label: "F2",   x: 2.5,      y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
-    { id: "F3",      keyName: "F3",      label: "F3",   x: 3.5,      y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
-    { id: "F4",      keyName: "F4",      label: "F4",   x: 4.5,      y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
-    { id: "F5",      keyName: "F5",      label: "F5",   x: 5.75,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
-    { id: "F6",      keyName: "F6",      label: "F6",   x: 6.75,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
-    { id: "F7",      keyName: "F7",      label: "F7",   x: 7.75,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
-    { id: "F8",      keyName: "F8",      label: "F8",   x: 8.75,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
-    { id: "F9",      keyName: "F9",      label: "F9",   x: 10,       y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
-    { id: "F10",     keyName: "F10",     label: "F10",  x: 11,       y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
-    { id: "F11",     keyName: "F11",     label: "F11",  x: 12,       y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
-    { id: "F12",     keyName: "F12",     label: "F12",  x: 13,       y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
+    { id: "F1",      keyName: "F1",      label: "F1",   x: 1.24,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
+    { id: "F2",      keyName: "F2",      label: "F2",   x: 2.24,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
+    { id: "F3",      keyName: "F3",      label: "F3",   x: 3.24,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
+    { id: "F4",      keyName: "F4",      label: "F4",   x: 4.24,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
+    { id: "F5",      keyName: "F5",      label: "F5",   x: 5.48,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
+    { id: "F6",      keyName: "F6",      label: "F6",   x: 6.48,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
+    { id: "F7",      keyName: "F7",      label: "F7",   x: 7.48,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
+    { id: "F8",      keyName: "F8",      label: "F8",   x: 8.48,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
+    { id: "F9",      keyName: "F9",      label: "F9",   x: 9.72,     y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
+    { id: "F10",     keyName: "F10",     label: "F10",  x: 10.72,    y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
+    { id: "F11",     keyName: "F11",     label: "F11",  x: 11.72,    y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
+    { id: "F12",     keyName: "F12",     label: "F12",  x: 12.72,    y: R0, w: 1,    kind: "fn",     cluster: "fn-row" },
     { id: "Delete",  keyName: "Delete",  label: "Del",  x: RC_LEFT,  y: R0, w: 1,    kind: "nav",    cluster: "nav-col" },
     { id: "Home",    keyName: "Home",    label: "Home", x: RC,       y: R0, w: 1,    kind: "nav",    cluster: "nav-col" },
 
@@ -66,7 +67,7 @@ export default createPreset({
     { id: "Digit0",     keyName: "Digit0",     label: "0",    x: 10,  y: R1, w: 1,   kind: "alpha", cluster: "number-row" },
     { id: "Minus",      keyName: "Minus",      label: "-",    x: 11,  y: R1, w: 1,   kind: "alpha", cluster: "number-row" },
     { id: "Equal",      keyName: "Equal",      label: "=",    x: 12,  y: R1, w: 1,   kind: "alpha", cluster: "number-row" },
-    { id: "Backspace",  keyName: "Backspace",  label: "Bksp", x: 13,  y: R1, w: 2,   kind: "accent", cluster: "number-row" },
+    { id: "Backspace",  keyName: "Backspace",  label: "Bksp", x: 13,     y: R1, w: 1.96, kind: "accent", cluster: "number-row" },
     { id: "End",        keyName: "End",        label: "End",  x: RC,  y: R1, w: 1,   kind: "nav",   cluster: "nav-col" },
 
     // ══ Row 2: QWERTY — PgUp in right column ══
@@ -83,7 +84,7 @@ export default createPreset({
     { id: "KeyP",          keyName: "KeyP",         label: "P",    x: 10.5, y: R2, w: 1,    kind: "alpha",  cluster: "alpha" },
     { id: "BracketLeft",   keyName: "BracketLeft",  label: "[",    x: 11.5, y: R2, w: 1,    kind: "alpha",  cluster: "alpha" },
     { id: "BracketRight",  keyName: "BracketRight", label: "]",    x: 12.5, y: R2, w: 1,    kind: "alpha",  cluster: "alpha" },
-    { id: "Backslash",     keyName: "Backslash",    label: "\\",   x: 13.5, y: R2, w: 1.5,  kind: "alpha",  cluster: "alpha" },
+    { id: "Backslash",     keyName: "Backslash",    label: "\\",   x: 13.5, y: R2, w: 1.46, kind: "alpha",  cluster: "alpha" },
     { id: "PageUp",        keyName: "PageUp",       label: "PgUp", x: RC,   y: R2, w: 1,    kind: "nav",    cluster: "nav-col" },
 
     // ══ Row 3: Home row — PgDn in right column ══
@@ -99,7 +100,7 @@ export default createPreset({
     { id: "KeyL",       keyName: "KeyL",       label: "L",     x: 9.75,  y: R3, w: 1,    kind: "alpha",  cluster: "alpha" },
     { id: "Semicolon",  keyName: "Semicolon",  label: ";",     x: 10.75, y: R3, w: 1,    kind: "alpha",  cluster: "alpha" },
     { id: "Quote",      keyName: "Quote",      label: "'",     x: 11.75, y: R3, w: 1,    kind: "alpha",  cluster: "alpha" },
-    { id: "Enter",      keyName: "Enter",      label: "Enter", x: 12.75, y: R3, w: 2.25, kind: "accent", cluster: "alpha" },
+    { id: "Enter",      keyName: "Enter",      label: "Enter", x: 12.75, y: R3, w: 2.21, kind: "accent", cluster: "alpha" },
     { id: "PageDown",   keyName: "PageDown",   label: "PgDn",  x: RC,    y: R3, w: 1,    kind: "nav",    cluster: "nav-col" },
 
     // ══ Row 4: Shift row — ↑ flush with right Shift ══
@@ -114,8 +115,8 @@ export default createPreset({
     { id: "Comma",      keyName: "Comma",      label: ",",     x: 9.25,  y: R4, w: 1,    kind: "alpha",  cluster: "alpha" },
     { id: "Period",     keyName: "Period",      label: ".",     x: 10.25, y: R4, w: 1,    kind: "alpha",  cluster: "alpha" },
     { id: "Slash",      keyName: "Slash",       label: "/",     x: 11.25, y: R4, w: 1,    kind: "alpha",  cluster: "alpha" },
-    { id: "ShiftRight", keyName: "ShiftRight",  label: "Shift", x: 12.25, y: R4, w: 1.75, kind: "accent", cluster: "alpha" },
-    { id: "ArrowUp",    keyName: "ArrowUp",     label: "↑",     x: 14,    y: R4, w: 1,    kind: "arrow",  cluster: "arrow-cluster" },
+    { id: "ShiftRight", keyName: "ShiftRight",  label: "Shift", x: 12.25, y: R4, w: 1.71, kind: "accent", cluster: "alpha" },
+    { id: "ArrowUp",    keyName: "ArrowUp",     label: "↑",     x: 13.96, y: R4, w: 1,    kind: "arrow",  cluster: "arrow-cluster" },
     // No nav key at RC on this row — gap between ↑ and right edge
 
     // ══ Row 5: Bottom row — no AltRight; Fn + Ctrl flush with spacebar ══
@@ -130,8 +131,8 @@ export default createPreset({
     { id: "Fn",           keyName: "Fn",           label: "Fn",   x: 10,    y: R5, w: 1.25, kind: "mod",    cluster: "bottom-row" },
     { id: "ControlRight", keyName: "ControlRight", label: "Ctrl", x: 11.25, y: R5, w: 1.25, kind: "mod",    cluster: "bottom-row" },
     // Arrow cluster shifted left by 0.25 to match ArrowUp under it.
-    { id: "ArrowLeft",    keyName: "ArrowLeft",    label: "←",    x: 13,    y: R5, w: 1,    kind: "arrow",  cluster: "arrow-cluster" },
-    { id: "ArrowDown",    keyName: "ArrowDown",    label: "↓",    x: 14,    y: R5, w: 1,    kind: "arrow",  cluster: "arrow-cluster" },
-    { id: "ArrowRight",   keyName: "ArrowRight",   label: "→",    x: 15,    y: R5, w: 1,    kind: "arrow",  cluster: "arrow-cluster" },
+    { id: "ArrowLeft",    keyName: "ArrowLeft",    label: "←",    x: 12.96, y: R5, w: 1,    kind: "arrow",  cluster: "arrow-cluster" },
+    { id: "ArrowDown",    keyName: "ArrowDown",    label: "↓",    x: 13.96, y: R5, w: 1,    kind: "arrow",  cluster: "arrow-cluster" },
+    { id: "ArrowRight",   keyName: "ArrowRight",   label: "→",    x: 14.96, y: R5, w: 1,    kind: "arrow",  cluster: "arrow-cluster" },
   ],
 });
