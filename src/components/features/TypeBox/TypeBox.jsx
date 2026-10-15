@@ -25,6 +25,7 @@ import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import SettingsIcon from "@mui/icons-material/Settings";
+import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
 import useLocalPersistState from "../../../hooks/useLocalPersistState";
 import CapsLockSnackbar from "../CapsLockSnackbar";
 import Stats from "./Stats";
@@ -36,6 +37,7 @@ import {
   COUNT_DOWN_60,
   COUNT_DOWN_30,
   COUNT_DOWN_15,
+  COUNT_DOWN_INFINITE,
   DEFAULT_WORDS_COUNT,
   DEFAULT_DIFFICULTY,
   HARD_DIFFICULTY,
@@ -87,6 +89,13 @@ const TypeBox = ({
   const [pacingStyle, setPacingStyle] = useLocalPersistState(
     PACING_PULSE,
     "pacing-style"
+  );
+
+  // Chinese-mode display toggle: "both" | "hanzi" | "pinyin". Controls
+  // whether the Chinese characters and/or the pinyin hint are visible.
+  const [chineseDisplayMode, setChineseDisplayMode] = useLocalPersistState(
+    "both",
+    "chinese-display-mode"
   );
 
   // local persist difficulty
@@ -222,6 +231,10 @@ const TypeBox = ({
   // set up timer state
   const [countDown, setCountDown] = useState(countDownConstant);
   const [intervalId, setIntervalId] = useState(null);
+  // Infinite mode has no countdown; track elapsed seconds for WPM math
+  // and chart sampling instead.
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const isInfiniteMode = countDownConstant === COUNT_DOWN_INFINITE;
 
   // set up game loop status state
   const [status, setStatus] = useState("waiting");
@@ -253,8 +266,19 @@ const TypeBox = ({
   const keyString = currWordIndex + "." + currCharIndex;
   const [currChar, setCurrChar] = useState("");
 
+  // Sliding window over the (growable) word list. Declared before the
+  // extension/scroll effect below because that effect re-scrolls whenever
+  // the window changes; keeping the state here avoids TDZ access.
+  const baseChunkSize = 120;
+  const [startIndex, setStartIndex] = useState(0);
+  const [visibleWordsCount, setVisibleWordsCount] = useState(baseChunkSize);
+
   useEffect(() => {
-    if (currWordIndex === DEFAULT_WORDS_COUNT - 1) {
+    // Extend the word list whenever the user reaches the last word of the
+    // current batch. Compare against the live list length (200 -> 400 ->
+    // 600, ...) rather than the fixed DEFAULT_WORDS_COUNT - 1, which only
+    // ever matched the first batch and made continuation one-time only.
+    if (wordsDict.length > 0 && currWordIndex === wordsDict.length - 1) {
       if (customWordsOverride?.parsed?.length) {
         const generatedCustom = customWordsGenerator(
           customWordsOverride.parsed,
@@ -311,6 +335,14 @@ const TypeBox = ({
   }, [
     currWordIndex,
     wordSpanRefs,
+    // The rendered slice is windowed by startIndex/visibleWordsCount. When
+    // the window advances (e.g. right after a 200-word batch is appended),
+    // the current word is re-parented at a different offsetTop inside the
+    // same scroll container, so the scroll position must be recalculated.
+    // Without these deps the old scrollTop is kept until the next keystroke,
+    // which can leave the active word outside the visible 3-row viewport.
+    startIndex,
+    visibleWordsCount,
     difficulty,
     language,
     effectiveLanguage,
@@ -375,6 +407,7 @@ const TypeBox = ({
     setWpm(0);
     setRawKeyStrokes(0);
     setWpmKeyStrokes(0);
+    setElapsedSeconds(0);
     setCurrInput("");
     setPrevInput("");
     setIntervalId(null);
@@ -387,7 +420,16 @@ const TypeBox = ({
     setWordsInCorrect(new Set());
     textInputRef.current.focus();
     // console.log("fully reset waiting for next inputs");
-    wordSpanRefs[0].current.scrollIntoView();
+    const firstWordElement = wordSpanRefs[0]?.current;
+    if (effectiveLanguage === CHINESE_MODE) {
+      // In Chinese mode the ref is attached to the pinyin span, which is the
+      // second line of each word block. Scrolling the pinyin itself into view
+      // would push the hanzi line above the clipped type-box viewport, so
+      // scroll the whole hanzi + pinyin block instead.
+      firstWordElement?.parentElement?.scrollIntoView();
+    } else {
+      firstWordElement?.scrollIntoView();
+    }
   };
 
   const start = () => {
@@ -407,62 +449,70 @@ const TypeBox = ({
 
     if (status !== "started") {
       setStatus("started");
-      let intervalId = setInterval(() => {
-        setCountDown((prevCountdown) => {
-          if (prevCountdown === 0) {
-            clearInterval(intervalId);
-            // current total extra inputs char count
-            const currCharExtraCount = Object.values(history)
-              .filter((e) => typeof e === "number")
-              .reduce((a, b) => a + b, 0);
+      let intervalId;
+      if (isInfiniteMode) {
+        // Untimed practice: count up instead of down, never finish.
+        intervalId = setInterval(() => {
+          setElapsedSeconds((prev) => prev + 1);
+        }, 1000);
+      } else {
+        intervalId = setInterval(() => {
+          setCountDown((prevCountdown) => {
+            if (prevCountdown === 0) {
+              clearInterval(intervalId);
+              // current total extra inputs char count
+              const currCharExtraCount = Object.values(history)
+                .filter((e) => typeof e === "number")
+                .reduce((a, b) => a + b, 0);
 
-            // current correct inputs char count
-            const currCharCorrectCount = Object.values(history).filter(
-              (e) => e === true
-            ).length;
+              // current correct inputs char count
+              const currCharCorrectCount = Object.values(history).filter(
+                (e) => e === true
+              ).length;
 
-            // current correct inputs char count
-            const currCharIncorrectCount = Object.values(history).filter(
-              (e) => e === false
-            ).length;
+              // current correct inputs char count
+              const currCharIncorrectCount = Object.values(history).filter(
+                (e) => e === false
+              ).length;
 
-            // current missing inputs char count
-            const currCharMissingCount = Object.values(history).filter(
-              (e) => e === undefined
-            ).length;
+              // current missing inputs char count
+              const currCharMissingCount = Object.values(history).filter(
+                (e) => e === undefined
+              ).length;
 
-            // current total advanced char counts
-            const currCharAdvancedCount =
-              currCharCorrectCount +
-              currCharMissingCount +
-              currCharIncorrectCount;
+              // current total advanced char counts
+              const currCharAdvancedCount =
+                currCharCorrectCount +
+                currCharMissingCount +
+                currCharIncorrectCount;
 
-            // When total inputs char count is 0,
-            // that is to say, both currCharCorrectCount and currCharAdvancedCount are 0,
-            // accuracy turns out to be 0 but NaN.
-            const accuracy =
-              currCharCorrectCount === 0
-                ? 0
-                : (currCharCorrectCount / currCharAdvancedCount) * 100;
+              // When total inputs char count is 0,
+              // that is to say, both currCharCorrectCount and currCharAdvancedCount are 0,
+              // accuracy turns out to be 0 but NaN.
+              const accuracy =
+                currCharCorrectCount === 0
+                  ? 0
+                  : (currCharCorrectCount / currCharAdvancedCount) * 100;
 
-            setStatsCharCount([
-              accuracy,
-              currCharCorrectCount,
-              currCharIncorrectCount,
-              currCharMissingCount,
-              currCharAdvancedCount,
-              currCharExtraCount,
-            ]);
+              setStatsCharCount([
+                accuracy,
+                currCharCorrectCount,
+                currCharIncorrectCount,
+                currCharMissingCount,
+                currCharAdvancedCount,
+                currCharExtraCount,
+              ]);
 
-            checkPrev();
-            setStatus("finished");
+              checkPrev();
+              setStatus("finished");
 
-            return countDownConstant;
-          } else {
-            return prevCountdown - 1;
-          }
-        });
-      }, 1000);
+              return countDownConstant;
+            } else {
+              return prevCountdown - 1;
+            }
+          });
+        }, 1000);
+      }
       setIntervalId(intervalId);
     }
   };
@@ -574,7 +624,13 @@ const TypeBox = ({
 
     // Update stats when typing unless there is no effective WPM
     if (wpmKeyStrokes !== 0) {
-      calculateWpm(wpmKeyStrokes, countDownConstant, countDown);
+      // In infinite mode countDown never decrements, so translate the
+      // elapsed-time counter into the equivalent remaining-countdown value
+      // the WPM worker expects (elapsed = countDownConstant - countDown + 1).
+      const effectiveCountDown = isInfiniteMode
+        ? countDownConstant - elapsedSeconds
+        : countDown;
+      calculateWpm(wpmKeyStrokes, countDownConstant, effectiveCountDown);
     }
 
     // start the game by typing any thing
@@ -978,6 +1034,29 @@ const TypeBox = ({
                     {COUNT_DOWN_15}
                   </span>
                 </IconButton>
+                <IconButton
+                  onClick={() => {
+                    reset(
+                      COUNT_DOWN_INFINITE,
+                      difficulty,
+                      language,
+                      numberAddOn,
+                      symbolAddOn,
+                      false
+                    );
+                  }}
+                >
+                  {/* Center the icon inside the span: MUI SvgIcon is
+                      inline-block and baseline-aligned by default, which
+                      would push the infinity symbol above the number labels
+                      of the sibling timer buttons. */}
+                  <span
+                    className={getTimerButtonClassName(COUNT_DOWN_INFINITE)}
+                    style={{ display: "inline-flex", alignItems: "center" }}
+                  >
+                    <AllInclusiveIcon sx={{ fontSize: 18 }} />
+                  </span>
+                </IconButton>
               </>
             )}
           </Box>
@@ -1248,6 +1327,32 @@ const TypeBox = ({
                   </Tooltip>
                 </IconButton>
               )}
+              {effectiveLanguage === CHINESE_MODE && (
+                <IconButton
+                  onClick={() => {
+                    setChineseDisplayMode((prev) =>
+                      prev === "both"
+                        ? "hanzi"
+                        : prev === "hanzi"
+                        ? "pinyin"
+                        : "both"
+                    );
+                  }}
+                >
+                  <Tooltip title={t("chinese_display_mode_tooltip")}>
+                    <span
+                      className="active-button"
+                      style={{ display: "inline-flex", alignItems: "center" }}
+                    >
+                      {chineseDisplayMode === "both"
+                        ? "双"
+                        : chineseDisplayMode === "hanzi"
+                        ? "字"
+                        : "pin"}
+                    </span>
+                  </Tooltip>
+                </IconButton>
+              )}
               <IconButton onClick={() => setLeaderboardOpen(true)}>
                 <Tooltip title={t("stats_tooltip")}>
                   <span
@@ -1264,10 +1369,6 @@ const TypeBox = ({
       </div>
     );
   };
-
-  const baseChunkSize = 120;
-  const [startIndex, setStartIndex] = useState(0);
-  const [visibleWordsCount, setVisibleWordsCount] = useState(baseChunkSize);
 
   // Reset startIndex when status changes
   useEffect(() => {
@@ -1335,9 +1436,11 @@ const TypeBox = ({
             currWordIndex={currWordIndex}
             currCharIndex={currCharIndex}
             wordsKey={wordsKey}
+            chineseDisplayMode={chineseDisplayMode}
             isUltraZenMode={isUltraZenMode}
             status={status}
             wordSpanRefs={wordSpanRefs}
+            startIndex={startIndex}
             getChineseWordKeyClassName={getChineseWordKeyClassName}
             getChineseWordClassName={getChineseWordClassName}
             getCharClassName={getCharClassName}
@@ -1356,6 +1459,8 @@ const TypeBox = ({
             theme={theme}
             countDown={countDown}
             countDownConstant={countDownConstant}
+            isInfiniteMode={isInfiniteMode}
+            elapsedSeconds={elapsedSeconds}
             statsCharCount={statsCharCount}
             rawKeyStrokes={rawKeyStrokes}
             wpmKeyStrokes={wpmKeyStrokes}

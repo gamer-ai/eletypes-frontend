@@ -3,9 +3,11 @@ import EnglishMostFrequentWords from '../assets/Vocab/EnglishMostFrequentWords.j
 import Chinese1500IdiomsPinyin from '../assets/Vocab/Chinese1500IdiomsPinyin.json';
 
 
-const COMMON_WORDS = EnglishMostFrequentWords;
-const COMMON_CHINESE_WORDS = Chinese5000WordsPinyin;
-const COMMON_CHINESE_IDIOMS_WORDS = Chinese1500IdiomsPinyin;
+// The JSON vocab files are keyed objects ({"0": {...}, ...}) rather than
+// arrays — normalize to plain arrays so consumers can rely on .length.
+const COMMON_WORDS = Object.values(EnglishMostFrequentWords);
+const COMMON_CHINESE_WORDS = Object.values(Chinese5000WordsPinyin);
+const COMMON_CHINESE_IDIOMS_WORDS = Object.values(Chinese1500IdiomsPinyin);
 
 
 export {
