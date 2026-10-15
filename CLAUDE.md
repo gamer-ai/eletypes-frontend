@@ -17,7 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Verification
 
-- There is **no test runner configured** in this repo (no `npm test`, no Jest/Vitest setup). Do not invent test commands.
+- Tests run with `npm test` (Node 20 built-in test runner, no extra dependencies): regression tests for SEO landing-page deep links (`tests/landing-params.test.mjs`) and the build-time prerender (`tests/build-landing.test.mjs`). The `@testing-library/*` devDependencies are present but not wired to a runner.
 - Before committing, verify with `npm run build` (Vite type/parse errors will surface there) and manually exercise the affected feature in `npm run dev`.
 - If you get stuck, present the code for review.
 
