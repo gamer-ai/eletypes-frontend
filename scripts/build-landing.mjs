@@ -64,7 +64,7 @@ const faqJsonLd = (page) => ({
   })),
 });
 
-const renderPage = (page) => {
+export const renderPage = (page) => {
   const url = `${SITE_URL}/${page.slug}/`;
   const labels =
     page.lang === "zh"
@@ -126,7 +126,7 @@ ${page.related.map((r) => `<li><a href="${esc(r.href)}">${esc(r.label)}</a></li>
 `;
 };
 
-const renderSitemap = () => {
+export const renderSitemap = () => {
   const urls = [
     ...STATIC_ROUTES.map((r) => `${SITE_URL}${r === "/" ? "/" : r}`),
     ...PAGES.map((p) => `${SITE_URL}/${p.slug}/`),
@@ -136,13 +136,22 @@ const renderSitemap = () => {
     .join("\n")}\n</urlset>\n`;
 };
 
-let count = 0;
-for (const page of PAGES) {
-  const outDir = join(BUILD, page.slug);
-  mkdirSync(outDir, { recursive: true });
-  writeFileSync(join(outDir, "index.html"), renderPage(page), "utf8");
-  count++;
-}
-writeFileSync(join(BUILD, "sitemap.xml"), renderSitemap(), "utf8");
+export const main = () => {
+  let count = 0;
+  for (const page of PAGES) {
+    const outDir = join(BUILD, page.slug);
+    mkdirSync(outDir, { recursive: true });
+    writeFileSync(join(outDir, "index.html"), renderPage(page), "utf8");
+    count++;
+  }
+  writeFileSync(join(BUILD, "sitemap.xml"), renderSitemap(), "utf8");
 
-console.log(`[build-landing] rendered ${count} landing pages + sitemap.xml -> ${BUILD}`);
+  console.log(`[build-landing] rendered ${count} landing pages + sitemap.xml -> ${BUILD}`);
+  return count;
+};
+
+// Only run when executed directly (`node scripts/build-landing.mjs`);
+// importing this module (e.g. in tests) must not touch the filesystem.
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main();
+}
