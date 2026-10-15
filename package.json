@@ -40,7 +40,8 @@
     "build": "vite build && node scripts/build-landing.mjs",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "npm run build"
+    "deploy": "npm run build",
+    "test": "node --test tests/landing-params.test.mjs tests/build-landing.test.mjs"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.7.0",
