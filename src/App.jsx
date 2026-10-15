@@ -10,6 +10,8 @@ import {
   resolveActiveCustomList,
 } from "./scripts/customWords";
 import { GlobalStyles } from "./style/global";
+import { EditorialStyles } from "./style/editorial";
+import { applyEditorialBodyClass, isEditorialTheme } from "./services/editorialChrome";
 import { LocaleProvider } from "./context/LocaleContext";
 import Logo from "./components/common/Logo";
 import MusicPlayerSnackbar from "./components/features/MusicPlayer/MusicPlayerSnackbar";
@@ -219,6 +221,11 @@ function App() {
     localStorage.setItem("ultra-zen-mode", isUltraZenMode);
   }, [isUltraZenMode]);
 
+  // Editorial chrome is body-scoped; toggle it with the theme.
+  useEffect(() => {
+    applyEditorialBodyClass(theme);
+  }, [theme]);
+
   const textInputRef = useRef(null);
   const focusTextInput = () => {
     textInputRef.current && textInputRef.current.focus();
@@ -265,6 +272,7 @@ function App() {
         <DynamicBackground theme={theme}></DynamicBackground>
         <div className="canvas">
           <GlobalStyles />
+          {isEditorialTheme(theme) && <EditorialStyles />}
           <Logo
             isFocusedMode={isFocusedMode}
             theme={theme}
