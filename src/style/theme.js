@@ -216,6 +216,18 @@ const velustroTheme = {
   textShadow: "1px 0px 0px #000000",
 };
 
+const editorialTheme = {
+  label: "Editorial",
+  background: "#fafaf7",
+  text: "#111111",
+  gradient: "linear-gradient(315deg, #fafaf7 0%, #f4f4f2 100%)",
+  title: "#111111",
+  textTypeBox: "#a3a099",
+  stats: "#ff3b00",
+  fontFamily:
+    "'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+};
+
 const defaultTheme = darkTheme;
 
 const themesOptions = [
@@ -238,6 +250,7 @@ const themesOptions = [
   { value: lumiflexTheme, label: "Lumiflex" },
   { value: opulentoTheme, label: "Opulento" },
   { value: velustroTheme, label: "Velustro" },
+  { value: editorialTheme, label: "Editorial" },
 ];
 
 export {
@@ -261,4 +274,5 @@ export {
   lumiflexTheme,
   opulentoTheme,
   tokyoNightTheme,
+  editorialTheme,
 };
