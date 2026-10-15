@@ -1,7 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 
 /**
- * EditorialStyles — Editorial editorial chrome for Eletypes.
+ * EditorialStyles — editorial chrome for the Editorial theme.
  *
  * Mounted only when the "Editorial" theme is active (see src/services/editorialChrome.js).
  * Everything is scoped under `body.editorial`, so all other themes are untouched —
@@ -182,9 +182,15 @@ export const EditorialStyles = createGlobalStyle`
   }
 
   /* ---------- footer ---------- */
+  /* one hairline above the footer: both the wrapper div and the MUI AppBar
+     inside it carry .bottomBar, so the inner one is reset (no double rule) */
   body.editorial .bottomBar {
     border-top: 1px solid #111111;
     padding-top: 12px;
+  }
+  body.editorial .bottomBar .bottomBar {
+    border-top: none;
+    padding-top: 0;
   }
   body.editorial .profile-btn {
     font-size: 11px;
