@@ -2,9 +2,11 @@
  * KeyboardLabPage — standalone route at /keyboardlab.
  */
 
-import React, { lazy, Suspense, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "../style/global";
+import { EditorialStyles } from "../style/editorial";
+import { applyEditorialBodyClass, isEditorialTheme } from "../services/editorialChrome";
 import { defaultTheme } from "../style/theme";
 import { loadCustomThemes, resolveTheme } from "../style/customThemes";
 import { LocaleProvider } from "../context/LocaleContext";
@@ -51,6 +53,7 @@ const KeyboardLabInner = ({ theme, setTheme, handleThemeChange }) => {
       <DynamicBackground theme={theme} />
       <div className="canvas">
         <GlobalStyles />
+        {isEditorialTheme(theme) && <EditorialStyles />}
         <Logo
           isFocusedMode={false}
           theme={theme}
@@ -126,6 +129,10 @@ const KeyboardLabPage = () => {
     window.localStorage.setItem("theme", JSON.stringify(e.value));
     setTheme(e.value);
   };
+
+  useEffect(() => {
+    applyEditorialBodyClass(theme);
+  }, [theme]);
 
   return (
     <LocaleProvider>
