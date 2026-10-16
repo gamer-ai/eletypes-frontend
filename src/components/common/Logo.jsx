@@ -18,25 +18,6 @@ const BANNER_VERSION = "banners-v6";
 // for the profile modal so the news log doesn't lose history.
 export const BANNER_KEYS = [
   {
-    id: "creator-recruit",
-    bannerTextKey: "banner_creator_recruit",
-    fullTextKey: "banner_creator_recruit_full",
-    // No top-level external link — clicking the short banner just opens
-    // the News tab where the full text includes the actual form CTA.
-    // Deliberately doesn't name or link the destination product brand;
-    // the pitch reads as "eletypes is building a content aggregator",
-    // and creator outreach happens purely through the recruitment form.
-    highlights: [
-      // Internal target — clicking opens the Profile modal on the
-      // Creators tab, which carries the full pitch + FAQ + an explicit
-      // CTA out to the Tencent Survey. We deliberately route through
-      // the in-app pitch first rather than jumping straight to the
-      // external form, so creators see context before deciding.
-      { placeholder: "提交友链申请", link: "profile-tab:creators" },
-      { placeholder: "submit your link", link: "profile-tab:creators" },
-    ],
-  },
-  {
     id: "customization",
     bannerTextKey: "banner_customization",
     fullTextKey: "banner_customization_full",
@@ -52,6 +33,17 @@ export const BANNER_KEYS = [
 // All news items including old ones — used by profile modal news tab
 export const ALL_NEWS_KEYS = [
   ...BANNER_KEYS,
+  // Temporarily retired from the header ticker (2026-10-16) — move back to
+  // BANNER_KEYS to restore.
+  {
+    id: "creator-recruit",
+    bannerTextKey: "banner_creator_recruit",
+    fullTextKey: "banner_creator_recruit_full",
+    highlights: [
+      { placeholder: "提交友链申请", link: "profile-tab:creators" },
+      { placeholder: "submit your link", link: "profile-tab:creators" },
+    ],
+  },
   {
     id: "keyboard-lab",
     bannerTextKey: "banner_keyboard_lab",
