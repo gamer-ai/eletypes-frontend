@@ -250,7 +250,7 @@ const themesOptions = [
   { value: lumiflexTheme, label: "Lumiflex" },
   { value: opulentoTheme, label: "Opulento" },
   { value: velustroTheme, label: "Velustro" },
-  { value: editorialTheme, label: "Editorial" },
+  { value: editorialTheme, label: "Editorial", isNew: true },
 ];
 
 export {
