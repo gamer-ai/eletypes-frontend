@@ -86,6 +86,14 @@ Deploying is wherever you want to host static files — push the contents of `bu
 
 Huge thanks to [@rendi12345678](https://github.com/rendi12345678) for continuous contributions — including the data visualization for typing stats.
 
+## Contributors
+
+Thanks to everyone who has helped make Eletypes better! 💛
+
+<a href="https://github.com/gamer-ai/eletypes-frontend/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=gamer-ai/eletypes-frontend" alt="Contributors" />
+</a>
+
 ## Sponsor
 
 If Eletypes helps you or just makes you smile, consider supporting development:
