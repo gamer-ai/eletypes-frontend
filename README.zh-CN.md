@@ -86,6 +86,14 @@ npm run preview  # 本地预览生产构建
 
 特别感谢 [@rendi12345678](https://github.com/rendi12345678) 长期以来的贡献 —— 包括打字数据可视化功能。
 
+## 贡献者
+
+感谢每一位让 Eletypes 变得更好的人！💛
+
+<a href="https://github.com/gamer-ai/eletypes-frontend/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=gamer-ai/eletypes-frontend" alt="Contributors" />
+</a>
+
 ## 赞助
 
 如果 Eletypes 帮到了你，或者只是让你会心一笑，欢迎请作者喝杯咖啡：
