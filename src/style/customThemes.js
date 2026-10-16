@@ -1,4 +1,4 @@
-import { themesOptions, defaultTheme } from "./theme";
+import { themesOptions, defaultTheme } from "./theme.js";
 
 export const CUSTOM_THEMES_KEY = "custom-themes";
 export const CUSTOM_THEME_PREFIX = "custom__";
@@ -57,17 +57,30 @@ export const resolveTheme = (saved, customThemes) => {
 };
 
 // react-select supports grouped options natively via {label, options: [...]}.
+// Themes flagged `isNew` get their own group pinned above Built-in so new
+// arrivals are discoverable; the flag lives on the option (not the theme
+// object) so it never leaks into persisted user data.
 export const buildGroupedOptions = (customThemes, t) => {
-  const builtIn = {
+  const fresh = themesOptions.filter((o) => o.isNew);
+  const rest = themesOptions.filter((o) => !o.isNew);
+  const groups = [];
+  if (fresh.length > 0) {
+    groups.push({
+      label: t ? t("theme_group_new") : "New",
+      options: fresh,
+    });
+  }
+  groups.push({
     label: t ? t("theme_group_builtin") : "Built-in",
-    options: themesOptions,
-  };
-  if (!customThemes || customThemes.length === 0) return [builtIn];
-  const mine = {
-    label: t ? t("theme_group_mine") : "My Themes",
-    options: customThemes.map((th) => ({ value: th, label: th.label })),
-  };
-  return [builtIn, mine];
+    options: rest,
+  });
+  if (customThemes && customThemes.length > 0) {
+    groups.push({
+      label: t ? t("theme_group_mine") : "My Themes",
+      options: customThemes.map((th) => ({ value: th, label: th.label })),
+    });
+  }
+  return groups;
 };
 
 export const findOptionForTheme = (groupedOptions, theme) => {
