@@ -489,7 +489,7 @@ const WordsCard = ({ soundType, soundMode }) => {
           onKeyDown={(e) => handleKeyDown(e)}
           // disabled={mode !== "vocab"}
         ></input>
-        <div className="wordcard-meaning-display-field">{currMeaning}</div>
+        <div className="wordcard-meaning-display-field notranslate" translate="no">{currMeaning}</div>
         {
           mode === "vocab" &&
           <>
@@ -529,7 +529,7 @@ const WordsCard = ({ soundType, soundMode }) => {
             </Tooltip>
           </>
         }
-        <div className="wordcard-word-display-field">
+        <div className="wordcard-word-display-field notranslate" translate="no">
           {currWord.split("").map((char, idx) => (
             <span key={"word" + idx} className={getCharClassName(idx, char)}>
               {getCharDisplay(idx, char)}

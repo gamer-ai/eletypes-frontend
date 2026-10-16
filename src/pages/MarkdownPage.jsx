@@ -2,9 +2,11 @@
  * MarkdownPage — standalone route at /markdown.
  */
 
-import React, { lazy, Suspense, useRef, useState } from "react";
+import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "../style/global";
+import { EditorialStyles } from "../style/editorial";
+import { applyEditorialBodyClass, isEditorialTheme } from "../services/editorialChrome";
 import { defaultTheme } from "../style/theme";
 import { loadCustomThemes, resolveTheme } from "../style/customThemes";
 import { LocaleProvider } from "../context/LocaleContext";
@@ -41,6 +43,10 @@ const MarkdownPage = () => {
     setTheme(e.value);
   };
 
+  useEffect(() => {
+    applyEditorialBodyClass(theme);
+  }, [theme]);
+
   const {
     customThemes,
     editorOpen,
@@ -63,6 +69,7 @@ const MarkdownPage = () => {
           <DynamicBackground theme={theme} />
           <div className="canvas">
             <GlobalStyles />
+            {isEditorialTheme(theme) && <EditorialStyles />}
             <Logo
               isFocusedMode={false}
               theme={theme}

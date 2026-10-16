@@ -19,7 +19,7 @@ What started as a typing test inspired by [monkeytype.com](https://www.monkeytyp
 ## Features
 
 ### Modes
-- **Typing Test** — English & Chinese (Pinyin), words + sentence modes, 15/30/60/90s timers, +numbers / +symbols add-ons, pulse & caret pacing
+- **Typing Test** — English & Chinese (Pinyin), words + sentence modes, 15/30/60/90s timers or untimed, +numbers / +symbols add-ons, pulse & caret pacing, hide hanzi/pinyin in Chinese mode
 - **Vocab Cards** *(popular with English learners)* — GRE, TOEFL, CET4/CET6 word decks; type to learn, with a recite mode that hides the word while the phrase stays visible
 - **Keyboard Lab** at `/keyboardlab` *(beta)* — design custom 3D keyboards in your browser: 7 layouts, 8 keycap profiles, parametric case editor, KLE import, full JSON schema. → [deep dive](src/components/features/KeyboardLab/KEYBOARD_LAB.md)
 - **Markdown Editor** at `/markdown` — live preview, syntax highlighting, save as `.md`

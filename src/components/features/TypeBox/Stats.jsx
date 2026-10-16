@@ -20,9 +20,12 @@ const Stats = ({
   wpm,
   countDown,
   countDownConstant,
+  isInfiniteMode,
+  elapsedSeconds,
   statsCharCount,
   language,
   rawKeyStrokes,
+  wpmKeyStrokes,
   theme,
   renderResetButton,
   setIncorrectCharsCount,
@@ -39,12 +42,23 @@ const Stats = ({
   const [roundedRawWpm, setRoundedRawWpm] = useState(0);
   const roundedWpm = Math.round(wpm);
 
+  // In infinite mode countDown never decrements; translate the elapsed-time
+  // counter into the equivalent remaining-countdown value the workers expect
+  // (elapsed = countDownConstant - countDown + 1).
+  const effectiveCountDown = isInfiniteMode
+    ? countDownConstant - elapsedSeconds
+    : countDown;
+
   useEffect(() => {
     const worker = new Worker(
       new URL("../../../worker/calculateRawWpmWorker", import.meta.url)
     );
 
-    worker.postMessage({ rawKeyStrokes, countDownConstant, countDown });
+    worker.postMessage({
+      rawKeyStrokes,
+      countDownConstant,
+      countDown: effectiveCountDown,
+    });
 
     worker.onmessage = function (e) {
       setRoundedRawWpm(e.data);
@@ -52,7 +66,7 @@ const Stats = ({
     };
 
     return () => worker.terminate();
-  }, [rawKeyStrokes, countDownConstant, countDown]);
+  }, [rawKeyStrokes, countDownConstant, effectiveCountDown]);
 
   const initialTypingTestHistory = [
     {
@@ -77,9 +91,11 @@ const Stats = ({
   // spike forever, so the submitted average stayed inflated. Correct-char
   // count comes from history{} which only marks a char true after a real
   // compare in getCharClassName, so mash+backspace contributes nothing.
-  const correctChars = statsCharCount[1] || 0;
+  // This anti-cheat method is inconsistent with the leaderboard stats
+  // calculation, so revert to the old version. Monkeytype also counts
+  // space keystrokes toward WPM.
   const finalWpm =
-    (correctChars / 5) * (60 / Math.max(countDownConstant, 1));
+    (wpmKeyStrokes / 5) * (60 / Math.max(countDownConstant, 1));
 
   const data = typingTestHistory.map((history) => ({
     wpm: history.wpm,
@@ -95,18 +111,23 @@ const Stats = ({
   }, [status]);
 
   useEffect(() => {
-    if (status === "started" && countDown < countDownConstant) {
+    if (
+      status === "started" &&
+      (isInfiniteMode ? elapsedSeconds > 0 : countDown < countDownConstant)
+    ) {
       const worker = new Worker(
         new URL("../../../worker/trackHistoryWorker", import.meta.url)
       );
 
       worker.postMessage({
-        countDown,
+        countDown: effectiveCountDown,
         countDownConstant,
         typingTestHistory,
         roundedWpm,
         roundedRawWpm,
         incorrectCharsCount,
+        isInfiniteMode,
+        elapsedSeconds,
       });
 
       worker.onmessage = function (e) {
@@ -124,7 +145,7 @@ const Stats = ({
       // Clean up the worker on component unmount
       return () => worker.terminate();
     }
-  }, [countDown]);
+  }, [countDown, elapsedSeconds, status, isInfiniteMode]);
 
   const modeParams = useMemo(
     () => ({
@@ -259,7 +280,9 @@ const Stats = ({
   const renderTime = () => (
     <div>
       <p className="stats-title">{t("time_label")}</p>
-      <h2 className="stats-value">{countDownConstant} s</h2>
+      <h2 className="stats-value">
+        {isInfiniteMode ? "∞" : `${countDownConstant} s`}
+      </h2>
     </div>
   );
 
@@ -329,7 +352,7 @@ const Stats = ({
     <>
       {status !== "finished" && (
         <>
-          <h3>{countDown} s</h3>
+          <h3>{isInfiniteMode ? "∞" : `${countDown} s`}</h3>
           <h3>{t("wpm_label")}: {Math.round(wpm)}</h3>
         </>
       )}
