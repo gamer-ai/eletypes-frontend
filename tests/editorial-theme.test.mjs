@@ -29,12 +29,16 @@ import {
   defaultTheme,
   darkTheme,
   editorialTheme,
+  inkTheme,
+  mossTheme,
+  clayTheme,
 } from "../src/style/theme.js";
 import * as themesModule from "../src/style/theme.js";
 import {
   isEditorialTheme,
   applyEditorialBodyClass,
   EDITORIAL_LABEL,
+  EDITORIAL_CHROME,
 } from "../src/services/editorialChrome.js";
 import {
   newThemeFrom,
@@ -123,6 +127,19 @@ describe("editorial theme — no regressions for existing themes", () => {
     }
   });
 
+  it("the editorial family carries the chrome flag", () => {
+    for (const th of [editorialTheme, inkTheme, mossTheme, clayTheme]) {
+      assert.equal(th.chrome, EDITORIAL_CHROME);
+    }
+    for (const opt of themesOptions) {
+      if (["Editorial", "Ink", "Moss", "Clay"].includes(opt.label)) continue;
+      assert.ok(
+        opt.value.chrome === undefined,
+        `${opt.label} unexpectedly carries a chrome flag`
+      );
+    }
+  });
+
   it("Editorial is flagged new and pinned above Built-in", () => {
     const entry = themesOptions.find((o) => o.label === "Editorial");
     assert.ok(entry, "Editorial missing from themesOptions");
@@ -170,13 +187,17 @@ describe("editorial theme — chrome activation", () => {
     );
   });
 
-  it("chrome helper activates only for the Editorial label", () => {
+  it("chrome helper activates for the editorial family", () => {
     assert.equal(EDITORIAL_LABEL, "Editorial");
-    assert.equal(isEditorialTheme(editorialTheme), true);
+    for (const th of [editorialTheme, inkTheme, mossTheme, clayTheme]) {
+      assert.equal(isEditorialTheme(th), true);
+    }
     assert.equal(isEditorialTheme({ label: "Dark" }), false);
     assert.equal(isEditorialTheme({ label: "editorial" }), false); // case-sensitive
     assert.equal(isEditorialTheme(null), false);
     assert.equal(isEditorialTheme(undefined), false);
+    // label fallback: an old saved snapshot without the flag still works
+    assert.equal(isEditorialTheme({ label: "Editorial" }), true);
   });
 
   it("applyEditorialBodyClass toggles body.editorial", () => {
@@ -214,7 +235,9 @@ describe("editorial theme — chrome scoping", () => {
   // the surrounding JS (imports/exports) is not style output
   const marker = "createGlobalStyle`";
   const css = src.slice(src.indexOf(marker) + marker.length, src.lastIndexOf("`"));
-  const code = css.replace(/\/\*[\s\S]*?\*\//g, ""); // strip comments
+  const code = css
+    .replace(/\/\*[\s\S]*?\*\//g, "") // strip comments
+    .replace(/\$\{[^}]*\}/g, "X"); // strip ${} interpolations (theme-derived values)
 
   it("every override selector is scoped under body.editorial", () => {
     const selectors = [];
@@ -256,12 +279,19 @@ describe("editorial theme — chrome scoping", () => {
 });
 
 describe("editorial theme — custom theme compatibility", () => {
-  it("cloning from Editorial copies colors but not the chrome", () => {
+  it("cloning from an editorial theme carries the design language", () => {
     const mine = newThemeFrom(editorialTheme, "My Paper");
     assert.ok(isCustomTheme(mine));
     assert.equal(mine.background, "#fafaf7");
     assert.equal(mine.stats, "#ff3b00");
-    // label-gated: custom themes never pick up the editorial chrome
+    assert.equal(mine.chrome, EDITORIAL_CHROME);
+    assert.equal(isEditorialTheme(mine), true);
+  });
+
+  it("cloning from a non-editorial theme carries no chrome", () => {
+    const mine = newThemeFrom(darkTheme, "My Dark");
+    assert.ok(isCustomTheme(mine));
+    assert.equal(mine.chrome, undefined);
     assert.equal(isEditorialTheme(mine), false);
   });
 
