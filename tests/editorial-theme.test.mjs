@@ -30,6 +30,7 @@ import {
   darkTheme,
   editorialTheme,
 } from "../src/style/theme.js";
+import * as themesModule from "../src/style/theme.js";
 import {
   isEditorialTheme,
   applyEditorialBodyClass,
@@ -83,9 +84,9 @@ const ORIGINAL_19_LABELS = [
 describe("editorial theme — no regressions for existing themes", () => {
   it("appends Editorial last without touching the original 19", () => {
     const labels = themesOptions.map((o) => o.label);
-    assert.equal(labels.length, 20);
+    assert.equal(labels.length, 23);
     assert.deepEqual(labels.slice(0, 19), ORIGINAL_19_LABELS);
-    assert.equal(labels[19], "Editorial");
+    assert.deepEqual(labels.slice(19), ["Editorial", "Ink", "Moss", "Clay"]);
   });
 
   it("default theme is still Dark", () => {
@@ -112,6 +113,8 @@ describe("editorial theme — no regressions for existing themes", () => {
         "#fafaf7",
         `${opt.label} uses the editorial paper`
       );
+      // Ink is Editorial's dark twin and deliberately shares the accent
+      if (opt.label === "Ink") continue;
       assert.notEqual(
         opt.value.stats,
         "#ff3b00",
@@ -128,7 +131,7 @@ describe("editorial theme — no regressions for existing themes", () => {
     assert.equal(groups[0].label, "New");
     assert.deepEqual(
       groups[0].options.map((o) => o.label),
-      ["Editorial"]
+      ["Editorial", "Ink", "Moss", "Clay"]
     );
     assert.equal(groups[1].label, "Built-in");
     assert.equal(groups[1].options.length, 19);
@@ -147,6 +150,16 @@ describe("editorial theme — no regressions for existing themes", () => {
 });
 
 describe("editorial theme — chrome activation", () => {
+  it("new themes use their documented palettes", () => {
+    const { inkTheme, mossTheme, clayTheme } = themesModule;
+    assert.equal(inkTheme.background, "#131311");
+    assert.equal(inkTheme.stats, "#ff3b00");
+    assert.equal(mossTheme.background, "#20241f");
+    assert.equal(mossTheme.stats, "#a8c69f");
+    assert.equal(clayTheme.background, "#f3ece1");
+    assert.equal(clayTheme.stats, "#c1502e");
+  });
+
   it("uses the editorial palette (paper / ink / accent)", () => {
     assert.equal(editorialTheme.background, "#fafaf7");
     assert.equal(editorialTheme.text, "#111111");
