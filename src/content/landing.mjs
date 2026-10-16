@@ -243,5 +243,355 @@ export const PAGES = [
       { href: `${SITE_URL}/typing-test/1-minute/`, label: "1 Minute Typing Test — start with the classic" },
       { href: `${SITE_URL}/typing-test/wpm-test/`, label: "WPM Test — check your words per minute" },
     ],
+  },  {
+    slug: "typing-test",
+    lang: "en",
+    htmlLang: "en",
+    ogLocale: "en_US",
+    keyword: "typing test",
+    title: "Free Typing Test – Check Your WPM Online | Eletypes",
+    description:
+      "Free online typing test: measure your WPM and accuracy in 15–90 seconds. English and Chinese, words and sentence modes, no sign-up.",
+    h1: "Free Online Typing Test",
+    intro: [
+      "A typing test measures how fast and accurately you can type — usually reported as WPM (words per minute) plus an accuracy percentage. People take them for job applications, to track their own progress, or just for the fun of beating a personal best. Whatever your reason, the format is the same: type the text on screen before the timer runs out, and get your score instantly.",
+      "Eletypes covers every common format in one place: 15, 30, 60, and 90-second timers, English and Chinese (Pinyin) languages, and both random-words and full-sentence modes. Every test reports live WPM, accuracy, and consistency stats, and your history is plotted over time so improvement is visible — not just a number you forget tomorrow.",
+      "There is no account, no paywall, and no ads: everything runs in your browser and your data stays there. Opt into the leaderboard with any display name, send friends challenge links so everyone types the exact same text, or render a shareable result card when you set a record.",
+    ],
+    cta: { text: "Start typing test", href: `${SITE_URL}/?s=seohub&t=60` },
+    faqs: [
+      {
+        q: "How does an online typing test work?",
+        a: "Text appears on screen and a timer starts when you type the first character. When time runs out, your WPM and accuracy are calculated from what you typed — correct characters count, errors cost you.",
+      },
+      {
+        q: "Which test length should I choose?",
+        a: "15 or 30 seconds for a quick check or warm-up, 60 seconds for the standard benchmark most people quote, 90 seconds if you want the most reliable measure of sustained speed.",
+      },
+      {
+        q: "Do I need to create an account?",
+        a: "No. Eletypes has no accounts at all — your settings and history live in your browser's localStorage, and the leaderboard only asks for a display name you invent.",
+      },
+      {
+        q: "Can I take the test in Chinese?",
+        a: "Yes. Switch to Chinese (Pinyin) mode and type directly with your system input method — there is a dedicated Chinese typing test page with its own stats.",
+      },
+    ],
+    related: [
+      { href: `${SITE_URL}/typing-test/1-minute/`, label: "1 Minute Typing Test — the classic benchmark" },
+      { href: `${SITE_URL}/typing-test/wpm-test/`, label: "WPM Test — what exactly is WPM?" },
+    ],
+  },
+  {
+    slug: "typing-test/30-second",
+    lang: "en",
+    htmlLang: "en",
+    ogLocale: "en_US",
+    keyword: "30 second typing test",
+    title: "30 Second Typing Test – Quick WPM Check | Eletypes",
+    description:
+      "Free 30-second typing test: a quick, low-commitment WPM reading with accuracy breakdown. No sign-up, results instantly.",
+    h1: "30 Second Typing Test",
+    intro: [
+      "Thirty seconds is the sweet spot of typing tests: long enough that one fumbled word doesn't wreck your score, short enough to repeat a dozen times while chasing a personal best. It's the format most people reach for when they want a quick, honest reading of their current speed without committing to a full minute.",
+      "Your score is measured the standard way — (characters ÷ 5) ÷ minutes — with both raw and net WPM plus accuracy, so a clean run and a sloppy run never look the same. Because it's quick, the 30-second test doubles as the perfect warm-up: two or three rounds to loosen your fingers before you attempt a 60 or 90-second benchmark.",
+      "Like every Eletypes test, it's free with no account and no ads. Your history is stored locally and charted over time, and one click turns a personal best into a shareable result card — or send a challenge link so a friend types the exact same text.",
+    ],
+    cta: { text: "Start the 30-second test", href: `${SITE_URL}/?s=seo30s&t=30` },
+    faqs: [
+      {
+        q: "What is a good 30-second typing score?",
+        a: "Roughly the same scale as the 1-minute test: 40 WPM is solid, 60 is strong, 80+ is fast. Scores run slightly higher than 60-second tests because there's less time for fatigue — compare 30-second scores with 30-second scores.",
+      },
+      {
+        q: "Is a 30-second test as accurate as a 1-minute test?",
+        a: "Close, but not identical. Shorter tests reward burst speed; longer tests reward consistency. Use 30 seconds for quick checks and warm-ups, 60–90 seconds when you want your most reliable number.",
+      },
+      {
+        q: "Can I use this as a warm-up?",
+        a: "Absolutely — that's one of its best uses. Two or three relaxed 30-second rounds before a longer benchmark typically add a few WPM to the real attempt.",
+      },
+      {
+        q: "Do I need an account to save my score?",
+        a: "No. Scores and history are stored in your browser automatically. The leaderboard is opt-in and needs only a display name.",
+      },
+    ],
+    related: [
+      { href: `${SITE_URL}/typing-test/1-minute/`, label: "1 Minute Typing Test — the standard benchmark" },
+      { href: `${SITE_URL}/typing-test/15-second/`, label: "15 Second Typing Test — pure sprint" },
+    ],
+  },
+  {
+    slug: "typing-test/15-second",
+    lang: "en",
+    htmlLang: "en",
+    ogLocale: "en_US",
+    keyword: "15 second typing test",
+    title: "15 Second Typing Test – Sprint Your WPM | Eletypes",
+    description:
+      "Free 15-second typing test: a pure burst-speed sprint. Great warm-up, instant WPM. No sign-up, no ads.",
+    h1: "15 Second Typing Test",
+    intro: [
+      "Fifteen seconds is the sprint format: all burst, no pacing. It's the shortest standard timer, popularized by minimal typing tests, and it answers one question — how fast can your fingers go when fatigue isn't a factor? Expect your highest WPM numbers here, and don't compare them directly with longer tests.",
+      "The real value of the 15-second test is as a training tool. It's the ideal warm-up (three quick rounds before a serious attempt), the fastest way to test a technique change, and the most addictive format for personal-best chasing — you can fit another attempt into any spare moment.",
+      "Eletypes runs it free with no account: live WPM as you type, accuracy and consistency stats at the end, history charted locally over time. When you finally crack your record, the shareable result card is one click away.",
+    ],
+    cta: { text: "Start the 15-second sprint", href: `${SITE_URL}/?s=seo15s&t=15` },
+    faqs: [
+      {
+        q: "Why is my 15-second WPM higher than my 1-minute WPM?",
+        a: "That's normal. Short tests measure burst speed before fatigue and concentration lapses kick in. Your 60-second score is the more honest measure of sustained typing ability.",
+      },
+      {
+        q: "Is the 15-second test good for practice?",
+        a: "Yes — it's the best warm-up format and great for drilling specific weaknesses quickly. Just don't treat it as your only benchmark; mix in 60-second tests for the full picture.",
+      },
+      {
+        q: "How is WPM calculated on such a short test?",
+        a: "The same standard formula: (correct characters ÷ 5) ÷ minutes. With only 15 seconds, every error costs more, so accuracy matters enormously.",
+      },
+      {
+        q: "Is it really free with no sign-up?",
+        a: "Yes. No account, no ads, no tracking — open-source (GPL-3.0) and free forever.",
+      },
+    ],
+    related: [
+      { href: `${SITE_URL}/typing-test/30-second/`, label: "30 Second Typing Test — quick but steadier" },
+      { href: `${SITE_URL}/typing-test/1-minute/`, label: "1 Minute Typing Test — the standard benchmark" },
+    ],
+  },
+  {
+    slug: "typing-test/90-second",
+    lang: "en",
+    htmlLang: "en",
+    ogLocale: "en_US",
+    keyword: "90 second typing test",
+    title: "90 Second Typing Test – Endurance WPM Test | Eletypes",
+    description:
+      "Free 90-second typing test: the endurance format for your most reliable WPM. Consistency stats included, no sign-up.",
+    h1: "90 Second Typing Test",
+    intro: [
+      "Ninety seconds is the endurance format — the longest standard timer, and the most honest measure of real typing ability. Burst speed fades after half a minute; what remains at 90 seconds is your sustainable pace, the number that actually predicts how fast you'll type an email, an essay, or a day's work.",
+      "The key skill here is pacing, not sprinting. Start slightly below your max, keep a steady rhythm, and resist the urge to speed up when you see a familiar word — most 90-second scores are lost in the middle third, when concentration dips. Eletypes' consistency stats show exactly where your pace wavers.",
+      "Free with no account, like everything here. Your 90-second history is charted locally alongside your shorter tests, so you can watch endurance improve independently of burst speed — and yes, the leaderboard and shareable result cards work for this format too.",
+    ],
+    cta: { text: "Start the 90-second test", href: `${SITE_URL}/?s=seo90s&t=90` },
+    faqs: [
+      {
+        q: "Why take a 90-second test instead of 60 seconds?",
+        a: "Longer tests are more reliable: luck and burst speed average out, leaving your true sustainable pace. If you want the single most honest WPM number, 90 seconds is it.",
+      },
+      {
+        q: "How should I pace a 90-second test?",
+        a: "Start at about 90% of your max and hold a metronome-steady rhythm. Sprinting early almost always costs more in errors and late-test slowdown than it gains.",
+      },
+      {
+        q: "Will my WPM be lower than on short tests?",
+        a: "Usually a few WPM lower, yes — that's the fatigue effect, and it's exactly what this format is designed to reveal. Track it separately from your sprint scores.",
+      },
+      {
+        q: "Do I need to sign up to keep my endurance history?",
+        a: "No. All history is stored in your browser automatically, with per-format trends so sprint and endurance progress stay separate.",
+      },
+    ],
+    related: [
+      { href: `${SITE_URL}/typing-test/1-minute/`, label: "1 Minute Typing Test — the standard benchmark" },
+      { href: `${SITE_URL}/typing-test/30-second/`, label: "30 Second Typing Test — quicker check" },
+    ],
+  },
+  {
+    slug: "typing-test/english",
+    lang: "en",
+    htmlLang: "en",
+    ogLocale: "en_US",
+    keyword: "english typing test",
+    title: "English Typing Test – Free QWERTY Speed Test | Eletypes",
+    description:
+      "Free English typing test on QWERTY: check your WPM and accuracy with the most common English words. No sign-up.",
+    h1: "English Typing Test",
+    intro: [
+      "The English typing test is the default benchmark of the typing world: QWERTY layout, common English words, WPM scored the standard way. It's the format behind job requirements (“60 WPM required”), typing certificates, and nearly every speed comparison you've ever seen — if someone quotes a WPM number without qualification, this is the test they mean.",
+      "Eletypes runs it on the 200 most common English words — the same practical vocabulary your fingers meet in real writing — with 15 to 90-second timers and live stats as you type. Prefer realism over randomness? Switch to sentence mode for full sentences with capitals and punctuation.",
+      "No account, no ads, no tracking. History lives in your browser and charts your trend; the opt-in leaderboard needs only a display name; challenge links let friends race the exact same text.",
+    ],
+    cta: { text: "Start the English typing test", href: `${SITE_URL}/?s=seoen&l=en&t=60` },
+    faqs: [
+      {
+        q: "What words are used in the English typing test?",
+        a: "The 200 most common English words — the, be, to, of, and so on. Common words keep the test about typing skill rather than vocabulary knowledge, and they mirror real-world writing.",
+      },
+      {
+        q: "What is a good English typing speed?",
+        a: "40 WPM is a solid baseline, 60 is strong, 80+ is fast, 100+ is professional. Most office work is comfortable at 50–60 WPM with 97%+ accuracy.",
+      },
+      {
+        q: "How is this different from the sentence mode?",
+        a: "Word mode uses random common words (pure typing skill); sentence mode uses real sentences with capitals and punctuation (closer to actual writing, slightly harder).",
+      },
+      {
+        q: "Is there a Chinese version?",
+        a: "Yes — Eletypes has a dedicated Chinese (Pinyin) typing test with its own word lists and stats.",
+      },
+    ],
+    related: [
+      { href: `${SITE_URL}/typing-test/1-minute/`, label: "1 Minute Typing Test — the classic format" },
+      { href: `${SITE_URL}/typing-test/sentence/`, label: "Sentence Typing Test — real-world practice" },
+    ],
+  },
+  {
+    slug: "typing-test/sentence",
+    lang: "en",
+    htmlLang: "en",
+    ogLocale: "en_US",
+    keyword: "sentence typing test",
+    title: "Sentence Typing Test – Real-World Practice | Eletypes",
+    description:
+      "Free sentence typing test: type real sentences with capitals and punctuation — closer to actual writing than random words.",
+    h1: "Sentence Typing Test",
+    intro: [
+      "Random words test pure finger speed; real sentences test actual typing. Sentence mode serves complete sentences — capitals at the start, commas and periods in the middle — which means your Shift key, your punctuation reach, and your reading-ahead all get exercised. It's noticeably harder than word mode, and noticeably closer to the typing you do all day.",
+      "That's what makes it the best practice format for real-world speed. Emails, essays, code comments, chat messages — none of them are random word salad. Training on sentences builds the exact coordination (capital → word → comma → space, without breaking rhythm) that word-mode tests never touch.",
+      "Clicking through sets sentence mode in the app — no account needed, as always. Your sentence-mode scores are tracked separately from word mode, so both trends stay honest, and the full stats, leaderboard, and challenge links all work here too.",
+    ],
+    cta: { text: "Practice sentence typing", href: `${SITE_URL}/?mode=sentence` },
+    faqs: [
+      {
+        q: "Why is sentence mode harder than word mode?",
+        a: "Capitals require Shift coordination, punctuation breaks your rhythm, and you have to read ahead instead of reacting word by word. Most people score 5–15 WPM lower in sentence mode at first.",
+      },
+      {
+        q: "Is sentence typing better practice than random words?",
+        a: "For real-world speed, yes — it trains the exact patterns of actual writing. For pure finger speed and personal-best chasing, word mode is still king. Serious practicers do both.",
+      },
+      {
+        q: "Does sentence mode change how WPM is calculated?",
+        a: "No — the same standard formula applies. Punctuation and capitals count as characters like everything else, which is part of why scores run lower.",
+      },
+      {
+        q: "Do I need an account?",
+        a: "No. Sentence mode is one click, no sign-up, and your sentence-mode history is stored locally like everything else.",
+      },
+    ],
+    related: [
+      { href: `${SITE_URL}/typing-test/english/`, label: "English Typing Test — the word-mode benchmark" },
+      { href: `${SITE_URL}/typing-test/1-minute/`, label: "1 Minute Typing Test — the classic format" },
+    ],
+  },
+  {
+    slug: "vocabulary",
+    lang: "zh",
+    htmlLang: "zh-CN",
+    ogLocale: "zh_CN",
+    keyword: "打字背单词",
+    title: "打字背单词 - 用键盘记住拼写 | Eletypes",
+    description:
+      "用打字背单词：四级、六级、托福、GRE 词库分章节练习，拼对才算过，默写模式自测。免费免注册。",
+    h1: "打字背单词",
+    intro: [
+      "背单词最大的坑是“认识但写不对”：阅读时眼熟，写作翻译时调不出来。只看不写练的是再认（recognition），而考试要的是回忆（recall）——打字背单词逼你完整输出每个字母的拼写，错一个就得重来，练的正好是输出通道。",
+      "Eletypes 内置四套词库：CET-4、CET-6、TOEFL、GRE，全部按章节划分。每章单词配有释义和例句，敲对拼写才算通过；recite（默写）模式把单词藏起来只留释义，考前自测一测便知是真记住了还是“以为记住了”。",
+      "全部免费、免注册，进度存在本地浏览器。建议节奏：每天一章新词 + 默写模式复习旧词；背完还能把词表当作打字测试的自定义词库，在计时模式里再练一轮速度。",
+    ],
+    cta: { text: "从四级单词开始", href: `${SITE_URL}/?deck=CET4` },
+    faqs: [
+      {
+        q: "打字背单词适合我吗？",
+        a: "如果你“看得懂但写不对”，特别适合。它主攻拼写输出，和百词斩这类主攻“认识”的 App 是互补关系，不冲突。",
+      },
+      {
+        q: "有哪些词库？",
+        a: "CET-4、CET-6、TOEFL、GRE 四套，全部按章节划分，可分章练习、跳章复习，默写模式通用。",
+      },
+      {
+        q: "需要下载 App 或注册吗？",
+        a: "都不需要。网页打开即用，学习进度保存在本地浏览器。",
+      },
+      {
+        q: "完全免费吗？",
+        a: "是。Eletypes 是开源项目（GPL-3.0），无广告、无内购。",
+      },
+    ],
+    related: [
+      { href: `${SITE_URL}/vocabulary/cet4/`, label: "打字背四级单词 — 从四级起步" },
+      { href: `${SITE_URL}/vocabulary/toefl/`, label: "打字背托福单词 — 进阶词汇" },
+    ],
+  },
+  {
+    slug: "vocabulary/cet6",
+    lang: "zh",
+    htmlLang: "zh-CN",
+    ogLocale: "zh_CN",
+    keyword: "六级词汇",
+    title: "打字背六级单词 - CET-6 词汇拼写训练 | Eletypes",
+    description:
+      "用打字背六级单词：CET-6 词库分章节练习，拼对才算过，默写模式自测。免费免注册，进度保存在本地。",
+    h1: "打字背六级单词",
+    intro: [
+      "过了四级，六级的难不是多背两千个词，而是词变长了、变学术了、长得还都差不多：accommodate 和 accumulate、conscious 和 consensus——阅读时能蒙对，写作时一拼写就露馅。六级写作和翻译考的正是输出，恰恰是“认识但写不对”的重灾区。",
+      "Eletypes 的 CET-6 词库按章节划分，每个单词配释义和例句。练习时必须完整敲出拼写，错一个字母就得重来，这种“错误阻断”逼你记住最容易混淆的字母组合；recite（默写）模式只给释义不给单词，适合考前检验是不是真记住了。",
+      "建议从四级词库的默写模式热身，确认基础拼写没问题再进六级。全部免费、免注册，进度存在本地，每天 15–20 分钟，写作时能调出来的词才是真正记住的词。",
+    ],
+    cta: { text: "开始六级词汇练习", href: `${SITE_URL}/?deck=CET6` },
+    faqs: [
+      {
+        q: "四级和六级词汇最大的区别是什么？",
+        a: "六级词更长、更学术、形近词更多，对拼写输出的要求明显更高。这也是六级写作和翻译容易丢分的原因——不是没背过，是写不对。",
+      },
+      {
+        q: "直接背六级还是先过四级？",
+        a: "建议先用四级词库的默写模式自测：如果四级词能稳定拼对，再进六级；如果四级还有大量拼写错误，先补四级。",
+      },
+      {
+        q: "有例句和释义吗？",
+        a: "有。每个单词配有中文释义和英文例句/短语，默写模式下释义保留、单词隐藏。",
+      },
+      {
+        q: "免费吗？要注册吗？",
+        a: "免费，免注册。Eletypes 是开源项目（GPL-3.0），无广告。",
+      },
+    ],
+    related: [
+      { href: `${SITE_URL}/vocabulary/cet4/`, label: "打字背四级单词 — 先夯实基础" },
+      { href: `${SITE_URL}/vocabulary/gre/`, label: "打字背GRE单词 — 继续进阶" },
+    ],
+  },
+  {
+    slug: "vocabulary/gre",
+    lang: "zh",
+    htmlLang: "zh-CN",
+    ogLocale: "zh_CN",
+    keyword: "GRE词汇",
+    title: "打字背GRE单词 - GRE 词汇拼写训练 | Eletypes",
+    description:
+      "用打字背GRE单词：GRE 词库分章节练习，再长的词也得亲手拼对，默写模式自测。免费免注册。",
+    h1: "打字背GRE单词",
+    intro: [
+      "GRE 词汇是背单词鄙视链的顶端：词长、抽象、还爱考那些平时根本见不到的词。更要命的是，GRE 对词汇的要求不只是“认识”——verbal 部分的填空和阅读都建立在精准辨义上，而写作部分则要求你完整准确地输出。拼错一个字母，意思可能就全变了。",
+      "Eletypes 的 GRE 词库按章节划分，每个单词配释义和例句。再长的词，在这里也得亲手一个字母一个字母敲对，错了就重来——这种强制输出对 GRE 这种“长词重灾区”特别有效，因为它逼你记住的正是那些平时扫一眼就过的字母组合。recite（默写）模式只给释义，适合考前自测。",
+      "建议的学习顺序：CET-4 → CET-6 → TOEFL → GRE，逐级用默写模式检验。全部免费、免注册，进度存在本地。",
+    ],
+    cta: { text: "开始GRE词汇练习", href: `${SITE_URL}/?deck=GRE` },
+    faqs: [
+      {
+        q: "GRE 词汇用打字背有什么特别的好处？",
+        a: "GRE 词普遍偏长，拼写错误率高。打字强制完整输出，能系统性消灭“大概记得但拼不对”的词——而这正是 GRE 写作和填空最容易丢分的地方。",
+      },
+      {
+        q: "零基础可以直接背 GRE 吗？",
+        a: "不建议。GRE 词库假设你已掌握四六级/托福基础。先用 CET-4/CET-6/TOEFL 的默写模式逐级检验，再进 GRE，效率高得多。",
+      },
+      {
+        q: "单词有释义和例句吗？",
+        a: "有。每个单词配有中文释义和英文例句/短语；默写模式下释义保留、单词隐藏，逼你凭记忆输出。",
+      },
+      {
+        q: "免费吗？要注册吗？",
+        a: "免费，免注册。Eletypes 是开源项目（GPL-3.0），无广告、无内购。",
+      },
+    ],
+    related: [
+      { href: `${SITE_URL}/vocabulary/toefl/`, label: "打字背托福单词 — 先过托福" },
+      { href: `${SITE_URL}/vocabulary/cet6/`, label: "打字背六级单词 — 逐级进阶" },
+    ],
   },
 ];
