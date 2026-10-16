@@ -218,6 +218,7 @@ const velustroTheme = {
 
 const editorialTheme = {
   label: "Editorial",
+  chrome: "editorial",
   background: "#fafaf7",
   text: "#111111",
   gradient: "linear-gradient(315deg, #fafaf7 0%, #f4f4f2 100%)",
@@ -230,6 +231,7 @@ const editorialTheme = {
 
 const inkTheme = {
   label: "Ink",
+  chrome: "editorial",
   background: "#131311",
   text: "#ece7db",
   gradient: "linear-gradient(315deg, #131311 0%, #1b1b18 100%)",
@@ -242,17 +244,20 @@ const inkTheme = {
 
 const mossTheme = {
   label: "Moss",
+  chrome: "editorial",
   background: "#20241f",
   text: "#dfe4d6",
   gradient: "linear-gradient(315deg, #20241f 0%, #2a302a 100%)",
   title: "#dfe4d6",
   textTypeBox: "#6b7263",
   stats: "#a8c69f",
-  fontFamily: "sans-serif",
+  fontFamily:
+    "'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
 };
 
 const clayTheme = {
   label: "Clay",
+  chrome: "editorial",
   background: "#f3ece1",
   text: "#2e2620",
   gradient: "linear-gradient(315deg, #f3ece1 0%, #eae0cf 100%)",
