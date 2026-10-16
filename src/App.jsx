@@ -36,6 +36,7 @@ import DynamicBackground from "./components/common/DynamicBackground";
 import TypeBox from "./components/features/TypeBox/TypeBox";
 import SentenceBox from "./components/features/SentenceBox/SentenceBox";
 import { parseChallengeParams, clearChallengeParams } from "./services/challengeLink";
+import { applyLandingParams } from "./services/landingParams";
 import { generateSeed } from "./scripts/seedUtils";
 
 const DefaultKeyboard = lazy(() => import("./components/features/Keyboard/DefaultKeyboard"));
@@ -58,6 +59,10 @@ const initialChallenge = (() => {
   }
   return params;
 })();
+
+// SEO landing-page deep links (?timer=&lang=&mode=&deck=). Challenge links
+// (?s=...) take precedence — applyLandingParams skips when one is present.
+applyLandingParams();
 
 function App() {
   // Every session gets a seed — from challenge URL or freshly generated
