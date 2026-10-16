@@ -216,6 +216,58 @@ const velustroTheme = {
   textShadow: "1px 0px 0px #000000",
 };
 
+const editorialTheme = {
+  label: "Editorial",
+  chrome: "editorial",
+  background: "#fafaf7",
+  text: "#111111",
+  gradient: "linear-gradient(315deg, #fafaf7 0%, #f4f4f2 100%)",
+  title: "#111111",
+  textTypeBox: "#a3a099",
+  stats: "#ff3b00",
+  fontFamily:
+    "'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+};
+
+const inkTheme = {
+  label: "Ink",
+  chrome: "editorial",
+  background: "#131311",
+  text: "#ece7db",
+  gradient: "linear-gradient(315deg, #131311 0%, #1b1b18 100%)",
+  title: "#ece7db",
+  textTypeBox: "#6f6a5c",
+  stats: "#ff3b00",
+  fontFamily:
+    "'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+};
+
+const mossTheme = {
+  label: "Moss",
+  chrome: "editorial",
+  background: "#20241f",
+  text: "#dfe4d6",
+  gradient: "linear-gradient(315deg, #20241f 0%, #2a302a 100%)",
+  title: "#dfe4d6",
+  textTypeBox: "#6b7263",
+  stats: "#a8c69f",
+  fontFamily:
+    "'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+};
+
+const clayTheme = {
+  label: "Clay",
+  chrome: "editorial",
+  background: "#f3ece1",
+  text: "#2e2620",
+  gradient: "linear-gradient(315deg, #f3ece1 0%, #eae0cf 100%)",
+  title: "#2e2620",
+  textTypeBox: "#a89a83",
+  stats: "#c1502e",
+  fontFamily:
+    "'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+};
+
 const defaultTheme = darkTheme;
 
 const themesOptions = [
@@ -238,6 +290,10 @@ const themesOptions = [
   { value: lumiflexTheme, label: "Lumiflex" },
   { value: opulentoTheme, label: "Opulento" },
   { value: velustroTheme, label: "Velustro" },
+  { value: editorialTheme, label: "Editorial", isNew: true },
+  { value: inkTheme, label: "Ink", isNew: true },
+  { value: mossTheme, label: "Moss", isNew: true },
+  { value: clayTheme, label: "Clay", isNew: true },
 ];
 
 export {
@@ -261,4 +317,8 @@ export {
   lumiflexTheme,
   opulentoTheme,
   tokyoNightTheme,
+  editorialTheme,
+  inkTheme,
+  mossTheme,
+  clayTheme,
 };
