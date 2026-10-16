@@ -228,6 +228,41 @@ const editorialTheme = {
     "'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
 };
 
+const inkTheme = {
+  label: "Ink",
+  background: "#131311",
+  text: "#ece7db",
+  gradient: "linear-gradient(315deg, #131311 0%, #1b1b18 100%)",
+  title: "#ece7db",
+  textTypeBox: "#6f6a5c",
+  stats: "#ff3b00",
+  fontFamily:
+    "'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+};
+
+const mossTheme = {
+  label: "Moss",
+  background: "#20241f",
+  text: "#dfe4d6",
+  gradient: "linear-gradient(315deg, #20241f 0%, #2a302a 100%)",
+  title: "#dfe4d6",
+  textTypeBox: "#6b7263",
+  stats: "#a8c69f",
+  fontFamily: "sans-serif",
+};
+
+const clayTheme = {
+  label: "Clay",
+  background: "#f3ece1",
+  text: "#2e2620",
+  gradient: "linear-gradient(315deg, #f3ece1 0%, #eae0cf 100%)",
+  title: "#2e2620",
+  textTypeBox: "#a89a83",
+  stats: "#c1502e",
+  fontFamily:
+    "'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
+};
+
 const defaultTheme = darkTheme;
 
 const themesOptions = [
@@ -251,6 +286,9 @@ const themesOptions = [
   { value: opulentoTheme, label: "Opulento" },
   { value: velustroTheme, label: "Velustro" },
   { value: editorialTheme, label: "Editorial", isNew: true },
+  { value: inkTheme, label: "Ink", isNew: true },
+  { value: mossTheme, label: "Moss", isNew: true },
+  { value: clayTheme, label: "Clay", isNew: true },
 ];
 
 export {
@@ -275,4 +313,7 @@ export {
   opulentoTheme,
   tokyoNightTheme,
   editorialTheme,
+  inkTheme,
+  mossTheme,
+  clayTheme,
 };
