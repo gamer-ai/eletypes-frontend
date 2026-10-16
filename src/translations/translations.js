@@ -326,6 +326,7 @@ export const translations = {
     github_repo: "project: @Github\n",
 
     // Custom Theme
+    theme_group_new: "New",
     theme_group_builtin: "Built-in",
     theme_group_mine: "My Themes",
     theme_editor_title: "Custom Theme",
@@ -794,6 +795,7 @@ export const translations = {
     github_repo: "项目: @Github\n",
 
     // Custom Theme
+    theme_group_new: "最新",
     theme_group_builtin: "内置",
     theme_group_mine: "我的主题",
     theme_editor_title: "自定义主题",
