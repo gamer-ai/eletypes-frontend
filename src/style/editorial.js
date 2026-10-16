@@ -192,16 +192,8 @@ export const EditorialStyles = createGlobalStyle`
   }
 
   /* ---------- footer ---------- */
-  /* one hairline above the footer: both the wrapper div and the MUI AppBar
-     inside it carry .bottomBar, so the inner one is reset (no double rule) */
-  body.editorial .bottomBar {
-    border-top: 1px solid ${ink};
-    padding-top: 12px;
-  }
-  body.editorial .bottomBar .bottomBar {
-    border-top: none;
-    padding-top: 0;
-  }
+  /* no divider above the bottom nav: the footer stays visually quiet and
+     keeps the app's default spacing */
   body.editorial .profile-btn {
     font-size: 11px;
     letter-spacing: 0.1em;

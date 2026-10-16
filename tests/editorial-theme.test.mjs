@@ -11,8 +11,8 @@
  *    body-class toggle behaves (incl. no-DOM no-op for SSR/build)
  *  - EVERY chrome override selector is scoped under `body.editorial`
  *    (a single unscoped rule would restyle other themes => fail)
- *  - the footer keeps exactly one hairline (regression: .bottomBar is on
- *    both the wrapper div and the MUI AppBar inside it)
+ *  - the footer has no divider above the bottom nav (the hairline was
+ *    removed for being visually heavy)
  *  - custom themes: cloning from Editorial copies the colors but not the
  *    chrome (label-gated); Editorial still resolves by label on reload
  *
@@ -258,11 +258,15 @@ describe("editorial theme — chrome scoping", () => {
     }
   });
 
-  it("footer keeps exactly one hairline (no double rule)", () => {
-    assert.ok(
-      code.includes("body.editorial .bottomBar .bottomBar"),
-      "inner .bottomBar reset missing — the double hairline regresses"
-    );
+  it("footer has no divider line above the bottom nav", () => {
+    for (const m of code.matchAll(
+      /body\.editorial \.bottomBar(?: \.bottomBar)? \{([^}]*)\}/g
+    )) {
+      assert.ok(
+        !m[1].includes("border-top"),
+        "footer divider should stay removed from the editorial chrome"
+      );
+    }
   });
 
   it("the three app shells mount the editorial styles conditionally", () => {
