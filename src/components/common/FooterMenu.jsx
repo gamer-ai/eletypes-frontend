@@ -156,6 +156,28 @@ const FooterMenu = ({
               isSelected={false}
               onChange={handleThemeChange}
               menuPlacement="top"
+              formatOptionLabel={(option, { context }) => (
+                <span>
+                  {option.label}
+                  {option.isNew && context === "menu" && (
+                    <span
+                      style={{
+                        marginLeft: 8,
+                        fontSize: 9,
+                        fontWeight: 800,
+                        letterSpacing: "0.12em",
+                        color: "#ff3b00",
+                        border: "1px solid #ff3b00",
+                        borderRadius: 3,
+                        padding: "1px 4px",
+                        verticalAlign: "1px",
+                      }}
+                    >
+                      NEW
+                    </span>
+                  )}
+                </span>
+              )}
             />
             {currentIsCustom && onEditCurrentTheme && (
               <IconButton size="small" onClick={onEditCurrentTheme}>
