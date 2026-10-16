@@ -28,10 +28,10 @@ const VALID_PARAMS = {
 };
 
 describe("landing content", () => {
-  it("has 6 pages with unique slugs and titles", () => {
-    assert.equal(PAGES.length, 6);
-    assert.equal(new Set(PAGES.map((p) => p.slug)).size, 6);
-    assert.equal(new Set(PAGES.map((p) => p.title)).size, 6);
+  it("has 15 pages with unique slugs and titles", () => {
+    assert.equal(PAGES.length, 15);
+    assert.equal(new Set(PAGES.map((p) => p.slug)).size, 15);
+    assert.equal(new Set(PAGES.map((p) => p.title)).size, 15);
   });
 
   it("every page meets basic SEO/content requirements", () => {
@@ -107,7 +107,7 @@ describe("build-landing prerender", () => {
     assert.ok(html.includes("a&lt;b&gt;&amp;c"));
   });
 
-  it("renders a well-formed sitemap with all 9 URLs", () => {
+  it("renders a well-formed sitemap with all 18 URLs", () => {
     const xml = renderSitemap();
     assert.ok(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>'));
     const locs = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1]);
