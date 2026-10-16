@@ -39,6 +39,9 @@ export const newThemeFrom = (baseTheme, name) => ({
   stats: baseTheme.stats,
   fontFamily: baseTheme.fontFamily,
   textShadow: baseTheme.textShadow || "",
+  // the design language travels with the theme: cloning from an editorial
+  // family theme keeps its chrome
+  ...(baseTheme.chrome ? { chrome: baseTheme.chrome } : {}),
 });
 
 // Resolve a persisted "theme" object against built-in + custom union.
