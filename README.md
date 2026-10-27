@@ -61,6 +61,12 @@ No accounts. No ads. No tracking. Your practice history and settings live in you
   </tr>
 </table>
 
+## Launch with PicoRunner
+
+[![Launch on PicoRunner](https://picorunner.com/badges/launch.svg)](https://picorunner.com/launch/?repository=https%3A%2F%2Fgithub.com%2Fgamer-ai%2Feletypes-frontend)
+
+PicoRunner reviews the repository setup, builds the app, and runs its web interface locally. This configuration uses the standalone web app; browser data stays in the same browser profile and origin. Supabase leaderboard features require separate configuration and are not enabled by this manifest.
+
 ## Quick Start
 
 ```bash
